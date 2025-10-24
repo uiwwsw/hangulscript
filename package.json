@@ -1,21 +1,23 @@
 {
-  "name": "koreanscript",
+  "name": "@uiwwsw/koreanscript",
   "version": "0.1.0",
   "description": "A tiny transpiler that lets you write TypeScript using Korean keywords.",
   "license": "MIT",
   "type": "module",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "exports": {
-    ".": "./src/index.js"
+    ".": "./dist/index.js"
   },
   "bin": {
-    "ksc": "src/cli.js"
+    "ksc": "dist/cli.js"
   },
   "files": [
-    "src",
+    "dist",
     "README.md"
   ],
   "scripts": {
+    "build": "node ./scripts/build.js",
+    "prepublishOnly": "npm run build",
     "test": "node --test"
   },
   "dependencies": {
