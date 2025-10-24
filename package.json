@@ -18,6 +18,9 @@
   "scripts": {
     "test": "node --test"
   },
+  "dependencies": {
+    "typescript": "^5.4.0"
+  },
   "keywords": [
     "korean",
     "typescript",
