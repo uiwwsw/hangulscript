@@ -47,3 +47,29 @@ test('async methods inside class drop function keyword', () => {
   const output = compileString(source);
   assert.match(output, /async 호출\(\): Promise<string>/);
 });
+
+test('translates new keyword and common globals', () => {
+  const source = `상수 자료 = 새로운 맵<문자열, 숫자>();
+상수 값 = 새로운 객체();
+상수 집합 = 새로운 세트<숫자>();
+상수 약맵 = 새로운 약한맵();
+상수 약세트 = 새로운 약한세트();
+상수 약속 = 새로운 프로미스<문자열>((완료) => 완료("ok"));
+상수 오늘 = 새로운 날짜();
+상수 오류값 = 새로운 오류("문제");
+상수 정규식값 = 새로운 정규식("a");
+상수 데이터 = 제이슨;
+상수 최대값 = 수학;`;
+  const output = compileString(source);
+  assert.match(output, /const 자료 = new Map<string, number>\(\);/);
+  assert.match(output, /const 값 = new Object\(\);/);
+  assert.match(output, /const 집합 = new Set<number>\(\);/);
+  assert.match(output, /const 약맵 = new WeakMap\(\);/);
+  assert.match(output, /const 약세트 = new WeakSet\(\);/);
+  assert.match(output, /const 약속 = new Promise<string>\(/);
+  assert.match(output, /const 오늘 = new Date\(\);/);
+  assert.match(output, /const 오류값 = new Error\("문제"\);/);
+  assert.match(output, /const 정규식값 = new RegExp\("a"\);/);
+  assert.match(output, /const 데이터 = JSON;/);
+  assert.match(output, /const 최대값 = Math;/);
+});
