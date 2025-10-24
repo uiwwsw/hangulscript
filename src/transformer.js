@@ -24,6 +24,7 @@ const KEYWORD_TRANSFORMS = [
   { match: "클래스", replacement: "class", requiresBoundary: true },
   { match: "생성자", replacement: "constructor", requiresBoundary: true },
   { match: "이것", replacement: "this", requiresBoundary: true },
+  { match: "새로운", replacement: "new", requiresBoundary: true },
   { match: "대기", replacement: "await", requiresBoundary: true },
   { match: "시도", replacement: "try", requiresBoundary: true },
   { match: "잡기", replacement: "catch", requiresBoundary: true },
@@ -34,6 +35,17 @@ const KEYWORD_TRANSFORMS = [
   { match: "아무거나", replacement: "any", requiresBoundary: true },
   { match: "배열", replacement: "Array", requiresBoundary: true },
   { match: "레코드", replacement: "Record", requiresBoundary: true },
+  { match: "맵", replacement: "Map", requiresBoundary: true },
+  { match: "세트", replacement: "Set", requiresBoundary: true },
+  { match: "약한맵", replacement: "WeakMap", requiresBoundary: true },
+  { match: "약한세트", replacement: "WeakSet", requiresBoundary: true },
+  { match: "프로미스", replacement: "Promise", requiresBoundary: true },
+  { match: "객체", replacement: "Object", requiresBoundary: true },
+  { match: "날짜", replacement: "Date", requiresBoundary: true },
+  { match: "오류", replacement: "Error", requiresBoundary: true },
+  { match: "정규식", replacement: "RegExp", requiresBoundary: true },
+  { match: "제이슨", replacement: "JSON", requiresBoundary: true },
+  { match: "수학", replacement: "Math", requiresBoundary: true },
   { match: "콘솔.출력", replacement: "console.log", requiresBoundary: false }
 ];
 
