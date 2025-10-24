@@ -5,10 +5,10 @@
 ## 설치
 
 ```bash
-npm install koreanscript
+bun add --global koreanscript
 ```
 
-(로컬 개발 중이라면 이 저장소를 클론한 뒤 `npm link`를 이용해 전역 설치할 수 있습니다.)
+(로컬 개발 중이라면 이 저장소를 클론한 뒤 `bun link`를 이용해 전역 설치할 수 있습니다.)
 
 ## 사용법
 
@@ -25,6 +25,14 @@ ksc examples/hello.ks
 ```bash
 ksc --out-dir dist src/main.ks src/utils.ks
 ```
+
+타입스크립트처럼 타입 오류를 확인하고 싶다면 `--check` 옵션을 사용할 수 있습니다. 이 모드는 `.ts` 파일을 생성하지 않고 타입 검사 결과만 출력합니다.
+
+```bash
+ksc --check src/main.ks
+```
+
+> 참고: `--check` 옵션은 내부적으로 TypeScript 컴파일러를 사용하므로, 프로젝트에 `typescript` 패키지가 설치되어 있어야 합니다. (예: `bun add typescript`)
 
 ## 지원하는 주요 키워드
 
