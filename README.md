@@ -4,11 +4,19 @@
 
 ## 설치
 
+이 저장소의 패키지명은 `@uiwwsw/koreanscript`입니다. 로컬 소스에서 사용하려면 Bun과 Node.js를 준비한 뒤 의존성을 설치하고 CLI를 빌드합니다.
+
 ```bash
-bun add --global koreanscript
+git clone https://github.com/uiwwsw/koreanscript.git
+cd koreanscript
+bun install
+bun run build
+bun link
 ```
 
-(로컬 개발 중이라면 이 저장소를 클론한 뒤 `bun link`를 이용해 전역 설치할 수 있습니다.)
+`ksc` 실행 파일은 빌드 결과인 `dist/cli.js`를 사용하므로 링크 전에 빌드가 필요합니다. 전역 링크 없이 실행하려면 `node dist/cli.js examples/hello.ks`를 사용할 수 있습니다.
+
+테스트는 `bun run test`로 실행합니다.
 
 ## 사용법
 
