@@ -12,7 +12,7 @@
     "preview": "vite preview --host 127.0.0.1"
   },
   "dependencies": {
-    "@uiwwsw/hangulscript": "0.6.0",
+    "@uiwwsw/hangulscript": "0.7.0",
     "react": "19.3.1",
     "react-dom": "19.3.1"
   },

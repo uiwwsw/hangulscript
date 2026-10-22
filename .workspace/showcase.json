@@ -6,14 +6,15 @@
   "category": "개발 도구",
   "symbol": "ㅎ",
   "color": "#174d3d",
-  "summary": "한글 문장으로 배우고 웹에서 실행하는 실험적 프로그래밍 언어",
-  "description": "한글스크립트(HangulScript)는 첫 줄부터 문장형으로 작성하는 실험적 언어입니다. 함수·반복·모듈·비동기·예외·클래스를 한글 문장으로 표현하고 JavaScript와 .d.ts로 빌드합니다. 브라우저 UI 예제와 React·Vue 공통 Vite 플러그인을 제공합니다.",
+  "summary": "한글 문장으로 개발하고 JavaScript·Node·VS Code로 연결하는 프로그래밍 언어",
+  "description": "한글스크립트(HangulScript)는 첫 줄부터 문장형으로 작성하는 언어입니다. 함수·반복·모듈·비동기·예외·클래스를 한글 문장으로 표현하고 JavaScript와 .d.ts로 빌드합니다. npm 0.7.0과 VS Code Marketplace 확장 0.2.0을 공개했으며 Node 직접 실행, React·Vue Vite 연동, 타입 오류 검사와 편집기 기능을 제공합니다.",
   "features": [
     "시작 표기 없는 문장형 전용 .hgs와 JS·타입 선언 빌드",
     "코드로 만드는 입력창·선택창·버튼·결과 카드",
     "계산기·할인·통계·문자열 UI 예제 4종",
     "React·Vue 공통 Vite 플러그인과 실행 예제·연동 가이드",
-    "개발 소스: VS Code 문법 강조·포맷·오류 진단 확장과 VSIX 빌드"
+    "VS Code 공식 확장: 문법 강조·포맷·오류 진단·타입 정보·정의 이동·스코프 자동 완성",
+    "Node .hgs 직접 실행·다중 모듈 빌드·tsconfig 연동"
   ],
   "status": "live",
   "links": [
@@ -32,7 +33,7 @@
   ],
   "evidence": {
     "verifiedAt": "2026-10-22",
-    "note": "2026-10-22: 0.6.0 removes keyword source mode, start markers and .ks input. 27 tests pass for core control flow, modules, async/generator, exceptions, classes, generics, standard helpers, UI protocol and CLI JS/declaration execution. All 13 .hgs examples typecheck; React JSX and Vue SFC builds pass with the 0.6.0 tarball. Production Chrome discount UI computes 10000 at 20 percent to 8000 without a start marker. npm 0.6.0 lifecycle status is published. Production statistics UI returns count 4, sum 100, average 25, minimum 10 and maximum 40. Development source adds VS Code extension 0.1.0 with VSIX packaging and mapped diagnostics. 36 automated tests pass; actual Vite build rejects a type error at original HGS location. Marketplace publication and extension-host UI testing are not verified."
+    "note": "2026-10-22: npm @uiwwsw/hangulscript 0.7.0 lifecycle published, latest 0.7.0, SHA1 997f2d5a701b2406cfa65fdfa60d7f88a4870463. Fresh npm consumer passes Node HGS imports and strict TypeScript API consumption. React/Vue builds pass with public 0.7.0 locks. Marketplace uiwwsw.hangulscript-vscode 0.2.0 reports validated/public; official VS Code CLI installs it in an isolated test profile. 39 tests, Node 20.19 CLI/module tests, Node 22/24 CI and real macOS/Linux Extension Host tests pass. Vercel health checks pass; production Chrome maps TS2322 to main.hgs:1:1 and discount UI computes 10000 at 20 percent to 8000."
   },
   "en": "HangulScript"
 }
