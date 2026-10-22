@@ -66,3 +66,16 @@ test('browser semantic checker catches the same errors without Node imports or e
   assert.ok(result.diagnostics.some(d => d.code === 2322 && d.line === 1));
   assert.ok(check('출력(없는이름)').diagnostics.some(d => d.code === 2304));
 });
+
+test('project tsconfig extends and strict options are respected without suppressing HGS emission', async () => {
+ const dir=await mkdtemp(path.join(tmpdir(),'hgs-config-'));
+ try {
+  await writeFile(path.join(dir,'base.json'),JSON.stringify({compilerOptions:{strict:true,noUnusedLocals:true,noEmit:true}}));
+  await writeFile(path.join(dir,'tsconfig.json'),JSON.stringify({extends:'./base.json',compilerOptions:{target:'ES2022'}}));
+  const source='안쓰는값은 1이다';
+  const result=checkSource(source,path.join(dir,'main.hgs'));
+  assert.ok(result.diagnostics.some(d=>d.code===6133 && d.line===1));
+  await writeFile(path.join(dir,'tsconfig.json'),JSON.stringify({compilerOptions:{noEmit:true}}));
+  assert.match(buildSource('출력(1)',path.join(dir,'main.hgs')).javascript,/console/);
+ } finally {await rm(dir,{recursive:true,force:true});}
+});

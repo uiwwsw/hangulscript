@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-import { compileFileToDefaultDestination, compileFile, lintFile, buildFile, buildSource } from './index.js';
-import { readFile } from 'node:fs/promises';
+import { compileFileToDefaultDestination, compileFile, lintFile, buildFile } from './index.js';
+import { fileURLToPath } from 'node:url';
 import { spawn } from 'node:child_process';
 import path from 'node:path';
 
@@ -15,7 +15,7 @@ function usage() {
   --typescript           변환된 TypeScript 확인용 출력
   -h, --help             도움말
 
-문장형은 실험판입니다. run은 신뢰하는 로컬 코드만 실행하세요.`);
+run은 신뢰하는 로컬 코드만 실행하세요.`);
 }
 
 async function main() {
@@ -42,13 +42,9 @@ async function main() {
   if (mode === 'run') {
     if (inputs.length !== 1 || outDir || typescript || check) throw new Error('run에는 .hgs 파일 하나와 -- 뒤의 실행 인자만 지정하세요.');
     const input = path.resolve(inputs[0]);
-    const { javascript } = buildSource(await readFile(input, 'utf8'), input);
-    const child = spawn(process.execPath, ['--input-type=module', '-', ...programArgs], {
-      cwd: path.dirname(input), stdio: ['pipe', 'inherit', 'inherit']
+    const child = spawn(process.execPath, ['--import', fileURLToPath(new URL('./register.js', import.meta.url)), input, ...programArgs], {
+      cwd: path.dirname(input), stdio: 'inherit'
     });
-    // Preserve imports relative to the source directory. Runtime needs Node.js 20+.
-    child.stdin.on('error', () => {});
-    child.stdin.end(javascript);
     const exitCode = await new Promise((resolve, reject) => {
       child.once('error', reject);
       child.once('exit', (code, signal) => resolve(code ?? (signal ? 1 : 0)));

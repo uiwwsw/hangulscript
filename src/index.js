@@ -2,7 +2,8 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { compileSource } from './transformer.js';
 import { analyzeSource } from './checker.js';
-import { HangulScriptError, formatSourceDiagnostics, mapDiagnostic } from './diagnostics.js';
+import { formatSourceDiagnostics } from './diagnostics.js';
+import { emitSource } from './emitter.js';
 export { checkSource } from './checker.js';
 export { HangulScriptError, formatSourceDiagnostics } from './diagnostics.js';
 
@@ -45,27 +46,30 @@ export { compileSource };
 
 /** Compile through TypeScript once, emitting executable JS and declarations in memory. */
 export function buildSource(source, filePath = 'input.hgs') {
-  const result = analyzeSource(source, filePath);
-  if (result.hasErrors) throw new HangulScriptError(result.diagnostics);
-  const files = new Map();
-  const emitted = result.program.emit(undefined, (name, content) => files.set(name, content));
-  if (emitted.emitSkipped) throw new HangulScriptError(emitted.diagnostics.map(d => mapDiagnostic(d, result.documents)));
-  return {
-    javascript: files.get(result.virtualRoot.replace(/\.ts$/, '.js')) ?? '',
-    declaration: files.get(result.virtualRoot.replace(/\.ts$/, '.d.ts')) ?? ''
-  };
+  const { javascript, declaration } = emitSource(source, filePath);
+  return { javascript, declaration };
 }
 
 export async function buildFile(inputPath, outputDirectory = path.dirname(inputPath)) {
   const source = await readFile(inputPath, 'utf8');
-  const result = buildSource(source, inputPath);
-  const base = path.parse(inputPath).name;
-  await mkdir(outputDirectory, { recursive: true });
-  const javascriptPath = path.join(outputDirectory, base + '.js');
-  const declarationPath = path.join(outputDirectory, base + '.d.ts');
-  await writeFile(javascriptPath, result.javascript, 'utf8');
-  await writeFile(declarationPath, result.declaration, 'utf8');
-  return { ...result, javascriptPath, declarationPath };
+  const { javascript, declaration, modules } = emitSource(source, inputPath);
+  const rootDirectory = path.dirname(path.resolve(inputPath));
+  const destinations = modules.map(module => {
+    const relative = path.relative(rootDirectory, module.sourcePath);
+    if (relative.startsWith('..' + path.sep) || path.isAbsolute(relative)) {
+      throw new Error('빌드 입력 파일의 폴더 밖에 있는 .hgs 모듈은 지원하지 않습니다. 공통 상위 폴더에 진입 파일을 두세요.');
+    }
+    const base = path.join(outputDirectory, relative.replace(/\.hgs$/, ''));
+    return { ...module, javascriptPath: base + '.js', declarationPath: base + '.d.ts' };
+  });
+  // Validate the complete graph before writing any output.
+  for (const module of destinations) {
+    await mkdir(path.dirname(module.javascriptPath), { recursive: true });
+    await writeFile(module.javascriptPath, module.javascript, 'utf8');
+    await writeFile(module.declarationPath, module.declaration, 'utf8');
+  }
+  const root = destinations.find(module => module.sourcePath === path.resolve(inputPath));
+  return { javascript, declaration, javascriptPath: root.javascriptPath, declarationPath: root.declarationPath };
 }
 
 export { formatSource } from './formatter.js';

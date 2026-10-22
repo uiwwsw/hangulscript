@@ -8,6 +8,8 @@ export default function hangulscript() {
   return {
     name: 'hangulscript',
     enforce: 'pre',
+    buildStart() { files.clear(); },
+    watchChange(id, change) { if (change.event === 'delete') files.delete(id.split('?')[0]); },
     transform(source, id) {
       const filePath = id.split('?')[0];
       if (!/\.hgs$/.test(filePath) || /[?&](?:raw|url)(?:[=&]|$)/.test(id)) return null;

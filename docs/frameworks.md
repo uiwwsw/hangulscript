@@ -1,6 +1,6 @@
 # React·Vue에서 한글스크립트 사용하기
 
-이 가이드는 `@uiwwsw/hangulscript@0.6.0` 문법과 공통 Vite 플러그인을 사용합니다.
+이 가이드는 `@uiwwsw/hangulscript@0.7.0` 문법과 공통 Vite 플러그인을 사용합니다.
 화면과 상태는 React/Vue로 만들고 계산·조건·검증 함수를 `.hgs`에 작성합니다.
 데모의 `숫자입력`·`버튼`·`보여주기`는 데모 UI 실행 환경의 API이며 React/Vue 컴포넌트로 자동 변환되지 않습니다.
 
@@ -26,7 +26,7 @@ Vue는 같은 저장소의 `examples/vue-vite`에서 `npm ci`와 `npm run dev`�
 ## 기존 Vite 프로젝트에 설치하기
 
 ```bash
-npm install --save-dev @uiwwsw/hangulscript@^0.6.0
+npm install --save-dev @uiwwsw/hangulscript@^0.7.0
 ```
 
 React/Vue와 해당 Vite 플러그인은 기존 프로젝트에 설치돼 있다고 가정합니다.
@@ -135,7 +135,7 @@ function 계산() {
 | `ksc build` 후 `.js` import | 타입 검사, JavaScript와 `.d.ts` 생성 | TypeScript 프로젝트·라이브러리 |
 | 온라인 데모의 화면 함수 | 격리 실행, 입력창·버튼·결과 카드 | 설치 없는 도구 만들기·코드 공유 |
 
-개발 중인 다음 버전의 Vite 플러그인은 구문과 타입을 검사하고 오류가 있으면 빌드를 중단합니다. 선언 생성·디버깅용 원본 `.hgs` 소스맵은 제공하지 않습니다.
+0.7.0부터 Vite 플러그인은 구문과 타입을 검사하고 오류가 있으면 빌드를 중단합니다. 선언 생성·디버깅용 원본 `.hgs` 소스맵은 제공하지 않습니다.
 TypeScript에서 `.hgs` 파일을 직접 가져오면 모듈 타입을 찾지 못할 수 있습니다.
 외부 TypeScript 소비자에게 선언을 제공하려면 다음처럼 빌드한 `.js`를 가져오세요. 인접한 `.d.ts`를 TypeScript가 읽습니다.
 

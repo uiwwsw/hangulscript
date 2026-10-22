@@ -5,11 +5,15 @@ import { mapDiagnostic, syntaxDiagnostic } from './diagnostics.js';
 
 const libraryCache = new Map();
 export function analyzeSource(source, filePath = 'input.hgs', settings = {}) {
+  const configPath = ts.findConfigFile(path.dirname(path.resolve(filePath)), ts.sys.fileExists);
+  const configRead = configPath ? ts.readConfigFile(configPath, ts.sys.readFile) : undefined;
+  const converted = configRead?.config ? ts.parseJsonConfigFileContent(configRead.config, { ...ts.sys, readDirectory: () => [] }, path.dirname(configPath)) : { options: {}, errors: [] };
   const options = {
-    target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext,
-    moduleResolution: ts.ModuleResolutionKind.Bundler, moduleDetection: ts.ModuleDetectionKind.Force,
-    strict: true, skipLibCheck: true, declaration: true, noEmitOnError: true, types: [],
-    ...settings.compilerOptions
+    strict: true, skipLibCheck: true, types: [],
+    ...converted.options, ...settings.compilerOptions,
+    target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext, moduleResolution: ts.ModuleResolutionKind.Bundler,
+    moduleDetection: ts.ModuleDetectionKind.Force, declaration: true, noEmitOnError: true,
+    noEmit: false, emitDeclarationOnly: false, outDir: undefined, outFile: undefined, rootDir: undefined, incremental: false, composite: false, sourceMap: false, declarationMap: false, inlineSourceMap: false
   };
   const originals = new Map([...settings.files ?? []].map(([name, text]) => [path.resolve(name), text]));
   const root = path.resolve(filePath);
@@ -33,6 +37,7 @@ export function analyzeSource(source, filePath = 'input.hgs', settings = {}) {
   const isVirtual = name => name.endsWith('.hgs.ts') || originals.has(name.slice(0, -3));
   const host = {
     ...base,
+    getCurrentDirectory: () => configPath ? path.dirname(configPath) : path.dirname(root),
     getDefaultLibFileName: () => path.join(libDirectory, ts.getDefaultLibFileName(options)),
     getDefaultLibLocation: () => libDirectory,
     fileExists(name) { return isVirtual(name) ? originals.has(name.slice(0, -3)) || ts.sys.fileExists(name.slice(0, -3)) : base.fileExists(name); },
@@ -59,8 +64,13 @@ export function analyzeSource(source, filePath = 'input.hgs', settings = {}) {
   };
   const roots = settings.allFiles ? [...originals.keys()] : [root];
   const program = ts.createProgram(roots.map(virtual), options, host);
-  const nativeDiagnostics = ts.getPreEmitDiagnostics(program);
-  const diagnostics = [...syntaxErrors, ...nativeDiagnostics.map(d => mapDiagnostic(d, documents))];
+  const nativeDiagnostics = ts.getPreEmitDiagnostics(program).filter(d => {
+    if (![6133, 6196].includes(d.code) || !d.file || d.start === undefined) return true;
+    const doc = documents.get(d.file.fileName);
+    return !doc || Boolean(doc.lineMap[d.file.getLineAndCharacterOfPosition(d.start).line]);
+  });
+  const configErrors = [...converted.errors.filter(d => d.code !== 18003), ...(configRead?.error ? [configRead.error] : [])].map(d => ({ ...mapDiagnostic(d, documents), filePath: configPath ?? root }));
+  const diagnostics = [...configErrors, ...syntaxErrors, ...nativeDiagnostics.map(d => mapDiagnostic(d, documents))];
   return { program, documents, diagnostics, nativeDiagnostics, virtualRoot: virtual(root), compiled: documents.get(virtual(root))?.code ?? '', hasErrors: diagnostics.some(d => d.severity === 'error') };
 }
 

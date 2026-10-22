@@ -13,7 +13,7 @@ test('packaged extension registers formatting and keeps expressions intact', { s
   class Range { constructor(start,end) { this.start=start; this.end=end; } }
   const event = () => ({ dispose() {} });
   const vscode = {
-    languages: { createDiagnosticCollection: () => ({clear(){},dispose(){}}), registerDocumentFormattingEditProvider: (_, p) => { provider=p; return event(); } },
+    languages: { createDiagnosticCollection: () => ({clear(){},dispose(){}}), registerHoverProvider:()=>event(),registerDefinitionProvider:()=>event(),registerCompletionItemProvider:()=>event(), registerDocumentFormattingEditProvider: (_, p) => { provider=p; return event(); } },
     workspace: {textDocuments:[],onDidOpenTextDocument:event,onDidChangeTextDocument:event,onDidCloseTextDocument:event,onDidSaveTextDocument:event,onDidChangeWatchedFiles:event,createFileSystemWatcher:()=>({dispose(){},onDidChange:event,onDidCreate:event,onDidDelete:event})},
     TextEdit:{replace:(range,newText)=>({range,newText})}, Range, window:{showWarningMessage(){}}
   };

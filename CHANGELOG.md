@@ -1,3 +1,11 @@
+# 0.7.0
+
+- 공식 VS Code 확장 0.2.0: 문법 강조·포맷·진단·타입 정보·정의 이동·스코프 자동 완성·스니펫.
+- 실제 VS Code Extension Host 통합 테스트와 CI 추가.
+- Node 등록 진입점과 CLI에서 상대 경로 .hgs 모듈 직접 실행.
+- 다중 파일 JS·타입 선언 빌드와 .js import 경로 연결.
+- tsconfig compilerOptions·extends 적용과 지원·호환성 계약 문서화.
+
 # 0.7.0-dev.0 (개발 버전)
 
 - VS Code 확장 0.1.0: `.hgs` 문법 강조, 들여쓰기, 문서 포맷, Problems 진단.

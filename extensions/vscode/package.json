@@ -1,8 +1,8 @@
 {
   "name": "hangulscript-vscode",
   "displayName": "한글스크립트",
-  "description": "한글스크립트 .hgs 문법 강조, 포맷과 오류 검사",
-  "version": "0.1.0",
+  "description": "한글스크립트 .hgs 문법 강조, 포맷, 타입 오류, 자동 완성, 타입 정보와 정의로 이동",
+  "version": "0.2.0",
   "publisher": "uiwwsw",
   "license": "MIT",
   "engines": {
@@ -51,6 +51,12 @@
         "editor.tabSize": 4,
         "editor.insertSpaces": true
       }
-    }
+    },
+    "snippets": [
+      {
+        "language": "hangulscript",
+        "path": "./snippets.json"
+      }
+    ]
   }
 }

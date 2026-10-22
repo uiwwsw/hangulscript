@@ -3,7 +3,7 @@
 [![CI on main](https://github.com/uiwwsw/hangulscript/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/uiwwsw/hangulscript/actions/workflows/ci.yml)
 [![MIT license](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](https://github.com/uiwwsw/hangulscript/blob/main/LICENSE)
 
-**한글 문장으로 작성하고, JavaScript와 타입 선언으로 배포하는 실험적 프로그래밍 언어.**
+**한글 문장으로 작성하고, JavaScript와 타입 선언으로 배포하는 프로그래밍 언어.**
 
 Python의 들여쓰기와 익숙한 기본 함수, JavaScript의 표현식과 웹 생태계,
 TypeScript의 타입 검사를 결합합니다. 소스 확장자는 **`.hgs`**입니다.
@@ -18,7 +18,7 @@ TypeScript의 타입 검사를 결합합니다. 소스 확장자는 **`.hgs`**�
 출력("평균:", 평균(점수들))
 ```
 
-문장형은 실험판입니다. 정해진 한국어 문법을 파싱하며, 임의의 자연어를 추측해 실행하지 않습니다.
+정해진 한국어 문법을 파싱하며, 임의의 자연어를 추측해 실행하지 않습니다.
 Python 소스 호환이나 전체 TypeScript 문법 지원을 뜻하지 않습니다.
 
 ## 지금 만들 수 있는 것
@@ -39,7 +39,7 @@ Python 소스 호환이나 전체 TypeScript 문법 지원을 뜻하지 않습�
 
 ## 설치
 
-Node.js **20 이상**이 필요합니다. 아래의 JS + .d.ts 빌드와 `run` 명령은 **0.3.0부터** 제공합니다.
+Node.js **20.19 이상**이 필요합니다. 아래의 JS + .d.ts 빌드와 `run` 명령은 **0.3.0부터** 제공합니다.
 공개된 버전은 [npm](https://www.npmjs.com/package/@uiwwsw/hangulscript) 또는 `npm view @uiwwsw/hangulscript version`으로 확인하세요.
 
 ```bash
@@ -270,7 +270,7 @@ HTML·이벤트 핸들러 문자열을 삽입하지 않습니다.
 **0.6.0 이상**의 공통 Vite 플러그인을 사용합니다. React/Vue의 화면과 상태 관리에 한글스크립트 계산·검증 함수를 연결할 수 있습니다.
 
 ```bash
-npm install --save-dev @uiwwsw/hangulscript@^0.6.0
+npm install --save-dev @uiwwsw/hangulscript@^0.7.0
 ```
 
 ```js
@@ -303,9 +303,15 @@ console.log(결제금액(10000, 20)); // 8000
 - [온라인 연동 안내](https://hangulscript.vercel.app/#frameworks)
 
 예제는 Node.js `^20.19.0 || >=22.12.0`이 필요하며 Node.js 24에서 검증했습니다.
-개발 중인 다음 버전의 Vite 플러그인은 구문·타입 오류가 있으면 개발 서버와 빌드를 실패시키고 원본 `.hgs` 위치를 표시합니다. 선언 생성·디버깅 소스맵은 제공하지 않습니다. TypeScript 프로젝트는 `ksc build`로 생성한 `.js`와 `.d.ts`를 가져오는 방식이 적합합니다.
+**0.7.0부터** Vite 플러그인은 구문·타입 오류가 있으면 개발 서버와 빌드를 실패시키고 원본 `.hgs` 위치를 표시합니다. 선언 생성·디버깅 소스맵은 제공하지 않습니다. TypeScript 프로젝트는 `ksc build`로 생성한 `.js`와 `.d.ts`를 가져오는 방식이 적합합니다.
 데모의 UI 문장을 React/Vue 컴포넌트로 자동 변환하는 기능은 포함하지 않습니다.
 
 ## VS Code 확장
 
-문법 강조·자동 들여쓰기·문서 포맷·Problems 오류 표시를 제공하는 확장을 같은 저장소의 [`extensions/vscode`](extensions/vscode)에서 개발합니다. [설치·저장 시 포맷·Marketplace 게시 안내](extensions/vscode/README.md)를 참고하세요. VSIX 패키지와 Marketplace 공개는 별도 단계입니다.
+문법 강조·자동 들여쓰기·문서 포맷·Problems 오류 표시·타입 정보·정의 이동·스코프 자동 완성을 제공하는 확장을 같은 저장소의 [`extensions/vscode`](extensions/vscode)에서 개발합니다. [설치·저장 시 포맷·Marketplace 게시 안내](extensions/vscode/README.md)를 참고하세요. VSIX 패키지와 Marketplace 공개는 별도 단계입니다.
+
+## 공식 도구와 지원 범위
+
+Node에서 직접 실행하려면 `node --import @uiwwsw/hangulscript/register src/main.hgs`를 사용합니다. `ksc run`도 같은 로더를 사용하며 상대 경로 `.hgs` import를 처리합니다. `ksc build`는 진입 폴더 아래 HGS 모듈을 함께 빌드하고 import를 `.js`로 연결합니다.
+
+[환경별 지원 계약·타입 설정·호환성 정책](docs/support.md)을 확인하세요. 언어 패키지와 VS Code 확장은 같은 저장소에서 검증하며 별도 버전으로 배포합니다.
