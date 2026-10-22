@@ -1,13 +1,19 @@
 {
   "name": "@uiwwsw/koreanscript",
-  "version": "0.2.0",
-  "description": "A tiny transpiler that lets you write TypeScript using Korean keywords.",
+  "version": "0.3.0",
+  "description": "한글 문장으로 작성하고 JavaScript와 타입 선언으로 배포하는 실험적 프로그래밍 언어",
   "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
   "exports": {
-    ".": "./dist/index.js",
-    "./browser": "./dist/transformer.js"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./browser": {
+      "types": "./dist/transformer.d.ts",
+      "import": "./dist/transformer.js"
+    }
   },
   "bin": {
     "ksc": "dist/cli.js"
@@ -23,7 +29,8 @@
     "build": "node ./scripts/build.js",
     "prepublishOnly": "npm test && npm run build",
     "test": "node --test",
-    "build:site": "node scripts/build-site.js"
+    "build:site": "node scripts/build-site.js",
+    "benchmark": "node scripts/benchmark.js"
   },
   "dependencies": {
     "typescript": "^5.4.0"
@@ -49,5 +56,6 @@
   },
   "devDependencies": {
     "esbuild": "^0.25.0"
-  }
+  },
+  "types": "dist/index.d.ts"
 }

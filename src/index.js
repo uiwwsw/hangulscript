@@ -137,3 +137,45 @@ export async function lintFile(inputPath, compilerOptions) {
 }
 
 export { compileSource };
+
+/** Compile through TypeScript once, emitting executable JS and declarations in memory. */
+export function buildSource(source, filePath = 'input.ks') {
+  const ts = loadTypeScriptModule();
+  const virtualPath = path.resolve(filePath).replace(/\.ks$/i, '') + '.ts';
+  const compiled = compileSource(source);
+  const options = {
+    target: ts.ScriptTarget.ES2022,
+    module: ts.ModuleKind.ESNext,
+    moduleResolution: ts.ModuleResolutionKind.Bundler,
+    strict: true,
+    declaration: true,
+    noEmitOnError: true,
+    skipLibCheck: true
+  };
+  const host = createLintHost(ts, options, virtualPath, compiled);
+  const files = new Map();
+  host.writeFile = (name, content) => files.set(name, content);
+  const program = ts.createProgram([virtualPath], options, host);
+  const diagnostics = ts.getPreEmitDiagnostics(program);
+  if (diagnostics.some(d => d.category === ts.DiagnosticCategory.Error)) {
+    throw new Error(formatDiagnostics(ts, diagnostics));
+  }
+  const emitted = program.emit();
+  if (emitted.emitSkipped) throw new Error(formatDiagnostics(ts, emitted.diagnostics) || '빌드에 실패했습니다.');
+  return {
+    javascript: files.get(virtualPath.replace(/\.ts$/, '.js')) ?? '',
+    declaration: files.get(virtualPath.replace(/\.ts$/, '.d.ts')) ?? ''
+  };
+}
+
+export async function buildFile(inputPath, outputDirectory = path.dirname(inputPath)) {
+  const source = await readFile(inputPath, 'utf8');
+  const result = buildSource(source, inputPath);
+  const base = path.basename(inputPath, '.ks');
+  await mkdir(outputDirectory, { recursive: true });
+  const javascriptPath = path.join(outputDirectory, base + '.js');
+  const declarationPath = path.join(outputDirectory, base + '.d.ts');
+  await writeFile(javascriptPath, result.javascript, 'utf8');
+  await writeFile(declarationPath, result.declaration, 'utf8');
+  return { ...result, javascriptPath, declarationPath };
+}

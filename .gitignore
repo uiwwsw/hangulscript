@@ -7,3 +7,5 @@ site-dist/
 .env*
 *.tgz
 .vercel
+examples/*.js
+examples/*.d.ts

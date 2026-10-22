@@ -1,5 +1,5 @@
 import ts from 'typescript';
-import { compileSentences, isSentenceSource } from './sentences.js';
+import { compileSentences, isSentenceSource, sentenceRuntime } from './sentences.js';
 
 const identifierCharRegex = /[\p{L}\p{N}_$]/u;
 
@@ -89,6 +89,13 @@ const KEYWORD_TRANSFORMS = [
   { match: "콘솔.출력", replacement: "console.log", requiresBoundary: true }
 ];
 
+const transformsByFirst = new Map();
+for (const transform of KEYWORD_TRANSFORMS) {
+  const first = transform.match[0];
+  if (!transformsByFirst.has(first)) transformsByFirst.set(first, []);
+  transformsByFirst.get(first).push(transform);
+}
+
 function isIdentifierBoundary(source, index) {
   if (index <= 0 || index >= source.length) {
     return true;
@@ -106,7 +113,7 @@ function isBoundaryAfter(source, index) {
 }
 
 function tryApplyTransform(source, index) {
-  for (const transform of KEYWORD_TRANSFORMS) {
+  for (const transform of transformsByFirst.get(source[index]) ?? []) {
     if (!source.startsWith(transform.match, index)) {
       continue;
     }
@@ -284,6 +291,7 @@ function transformKeywords(source) {
 
 // Scan tokens so literals, comments, and nested function bodies stay untouched.
 function fixClassMethods(source) {
+  if (!source.includes('class')) return source;
   const scanner = ts.createScanner(ts.ScriptTarget.Latest, false, ts.LanguageVariant.Standard, source);
   const stack = [];
   const edits = [];
@@ -323,7 +331,8 @@ function fixClassMethods(source) {
 }
 
 export function compileSource(source) {
-  if (isSentenceSource(source)) source = compileSentences(source);
-  const keywordTransformed = transformKeywords(source);
-  return fixClassMethods(keywordTransformed);
+  const sentenceMode = isSentenceSource(source);
+  if (sentenceMode) source = compileSentences(source, { includeRuntime: false });
+  const transformed = fixClassMethods(transformKeywords(source));
+  return sentenceMode ? sentenceRuntime + '\n' + transformed : transformed;
 }

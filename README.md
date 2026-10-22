@@ -1,13 +1,11 @@
-# 한글스크립트 (koreanscript)
+# 한글스크립트 · KoreanScript
 
-한글 문장과 키워드로 프로그램을 작성하는 실험적 언어입니다. Python의 들여쓰기와 기본 함수, JavaScript/TypeScript의 표현식과 웹 생태계를 결합합니다. `.ks` 파일을 작성하면 CLI가 동일한 폴더에 `.ts` 파일을 생성해 줍니다.
+**한글 문장으로 작성하고, JavaScript와 타입 선언으로 배포하는 실험적 프로그래밍 언어.**
 
-## 온라인 데모와 공유
+Python의 들여쓰기와 익숙한 기본 함수, JavaScript의 표현식과 웹 생태계,
+TypeScript의 타입 검사를 결합합니다. 소스 확장자는 **`.ks`**입니다.
 
-[한글스크립트 실행하기](https://koreanscript.vercel.app/)에서 성적 분석기·구구단·인사 예제를 실행할 수 있습니다.
-코드를 수정하고 **공유 링크 복사**를 누르면 코드가 포함된 링크를 공유합니다.
-수신자는 코드를 읽고 직접 실행합니다. 링크에는 비밀 정보를 넣지 마세요.
-**.ks 저장**으로 파일을 내려받아 프로젝트에 사용할 수 있습니다.
+[온라인에서 실행하기](https://koreanscript.vercel.app/) · [문법 명세](LANGUAGE.md) · [릴리스](https://github.com/uiwwsw/koreanscript/releases) · [의견 보내기](https://github.com/uiwwsw/koreanscript/issues)
 
 ```ks
 문장으로 시작
@@ -15,220 +13,241 @@
 각 점수를 점수들에서:
     만약 점수 >= 80 이라면:
         출력(점수)
-출력("평균:", 합계(점수들) / 길이(점수들))
+출력("평균:", 평균(점수들))
 ```
 
-[문장형 문법·기본 함수·설계 방향](LANGUAGE.md)을 참고하세요.
-기존 한글 키워드형도 계속 지원합니다. 자유 자연어 해석이나 Python 소스 호환을 제공하지는 않습니다.
+문장형은 실험판입니다. 정해진 한국어 문법을 파싱하며, 임의의 자연어를 추측해 실행하지 않습니다.
+Python 소스 호환이나 전체 TypeScript 문법 지원을 뜻하지 않습니다.
+
+## 지금 만들 수 있는 것
+
+| 예제 | 바꿀 수 있는 값 | 사용하는 기능 |
+| --- | --- | --- |
+| [사칙연산 계산기](examples/calculator.ks) | 두 숫자·연산 | 함수·조건·0 나눗셈 처리 |
+| [할인 계산기](examples/discount.ks) | 가격·할인율 | 범위 검사·반올림 |
+| [숫자 통계](examples/statistics.ks) | 쉼표로 구분한 숫자 | 합계·평균·최솟값·최댓값 |
+| [문자열 정리기](examples/text.ks) | 단어 목록 | 공백 정리·중복 제거·연결 |
+| [성적 분석기](examples/scores.ks) | 점수 목록 | 반복·필터링·정렬 |
+| [타입 있는 함수 모듈](examples/math-library.ks) | 함수·타입 | JS + .d.ts 라이브러리 빌드 |
+
+데모에서 예제를 선택하고 입력값을 바꾼 다음 **실행하기**를 누르세요.
+입력값 변경은 예제 코드를 다시 생성하며, 코드를 직접 편집하면 입력란은 숨겨집니다.
+독립적인 웹 UI·데이터베이스·외부 API를 언어 자체에서 제공하는 단계는 아닙니다.
+생성한 JS를 기존 웹/Node 프로젝트에 연결해 화면과 서비스를 확장할 수 있습니다.
 
 ## 설치
 
-이 저장소의 패키지명은 `@uiwwsw/koreanscript`입니다. 로컬 소스에서 사용하려면 Node.js 20 이상을 준비한 뒤 의존성을 설치하고 CLI를 빌드합니다.
+Node.js **20 이상**이 필요합니다. 아래의 JS + .d.ts 빌드와 `run` 명령은 **0.3.0부터** 제공합니다.
+공개된 버전은 [npm](https://www.npmjs.com/package/@uiwwsw/koreanscript) 또는 `npm view @uiwwsw/koreanscript version`으로 확인하세요.
+
+```bash
+npm install --save-dev @uiwwsw/koreanscript
+```
+
+소스에서 최신 버전을 사용하려면:
 
 ```bash
 git clone https://github.com/uiwwsw/koreanscript.git
 cd koreanscript
 npm ci
 npm run build
-npm link
+node dist/cli.js run examples/calculator.ks
 ```
 
-`ksc` 실행 파일은 빌드 결과인 `dist/cli.js`를 사용하므로 링크 전에 빌드가 필요합니다. 전역 링크 없이 실행하려면 `node dist/cli.js examples/hello.ks`를 사용할 수 있습니다.
+이 Mac의 Developer workspace에서는 설치·테스트·빌드 명령 앞에 `./dev`를 붙입니다.
 
-테스트는 `npm test`로 실행합니다. 이 Mac의 Developer workspace에서는 모든 명령을 `./dev`로 실행하세요.
-
-## 사용법
-
-1. `*.ks` 파일을 만듭니다.
-2. CLI를 실행해 `.ts` 파일로 변환합니다.
+## 직접 실행과 빌드
 
 ```bash
-ksc examples/hello.ks
-# ✅ examples/hello.ts 생성됨
+# .ks를 바로 실행: 중간 파일을 만들지 않음
+npx ksc run examples/calculator.ks
+
+# 기본 출력은 .js + .d.ts
+npx ksc build examples/math-library.ks --out-dir output
+# output/math-library.js
+# output/math-library.d.ts
+
+# build 생략 가능
+npx ksc examples/math-library.ks --out-dir output
+
+# 타입 검사만 수행
+npx ksc --check examples/math-library.ks
+
+# 기존 .ts 출력이 필요할 때
+npx ksc --typescript examples/math-library.ks --out-dir output
 ```
 
-여러 개의 파일을 한 번에 변환할 수도 있고, `--out-dir` 옵션으로 결과물을 다른 폴더에 저장할 수도 있습니다.
+**0.2에서 변경:** CLI의 기본 출력이 `.ts`에서 **`.js` + `.d.ts`**로 바뀝니다.
+기존 자동화가 `.ts`를 기대한다면 `--typescript`를 추가하세요.
+`compileSource`·`compileString` API는 기존처럼 TypeScript 문자열을 반환합니다.
 
-```bash
-ksc --out-dir dist src/main.ks src/utils.ks
+`run`은 신뢰하는 코드를 로컬 Node.js에서 실행합니다. 온라인 데모와 달리 격리·2초 제한이 없습니다.
+프로그램 인자는 `ksc run 파일.ks -- 인자1 인자2`처럼 전달합니다.
+
+### 배포 산출물 사용
+
+```ks
+문장으로 시작
+더함(가: 숫자, 나: 숫자)를 정의한다:
+    돌려주기 가 + 나
+내보내기 { 더함 }
 ```
 
-타입스크립트처럼 타입 오류를 확인하고 싶다면 `--check` 옵션을 사용할 수 있습니다. 이 모드는 `.ts` 파일을 생성하지 않고 타입 검사 결과만 출력합니다.
+생성한 `.js`에는 실행 코드가, `.d.ts`에는 다음과 같은 타입 계약이 담깁니다.
 
-```bash
-ksc --check src/main.ks
+```ts
+declare function 더함(가: number, 나: number): number;
+export { 더함 };
 ```
 
-> 참고: `--check` 옵션은 내부적으로 TypeScript 컴파일러를 사용하므로, 프로젝트에 `typescript` 패키지가 설치되어 있어야 합니다. (예: `bun add typescript`)
+```js
+import { 더함 } from './output/math-library.js';
+console.log(더함(2, 3)); // 5
+```
 
-## 지원하는 주요 키워드
+출력은 **ES Modules**입니다. Node 프로젝트에는 `package.json`의 `"type": "module"`을 설정하거나
+ESM을 지원하는 번들러를 사용하세요. JS와 .d.ts를 함께 배포하면 TypeScript 사용자가 타입을 읽을 수 있습니다.
+`.d.ts`는 실행 파일이 아닙니다. 함수 인자 타입을 생략하면 `any`가 되므로
+공개 라이브러리 함수에는 타입을 명시하는 편이 좋습니다.
+여러 `.ks` 파일의 import 경로를 자동으로 묶거나 재작성하지는 않습니다.
 
-### 제어 흐름과 값
+## 문장형 문법
 
-| 한글 | JavaScript/TypeScript |
-| ---- | --------------------- |
-| 상수 | const |
-| 변수 | let |
-| 함수 | function |
-| 비동기함수 | async function |
-| 반환 | return |
-| 만약 | if |
-| 아니면 | else |
-| 반복 | for |
-| 동안 | while |
-| 실행 | do |
-| 오브 | of |
-| 안에 | in |
-| 스위치 / 선택 | switch |
-| 케이스 / 경우 | case |
-| 디폴트 / 기본 | default |
-| 중단 / 멈춤 | break |
-| 계속 | continue |
-| 시도 | try |
-| 잡기 | catch |
-| 마침내 | finally |
-| 던지기 | throw |
-| 양보 | yield |
-| 삭제 | delete |
-| 참 | true |
-| 거짓 | false |
-| 비어있음 | null |
-| 정의안됨 | undefined |
+```ks
+문장으로 시작
+이름은 "하늘"이다
+횟수는 3이다
 
-### 모듈과 전역 키워드
+인사(누구: 문자열)를 정의한다:
+    돌려주기 "안녕, " + 누구
 
-| 한글 | JavaScript/TypeScript |
-| ---- | --------------------- |
-| 가져오기 | import |
-| 에서 / 프롬 | from |
-| 내보내기 | export |
-| 내보내기 기본내보내기 | export default |
-| 새로운 | new |
-| 이것 | this |
-| 상위 | super |
-| 대기 | await |
-| 콘솔.출력 | console.log |
+각 순서를 범위(횟수)에서:
+    만약 순서 == 0 이라면:
+        출력("첫 인사")
+    아니면:
+        출력(인사(이름))
+```
 
-### 클래스와 타입 시스템
+- 선언: `이름은 값이다` 또는 `이름는 값이다`. 재대입은 `이름 = 값`.
+- 함수: `인사(누구)를 정의한다:`와 `돌려주기 값`.
+- 조건: `만약 식 이라면:` → `아니고 식 이라면:` → `아니면:`.
+- 반복: `각 항목을 목록에서:`와 `동안 식:`. `멈추기`, `계속하기` 지원.
+- 블록은 콜론 뒤에 공백으로 들여씁니다. 탭은 허용하지 않습니다.
+- 행 전체 주석은 `#`입니다. 표현식은 JS의 연산자·배열·객체를 사용합니다.
 
-| 한글 | JavaScript/TypeScript |
-| ---- | --------------------- |
-| 타입 | type |
-| 인터페이스 | interface |
-| 구현 | implements |
-| 확장 | extends |
-| 열거형 | enum |
-| 클래스 | class |
-| 생성자 | constructor |
-| 추상 | abstract |
-| 공개 | public |
-| 보호 | protected |
-| 비공개 | private |
-| 정적 | static |
-| 읽기전용 | readonly |
-| 얻기 | get |
-| 설정 | set |
-| 선언 | declare |
-
-### 타입 연산자
-
-| 한글 | JavaScript/TypeScript |
-| ---- | --------------------- |
-| 타입오브 | typeof |
-| 키오브 | keyof |
-| 인퍼 | infer |
-| 만족 | satisfies |
-| 애즈 / 처럼 | as |
-| 이즈 / 이다 | is |
-| 무효 | void |
-
-### 기본 타입과 전역 객체
-
-| 한글 | JavaScript/TypeScript |
-| ---- | --------------------- |
-| 문자열 | string |
-| 숫자 | number |
-| 불리언 | boolean |
-| 아무거나 | any |
-| 배열 | Array |
-| 레코드 | Record |
-| 맵 | Map |
-| 세트 | Set |
-| 약한맵 | WeakMap |
-| 약한세트 | WeakSet |
-| 프로미스 | Promise |
-| 객체 | Object |
-| 날짜 | Date |
-| 오류 | Error |
-| 정규식 | RegExp |
-| 제이슨 | JSON |
-| 수학 | Math |
-
-타입 관련 키워드는 위 표 외에도 상황에 맞는 변환이 적용되며, 새로운 키워드가 필요하다면 이 표를 참조해 코드를 작성할 수 있습니다.
-
-## 예시
-
-`examples/hello.ks`
+기존 키워드형도 사용할 수 있습니다.
 
 ```ks
 상수 이름 = "철수";
-
-함수 인사(사람이름: 문자열): 문자열 {
-  반환 `안녕 ${사람이름}!`;
+함수 인사(사람: 문자열): 문자열 {
+  반환 "안녕, " + 사람;
 }
-
 콘솔.출력(인사(이름));
 ```
 
-`ksc examples/hello.ks` 실행 후 생성되는 `examples/hello.ts`
+지원 범위와 제약은 [LANGUAGE.md](LANGUAGE.md)에 정리했습니다.
 
-```ts
-const 이름 = "철수";
+## 한글 기본 함수
 
-function 인사(사람이름: string): string {
-  return `안녕 ${사람이름}!`;
-}
+문장형 파일에는 다음 함수가 제공됩니다.
 
-console.log(인사(이름));
+| 함수 | 예시 / 의미 |
+| --- | --- |
+| `출력` | `출력("합계:", 30)` |
+| `길이` | 문자열의 UTF-16 코드 단위 수 또는 목록 항목 수 |
+| `추가` | `추가(목록, 값)` — 원본 목록 변경 |
+| `포함` | `포함(목록, 값)` — 포함 여부 |
+| `나누기` | `나누기("가,나", ",")` |
+| `잇기` | `잇기(["가", "나"], " · ")` |
+| `다듬기` | 문자열 양 끝 공백 제거 |
+| `숫자로` | 유한한 숫자로 변환, 빈 문자열·잘못된 값은 오류 |
+| `합계` | 숫자 목록 합산 |
+| `평균` | 숫자 목록 평균, 빈 목록은 오류 |
+| `최솟값` / `최댓값` | 목록을 순회해 계산, 빈 목록은 오류 |
+| `반올림` | `반올림(12.345, 2)` — 자리 -10~10 |
+| `정렬` | 숫자 목록을 복사해 오름차순 정렬 |
+| `범위` | `범위(5)`, `범위(1, 5)`, `범위(5, 0, -1)` — 끝 제외 |
+
+계산은 JS의 부동소수점 규칙을 따릅니다. 예를 들어 `0.1 + 0.2`의 정밀도는
+이 언어에서도 달라지지 않습니다. 금액은 원·센트 같은 정수 단위로 다루세요.
+`반올림`은 JS `Math.round` 규칙이며 임의 정밀도 십진 연산이 아닙니다.
+
+## 공유
+
+1. 데모에서 예제를 수정하고 실행 결과를 확인합니다.
+2. **공유 링크 복사**로 코드를 담은 URL을 전달합니다.
+3. 받는 사람은 코드를 읽고 직접 실행합니다. 링크를 열기만 해서는 실행되지 않습니다.
+4. **.ks 저장**으로 소스를 내려받아 CLI에서 실행하거나 JS + .d.ts로 배포합니다.
+
+코드는 URL의 `#code=` 조각에 담깁니다. 서버 저장소·공개 코드 목록 기능은 없습니다.
+링크를 가진 사람이 코드를 읽을 수 있으므로 비밀번호·토큰·개인정보는 넣지 마세요.
+
+## 성능과 실행 제한
+
+0.3에서 다음 개선을 적용했습니다.
+
+- **컴파일 전용 Worker:** TypeScript 파싱·변환·출력 정리를 UI 스레드 밖에서 실행.
+- **180ms 입력 지연과 결과 재사용:** 키를 누를 때마다 변환하지 않고, 같은 소스는 다시 컴파일하지 않음.
+- **키워드 첫 글자별 탐색:** 모든 문자에서 전체 키워드 목록을 순회하지 않음.
+- **불필요한 재처리 생략:** 기본 함수 코드를 다시 치환하지 않고, 클래스가 없으면 클래스 보정도 생략.
+- **실행 출력 제한:** 부모 페이지에서도 최대 100행·행당 1,000자로 제한.
+- **범위 제한:** `범위`는 최대 100,000개 항목. 최솟값·최댓값은 인자 펼치기 없이 순회.
+
+2026-10-22 이 Mac / Node 24.18.0에서 같은 1,000행 선언 코드를 측정했을 때,
+변환 중앙값은 변경 전 약 **4.45ms**, 변경 후 약 **0.65ms**였습니다.
+개선 후 20회 측정 p95는 약 **1.88ms**였고, 작은 코드의 타입 검사·JS/.d.ts 생성은 약 **168ms**였습니다.
+서로 다른 기기·입력·브라우저에서 같은 수치를 보장하는 벤치마크는 아닙니다.
+
+화면 JS는 약 **10.4KB**, 컴파일러 Worker는 약 **3.58MB**입니다(압축 전).
+Worker 분리는 UI의 파싱·실행 부담을 분리하지만 전체 다운로드를 제거하지 않습니다.
+첫 로딩은 네트워크와 기기에 따라 느릴 수 있습니다.
+
+```bash
+npm run build:site
+npm run benchmark
 ```
 
-## 라이선스
+온라인 실행은 별도 origin의 sandbox iframe과 Worker에서 최대 2초 동안 수행합니다.
+네트워크·DOM·외부 모듈은 제공하지 않으며 입력은 30,000자로 제한합니다.
+이는 완전한 메모리 할당 제한이 아닙니다. 매우 큰 배열 등은 Worker에서도 메모리를 많이 사용할 수 있습니다.
+대용량 작업·프로덕션 서버용 성능을 검증한 단계는 아닙니다.
 
-MIT
+## 프로그래밍 API
 
-## 브라우저와 프로젝트에서 사용
+```js
+import { buildSource, lintSource } from '@uiwwsw/koreanscript';
 
-Node 파일 API가 없는 변환 진입점을 제공합니다.
+const source = '문장으로 시작\n출력(합계([1, 2, 3]))';
+const { javascript, declaration } = buildSource(source);
+const { hasErrors } = lintSource(source);
+```
+
+Node 파일 API 없이 변환만 필요하면:
 
 ```js
 import { compileSource } from '@uiwwsw/koreanscript/browser';
 const typescript = compileSource('문장으로 시작\n출력("안녕")');
 ```
 
-`.ks` → `ksc` → `.ts` → 기존 TypeScript 빌드 순서로 통합합니다.
-브라우저에서 임의의 사용자 코드를 부모 페이지나 서버에서 실행하면 안 됩니다.
-데모는 별도 origin의 sandbox iframe과 최대 2초 실행 Worker를 사용합니다.
+이 진입점도 TypeScript 스캐너를 포함합니다. 브라우저에서는 데모처럼 Worker에서 사용하세요.
+루트와 브라우저 진입점 모두 패키지의 `.d.ts`를 제공합니다.
 
-## 웹 데모 개발·Vercel 배포
+## 개발·배포
 
 ```bash
-./dev npm ci
-./dev npm test
-./dev npm run build:site
-./dev vercel link --project koreanscript
-./dev vercel deploy --prod
+npm ci
+npm test
+npm run build
+npm run build:site
+npm pack --dry-run
 ```
 
-Vercel은 GitHub 저장소에 연결되어 main push로 production을 배포합니다.
-공개 산출물은 `site-dist/`입니다. `SITE_URL`을 HTTPS origin으로 지정하면
-canonical·Open Graph·robots·sitemap을 다른 도메인으로 빌드할 수 있습니다.
-SEO 메타데이터·구조화 데이터·사이트맵을 제공하지만 검색 노출을 보장하지 않습니다.
-Google Search Console / 네이버 서치어드바이저 등록에는 별도 소유권 확인이 필요합니다.
+Vercel은 GitHub main과 연결되어 `site-dist/`를 배포합니다.
+`SITE_URL`에 HTTPS origin을 지정하면 canonical·Open Graph·robots·sitemap 주소를 바꿀 수 있습니다.
+검색엔진 등록·사이트맵 제출이 검색 노출이나 순위를 보장하지는 않습니다.
 
-## 패키지 배포
+향후에는 독립 AST·원본 `.ks` 소스맵·LSP·모듈 그래프·Vite 연동 순으로 확장할 계획입니다.
 
-`npm test && npm run build && npm pack --dry-run`으로 검증합니다.
-현재 공개 npm 게시 여부는 npm registry에서 확인해야 하며 GitHub 릴리스와 별개입니다.
-인증된 npm 계정에서 `npm publish --access public`을 실행하거나
-[npm trusted publishing](https://docs.npmjs.com/trusted-publishers/)을 설정합니다.
-GitHub Release의 `.tgz`를 내려받아 `npm install ./uiwwsw-koreanscript-0.2.0.tgz`로 설치할 수도 있습니다.
+## 라이선스
+
+[MIT](LICENSE)

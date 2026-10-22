@@ -5,7 +5,7 @@ if (!/^https:\/\/[a-z0-9.-]+$/i.test(origin)) throw new Error('SITE_URL must be 
 await rm('site-dist', { recursive: true, force: true });
 await mkdir('site-dist');
 await cp('site', 'site-dist', { recursive: true });
-await build({ entryPoints: ['site/app.js'], bundle: true, minify: true, format: 'esm', platform: 'browser', outfile: 'site-dist/app.js' });
+await build({ entryPoints: ['site/app.js', 'site/compiler-worker.js'], bundle: true, minify: true, format: 'esm', platform: 'browser', outdir: 'site-dist' });
 await writeFile('site-dist/robots.txt', `User-agent: *\nAllow: /\nSitemap: ${origin}/sitemap.xml\n`);
 await writeFile('site-dist/sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>${origin}/</loc></url></urlset>`);
 const { readFile } = await import('node:fs/promises');
