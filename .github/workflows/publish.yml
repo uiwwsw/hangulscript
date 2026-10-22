@@ -41,6 +41,7 @@ jobs:
       - run: npm ci
       - run: npm run build:vscode
       - run: npm test
+      - run: xvfb-run -a npm run test:vscode
       - run: npm run build
       - run: npm run build:site
       - name: Package once
