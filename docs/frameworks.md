@@ -1,6 +1,6 @@
 # React·Vue에서 한글스크립트 사용하기
 
-`@uiwwsw/hangulscript@0.5.0`부터 공통 Vite 플러그인을 제공합니다.
+이 가이드는 `@uiwwsw/hangulscript@0.6.0` 문법과 공통 Vite 플러그인을 사용합니다.
 화면과 상태는 React/Vue로 만들고 계산·조건·검증 함수를 `.hgs`에 작성합니다.
 데모의 `숫자입력`·`버튼`·`보여주기`는 데모 UI 실행 환경의 API이며 React/Vue 컴포넌트로 자동 변환되지 않습니다.
 
@@ -26,7 +26,7 @@ Vue는 같은 저장소의 `examples/vue-vite`에서 `npm ci`와 `npm run dev`�
 ## 기존 Vite 프로젝트에 설치하기
 
 ```bash
-npm install --save-dev @uiwwsw/hangulscript@^0.5.0
+npm install --save-dev @uiwwsw/hangulscript@^0.6.0
 ```
 
 React/Vue와 해당 Vite 플러그인은 기존 프로젝트에 설치돼 있다고 가정합니다.
@@ -57,13 +57,12 @@ export default defineConfig({ plugins: [hangulscript(), vue()] });
 두 예제의 `src/discount.hgs`는 동일합니다. 함수와 조건을 한글 문장으로 작성하고 ESM `export`로 내보냅니다.
 
 ```text
-문장으로 시작
-결제금액(가격: number, 할인율: number)를 정의한다:
+결제금액(가격: 숫자, 할인율: 숫자)를 정의한다:
     만약 !Number.isFinite(가격) || !Number.isFinite(할인율) || 가격 < 0 || 할인율 < 0 || 할인율 > 100 이라면:
         돌려주기 "가격은 0 이상, 할인율은 0~100 사이로 입력하세요"
     돌려주기 가격 - 반올림(가격 * 할인율 / 100)
 
-export { 결제금액 }
+결제금액을 공개한다
 ```
 
 ## React에서 호출하기

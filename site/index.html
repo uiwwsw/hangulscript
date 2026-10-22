@@ -13,13 +13,13 @@
 <script type="module" src="/app.js"></script>
 </head>
 <body>
-<header><a class="brand" href="/" aria-label="한글스크립트 홈"><span class="mark">ㅎ</span> 한글스크립트 <small>0.5 실험판</small></a><nav><a href="#frameworks">React·Vue</a><a href="#guide">문법 안내</a><a href="https://github.com/uiwwsw/hangulscript">GitHub ↗</a></nav></header>
+<header><a class="brand" href="/" aria-label="한글스크립트 홈"><span class="mark">ㅎ</span> 한글스크립트 <small>0.6 실험판</small></a><nav><a href="#frameworks">React·Vue</a><a href="#guide">문법 안내</a><a href="https://github.com/uiwwsw/hangulscript">GitHub ↗</a></nav></header>
 <main>
 <section class="hero"><div><p class="eyebrow">HANGULSCRIPT / 생각과 코드 사이</p><h1>생각을 우리말로.<br><em>가능성은 웹으로.</em></h1><p class="intro">익숙한 문장으로 쓰고, 들여쓰기로 정리하세요.<br>Python의 간결함에 JavaScript의 웹 생태계를 더했습니다.</p><a class="primary" href="#playground">지금 한 문장 실행하기 <span>↘</span></a></div><aside class="note"><span>첫 번째 프로그램</span><pre>이름은 "세상"이다
 출력("안녕, " + 이름)</pre><div class="note-result">↳ 안녕, 세상</div><p>파일은 <b>.hgs</b> · 배포는 JS + 타입 선언</p></aside></section>
 <section id="playground" class="lab"><div class="section-head"><div><p class="eyebrow">01 / 직접 해보기</p><h2>작은 문장, 움직이는 프로그램.</h2></div><span class="pill">● 브라우저 안에서 실행</span></div>
-<div class="toolbar"><label>예제 <select id="example"><option value="calculator">화면 · 사칙연산 계산기</option><option value="discount">화면 · 할인 계산기</option><option value="statistics">화면 · 숫자 통계</option><option value="text">화면 · 문자열 정리기</option><option value="scores">문장형 · 성적 분석기</option><option value="hello">문장형 · 첫 인사</option><option value="loop">문장형 · 구구단</option><option value="legacy">기존 키워드형</option></select></label><div><button id="share">공유 링크 복사</button><button id="download">.hgs 저장</button><button id="run" class="primary">실행하기 ▷</button></div></div>
-<form id="tool-inputs" class="tool-inputs" hidden aria-label="도구 입력값"></form><p class="fine">코드에 선언한 숫자입력·글자입력·선택입력·버튼·보여주기로 실제 화면을 만듭니다.</p><section class="preview" aria-labelledby="preview-title"><div class="editor-label"><b id="preview-title">만든 도구 · 실제 화면</b><span>코드의 입력창과 버튼이 여기에 나타납니다</span></div><form id="preview-content"><p>실행하기를 눌러 화면을 만들어 보세요.</p></form><p class="fine">버튼을 누를 때 현재 입력값으로 프로그램을 처음부터 실행합니다. 입력값을 바꾼 뒤 도구 안의 버튼을 눌러 보세요.</p></section><div class="editors"><div><div class="editor-label"><label for="source">내가 쓴 한글</label><span>main.hgs</span></div><textarea id="source" spellcheck="false" aria-describedby="source-help"></textarea></div><div><div class="editor-label"><label for="compiled">변환된 코드</label><select id="output-format" aria-label="출력 언어"><option value="javascript">JavaScript · main.js</option><option value="typescript">TypeScript · main.ts</option></select></div><textarea id="compiled" readonly spellcheck="false"></textarea></div></div>
+<div class="toolbar"><label>예제 <select id="example"><option value="calculator">화면 · 사칙연산 계산기</option><option value="discount">화면 · 할인 계산기</option><option value="statistics">화면 · 숫자 통계</option><option value="text">화면 · 문자열 정리기</option><option value="scores">문장형 · 성적 분석기</option><option value="hello">문장형 · 첫 인사</option><option value="loop">문장형 · 구구단</option></select></label><div><button id="share">공유 링크 복사</button><button id="download">.hgs 저장</button><button id="run" class="primary">실행하기 ▷</button></div></div>
+<p class="fine">코드에 선언한 숫자입력·글자입력·선택입력·버튼·보여주기로 실제 화면을 만듭니다.</p><section class="preview" aria-labelledby="preview-title"><div class="editor-label"><b id="preview-title">만든 도구 · 실제 화면</b><span>코드의 입력창과 버튼이 여기에 나타납니다</span></div><form id="preview-content"><p>실행하기를 눌러 화면을 만들어 보세요.</p></form><p class="fine">버튼을 누를 때 현재 입력값으로 프로그램을 처음부터 실행합니다. 입력값을 바꾼 뒤 도구 안의 버튼을 눌러 보세요.</p></section><div class="editors"><div><div class="editor-label"><label for="source">내가 쓴 한글</label><span>main.hgs</span></div><textarea id="source" spellcheck="false" aria-describedby="source-help"></textarea></div><div><div class="editor-label"><label for="compiled">변환된 코드</label><select id="output-format" aria-label="출력 언어"><option value="javascript">JavaScript · main.js</option><option value="typescript">TypeScript · main.ts</option></select></div><textarea id="compiled" readonly spellcheck="false"></textarea></div></div>
 <p class="fine">기본 출력은 JavaScript입니다. CLI의 <code>ksc build main.hgs</code>는 <code>main.js</code>와 타입 선언 <code>main.d.ts</code>를 함께 만듭니다. 데모에서는 JavaScript와 중간 변환 TypeScript를 비교할 수 있습니다.</p><div class="console" role="region" aria-label="프로그램 실행 결과"><div class="editor-label"><span>실행 결과</span><span id="status" role="status" aria-live="polite">실행을 눌러 주세요</span></div><pre id="output" aria-live="polite">여기에 프로그램의 출력이 나타납니다.</pre></div><p id="source-help" class="fine">공유된 코드는 자동 실행하지 않습니다. 실행은 격리된 환경에서 최대 2초 동안 진행됩니다. 브라우저 데모는 네트워크·직접 DOM 접근·외부 모듈을 제공하지 않습니다. 화면은 제한된 UI 함수로 생성합니다.</p>
 </section>
 <section id="guide" class="guide"><p class="eyebrow">02 / 문법의 출발점</p><h2>외울 것은 줄이고, 뜻은 또렷하게.</h2><div class="cards"><article><span>01</span><h3>문장으로 선언</h3><pre>나이는 20이다
@@ -41,10 +41,10 @@
 동안 나이 < 25:
     나이 = 나이 + 1
     만약 나이 == 23 이라면:
-        멈추기</pre><p>문장형 파일은 <code>문장으로 시작</code>으로 명시할 수 있습니다. 자유 자연어 해석, Python 호환 실행기, 전체 TypeScript 문법 지원을 의미하지는 않습니다. 문자열 길이는 JavaScript의 UTF-16 기준이며 정렬은 숫자 목록을 복사해 정렬합니다.</p></details>
+        멈추기</pre><p>모든 코드는 시작 표기 없이 문장형으로 작성합니다. 자유 자연어 해석, Python 호환 실행기, 전체 TypeScript 문법 지원을 의미하지는 않습니다. 문자열 길이는 JavaScript의 UTF-16 기준이며 정렬은 숫자 목록을 복사해 정렬합니다.</p></details>
 </section>
 <section class="share-section"><div><p class="eyebrow">03 / 만들고, 나누기</p><h2>오늘 만든 코드를<br>누군가의 첫 코드로.</h2></div><ol><li><b>예제를 바꿔 나만의 도구 만들기</b><p>계산기·할인 계산·숫자 통계·문자열 정리 예제의 입력값과 코드를 바꿔 보세요.</p></li><li><b>링크 하나로 코드 공유하기</b><p>공유 링크에는 코드가 URL 조각으로 담깁니다. 비밀 정보는 넣지 마세요.</p></li><li><b>프로젝트에 연결하기</b><p>.hgs 파일을 저장하고 CLI로 실행하거나 JavaScript와 .d.ts를 생성하세요. <a href="https://github.com/uiwwsw/hangulscript#readme">설치와 활용 안내 ↗</a></p></li></ol></section>
-<section id="frameworks" class="frameworks"><p class="eyebrow">04 / 기존 프로젝트에 연결하기</p><h2>React도 Vue도, 계산은 한글로.</h2><p class="framework-intro">0.5.0부터 같은 Vite 플러그인으로 .hgs 파일을 가져올 수 있습니다. 화면과 상태는 React·Vue로 만들고, 계산·검증은 한글스크립트 함수로 작성하세요.</p><div class="framework-install"><b>기존 Vite 프로젝트에 설치</b><pre>npm install --save-dev @uiwwsw/hangulscript@^0.5.0</pre></div><div class="framework-grid"><article><h3>React + Vite</h3><p>공통 플러그인을 등록하고 <code>discount.hgs</code>의 함수를 버튼 이벤트에서 호출합니다.</p><pre>import { defineConfig } from &#x27;vite&#x27;;
+<section id="frameworks" class="frameworks"><p class="eyebrow">04 / 기존 프로젝트에 연결하기</p><h2>React도 Vue도, 계산은 한글로.</h2><p class="framework-intro">0.6.0부터 같은 Vite 플러그인으로 .hgs 파일을 가져올 수 있습니다. 화면과 상태는 React·Vue로 만들고, 계산·검증은 한글스크립트 함수로 작성하세요.</p><div class="framework-install"><b>기존 Vite 프로젝트에 설치</b><pre>npm install --save-dev @uiwwsw/hangulscript@^0.6.0</pre></div><div class="framework-grid"><article><h3>React + Vite</h3><p>공통 플러그인을 등록하고 <code>discount.hgs</code>의 함수를 버튼 이벤트에서 호출합니다.</p><pre>import { defineConfig } from &#x27;vite&#x27;;
 import react from &#x27;@vitejs/plugin-react&#x27;;
 import hangulscript from &#x27;@uiwwsw/hangulscript/vite&#x27;;
 
@@ -102,13 +102,12 @@ function 계산() {
     &lt;output aria-live=&quot;polite&quot;&gt;{{ 결과 === null ? &#x27;입력 후 계산하기를 눌러 주세요.&#x27; : typeof 결과 === &#x27;number&#x27; ? `결제 금액: ${결과.toLocaleString(&#x27;ko-KR&#x27;)}원` : 결과 }}&lt;/output&gt;
   &lt;/main&gt;
 &lt;/template&gt;
-</pre></details><a class="framework-link" href="https://github.com/uiwwsw/hangulscript/tree/main/examples/vue-vite">실행 가능한 Vue 예제 전체 보기 ↗</a></article></div><details><summary>공통 한글스크립트 함수 · src/discount.hgs</summary><pre>문장으로 시작
-결제금액(가격: number, 할인율: number)를 정의한다:
+</pre></details><a class="framework-link" href="https://github.com/uiwwsw/hangulscript/tree/main/examples/vue-vite">실행 가능한 Vue 예제 전체 보기 ↗</a></article></div><details><summary>공통 한글스크립트 함수 · src/discount.hgs</summary><pre>결제금액(가격: 숫자, 할인율: 숫자)를 정의한다:
     만약 !Number.isFinite(가격) || !Number.isFinite(할인율) || 가격 &lt; 0 || 할인율 &lt; 0 || 할인율 &gt; 100 이라면:
         돌려주기 &quot;가격은 0 이상, 할인율은 0~100 사이로 입력하세요&quot;
     돌려주기 가격 - 반올림(가격 * 할인율 / 100)
 
-export { 결제금액 }
+결제금액을 공개한다
 </pre></details><p class="framework-intro">완성된 예제 폴더에서 <code>npm ci</code> 후 <code>npm run dev</code>를 실행하세요. 가격 10000, 할인율 20을 입력하면 결제 금액 8,000원이 나옵니다. 예제의 Vite는 Node.js 20.19 이상(20.x) 또는 22.12 이상이 필요합니다.</p><p class="framework-limit">Vite 플러그인은 JavaScript 변환을 제공합니다. TypeScript에서 타입 검사와 선언 파일이 필요하면 <code>ksc build</code>로 만든 .js·.d.ts를 가져오세요. 데모의 UI 문장을 React·Vue 컴포넌트로 자동 변환하지는 않습니다.</p><a class="primary" href="https://github.com/uiwwsw/hangulscript/blob/main/docs/frameworks.md">설치부터 컴포넌트 연결까지 읽기 ↗</a></section>
 </main><footer><a class="brand" href="/">ㅎ 한글스크립트</a><p>우리말로 배우고, 웹으로 넓히다.</p><a href="https://github.com/uiwwsw/hangulscript/issues">의견 보내기 ↗</a></footer>
 </body></html>

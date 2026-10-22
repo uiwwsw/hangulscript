@@ -12,7 +12,7 @@ function usage() {
 옵션:
   -o, --out-dir <경로>   출력 디렉터리 (기본: 입력 파일 옆)
   --check                타입 검사만 실행
-  --typescript           기존 .ts 출력 모드
+  --typescript           변환된 TypeScript 확인용 출력
   -h, --help             도움말
 
 문장형은 실험판입니다. run은 신뢰하는 로컬 코드만 실행하세요.`);
@@ -34,7 +34,7 @@ async function main() {
     } else if (arg === '--check') check = true;
     else if (arg === '--typescript') typescript = true;
     else if (arg.startsWith('-')) throw new Error(`알 수 없는 옵션: ${arg}`);
-    else if (!(/\.(?:hgs|ks)$/.test(arg))) throw new Error('입력 파일은 .hgs 확장자여야 합니다.');
+    else if (!(/\.hgs$/.test(arg))) throw new Error('입력 파일은 .hgs 확장자여야 합니다.');
     else inputs.push(arg);
   }
   if (!inputs.length) throw new Error('입력 .hgs 파일을 지정하세요.');

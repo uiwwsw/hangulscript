@@ -1,201 +1,93 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { compileString } from '../src/index.js';
+import vm from 'node:vm';
+import ts from 'typescript';
+import { compileSource, buildSource, lintSource } from '../src/index.js';
 
-const fixture = `상수 이름 = "철수";
-변수 나이 = 12;
-
-함수 인사(사람이름: 문자열): 문자열 {
-  만약 (나이 >= 20) {
-    반환 \`안녕 \${사람이름}!\`;
-  } 아니면 {
-    반환 \`안녕 아직 \${나이}살!\`;
-  }
+function run(source) {
+  const logs = [];
+  const javascript = ts.transpileModule(compileSource(source), { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext } }).outputText;
+  vm.runInNewContext(javascript, { console: { log: (...values) => logs.push(JSON.stringify(values)) } }, { timeout: 1000 });
+  return logs;
+}
+async function load(source) {
+  const { javascript } = buildSource(source);
+  return import('data:text/javascript;base64,' + Buffer.from(javascript).toString('base64'));
 }
 
-클래스 사람 {
-  생성자(이름: 문자열) {
-    이것.이름 = 이름;
-  }
-
-  함수 소개(): 문자열 {
-    반환 \`\${이것.이름}\`;
-  }
-}
-
-콘솔.출력(인사(이름));`;
-
-test('compileString converts korean keywords to TypeScript', () => {
-  const output = compileString(fixture);
-  assert.match(output, /const 이름 = "철수";/);
-  assert.match(output, /let 나이 = 12;/);
-  assert.match(output, /function 인사\(사람이름: string\): string {/);
-  assert.match(output, /if \(나이 >= 20\)/);
-  assert.match(output, /} else {/);
-  assert.match(output, /class 사람 {/);
-  assert.match(output, /constructor\(이름: string\)/);
-  assert.match(output, /소개\(\): string {/);
-  assert.match(output, /console.log\(인사\(이름\)\);/);
+test('sentence mode starts directly with code and rejects obsolete start markers', () => {
+  assert.deepEqual(run('이름은 "세상"이다\n출력(이름)'), ['["세상"]']);
+  for (const marker of ['문장으로 시작', '문장으로 시작.']) assert.throws(() => compileSource(marker + '\n출력(1)'), /시작 표기/);
 });
 
-test('async methods inside class drop function keyword', () => {
-  const source = `클래스 서비스 {
-  비동기함수 호출(): Promise<문자열> {
-    반환 "ok";
+test('keyword and raw JS statement modes are rejected instead of falling back', () => {
+  for (const old of ['상수 값 = 1;', '변수 값 = 1;', '함수 인사() { 반환 1; }', '클래스 사람 {}', '내보내기 { 값 }', '콘솔.출력(1)', 'const x = 1;', 'function f() {}', 'export { x };']) {
+    assert.throws(() => compileSource(old), /1행/);
   }
-}`;
-  const output = compileString(source);
-  assert.match(output, /async 호출\(\): Promise<string>/);
 });
 
-test('translates new keyword and common globals', () => {
-  const source = `상수 자료 = 새로운 맵<문자열, 숫자>();
-상수 값 = 새로운 객체();
-상수 집합 = 새로운 세트<숫자>();
-상수 약맵 = 새로운 약한맵();
-상수 약세트 = 새로운 약한세트();
-상수 약속 = 새로운 프로미스<문자열>((완료) => 완료("ok"));
-상수 오늘 = 새로운 날짜();
-상수 오류값 = 새로운 오류("문제");
-상수 정규식값 = 새로운 정규식("a");
-상수 데이터 = 제이슨;
-상수 최대값 = 수학;`;
-  const output = compileString(source);
-  assert.match(output, /const 자료 = new Map<string, number>\(\);/);
-  assert.match(output, /const 값 = new Object\(\);/);
-  assert.match(output, /const 집합 = new Set<number>\(\);/);
-  assert.match(output, /const 약맵 = new WeakMap\(\);/);
-  assert.match(output, /const 약세트 = new WeakSet\(\);/);
-  assert.match(output, /const 약속 = new Promise<string>\(/);
-  assert.match(output, /const 오늘 = new Date\(\);/);
-  assert.match(output, /const 오류값 = new Error\("문제"\);/);
-  assert.match(output, /const 정규식값 = new RegExp\("a"\);/);
-  assert.match(output, /const 데이터 = JSON;/);
-  assert.match(output, /const 최대값 = Math;/);
+test('literals, templates, regexes, comments and property names keep their contents', () => {
+  const source = '# 상수 함수 참\n객체는 { 참: "거짓" }이다\n참가자는 "상수 함수 참"이다\n출력(객체.참, 참가자, /참/.test("참"), `문자 참: ${참}`)';
+  assert.deepEqual(run(source), ['["거짓","상수 함수 참",true,"문자 참: true"]']);
 });
 
-test('translates extended control flow, module, and type keywords', () => {
-  const source = `가져오기 기본모듈 프롬 "./module";
-가져오기 { 읽기파일 } 에서 "fs";
+test('typed variables, fixed values, Unicode names and nested function signatures work', () => {
+  assert.deepEqual(run('값: 숫자는 3이다\n이름은 "한글"으로 고정한다\n더함(가: 숫자, 나 = 2)를 정의한다:\n    안쪽(값: 숫자)를 정의한다:\n        돌려주기 값 + 나\n    돌려주기 안쪽(가)\n출력(더함(값), 이름)'), ['[5,"한글"]']);
+  assert.equal(lintSource('자료형 타입은 Map<문자열, 숫자>이다\n계산(값: Map<문자열, 숫자>, 나: 숫자)를 정의한다:\n    돌려주기 나').hasErrors, false);
+});
 
-스위치 (상태) {
-  경우 "start": {
-    중단;
-  }
-  기본: {
-    계속;
-  }
-}
+test('while, for, break, continue and do/while execute with correct scopes', () => {
+  assert.deepEqual(run('합은 0이다\n각 수를 범위(5)에서:\n    만약 수 == 1 이라면:\n        계속하기\n    만약 수 == 4 이라면:\n        멈추기\n    합 = 합 + 수\n먼저 실행한다:\n    합 = 합 + 1\n합 < 7인 동안 반복한다\n동안 합 < 8:\n    합 = 합 + 1\n출력(합)'), ['[8]']);
+  assert.throws(() => compileSource('멈추기'), /반복 블록/);
+  assert.throws(() => compileSource('돌려주기 1'), /함수 안/);
+  assert.throws(() => compileSource('각 수를 범위(2)에서:\n    출력(수)\n아니면:\n    출력(0)'), /조건 블록/);
+});
 
-실행 {
-  계속;
-} 동안 (거짓);
+test('selection branches do not fall through and default works', () => {
+  assert.deepEqual(run('값은 2이다\n값에 따라:\n    1인 경우:\n        출력("하나")\n    2인 경우:\n        출력("둘")\n    그 밖의 경우:\n        출력("다른 값")'), ['["둘"]']);
+  assert.deepEqual(run('9에 따라:\n    1인 경우:\n        출력(1)\n    그 밖의 경우:\n        출력(9)'), ['[9]']);
+});
 
-상수 목록 = [1, 2, 3];
-상수 객체 = { 삭제: 참 };
+test('try, catch, throw and finally use sentence blocks', () => {
+  assert.deepEqual(run('시도한다:\n    오류를 일으킨다 새 Error("문제")\n오류를 잡으면:\n    출력(String(오류))\n마지막으로:\n    출력("마침")'), ['["Error: 문제"]','["마침"]']);
+  assert.throws(() => compileSource('오류를 잡으면:\n    출력(1)'), /시도한다/);
+});
 
-반복 (상수 항목 오브 목록) {
-  콘솔.출력(항목);
-}
+test('async await and generators are executable and typed', async () => {
+  const module = await load('비동기로 계산(값: 숫자)를 정의한다:\n    결과는 기다리기 Promise.resolve(값 * 2)이다\n    돌려주기 결과\n차례로 목록()를 정의한다:\n    내주기 1\n    내주기 2\n{ 계산, 목록 }을 공개한다');
+  assert.equal(await module.계산(7), 14);
+  assert.deepEqual([...module.목록()], [1, 2]);
+});
 
-반복 (상수 키 안에 객체) {
-  만약 (키 === "삭제") {
-    삭제 객체[키];
-  }
-}
+test('class construction, inheritance, methods and getter/setter execute', async () => {
+  const module = await load('사람 클래스를 정의한다:\n    이름: 문자열은 ""이다\n    생성할 때(이름: 문자열):\n        자신.이름 = 이름\n    소개()를 정의한다:\n        돌려주기 자신.이름\n    별명을 읽으면:\n        돌려주기 자신.이름\n    별명을 바꾸면(값: 문자열):\n        자신.이름 = 값\n사람을 이어받아 학생 클래스를 정의한다:\n    생성할 때(이름: 문자열):\n        부모(이름)\n학생을 공개한다');
+  const person = new module.학생('하늘');
+  assert.equal(person.소개(), '하늘'); person.별명 = '바다'; assert.equal(person.별명, '바다');
+});
 
-함수* 생성기() {
-  양보 1;
-}
+test('interfaces, aliases, enums and generics produce JS and precise declarations', async () => {
+  const source = '상자<T> 자료형을 정의한다:\n    값: T\n숫자상자 타입은 상자<숫자>이다\n상태 열거값을 정의한다:\n    준비\n    완료\n복사<T>(값: T)를 정의한다:\n    돌려주기 값\n{ 복사, 상태 }를 공개한다';
+  const built = buildSource(source);
+  assert.match(built.declaration, /복사<T>\(값: T\): T/);
+  const module = await load(source); assert.equal(module.복사(3), 3); assert.equal(module.상태.완료, 1);
+});
 
-열거형 상태 { 준비, 완료 }
+test('ES module named/default imports and exports use sentence forms', async () => {
+  const dependency = 'data:text/javascript,export const 값=7;export default 5;';
+  const javascript = ts.transpileModule(compileSource(`"${dependency}"에서 { 값 }을 가져온다\n"${dependency}"에서 기본값을 가져온다\n합은 값 + 기본값이다\n합을 기본으로 공개한다`), { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext } }).outputText;
+  const module = await import('data:text/javascript;base64,' + Buffer.from(javascript).toString('base64'));
+  assert.equal(module.default, 12);
+});
 
-선언 추상 클래스 기초서비스 {
-  추상 초기화(): 무효;
-}
-
-클래스 서비스 확장 기초서비스 {
-  공개 읽기전용 이름: 문자열;
-  비공개 정적 인스턴스: 서비스 | 정의안됨;
-
-  생성자(이름: 문자열) {
-    상위();
-    이것.이름 = 이름;
-  }
-
-  초기화(): 무효 {
-    반환;
-  }
-
-  정적 얻기 기본(): 서비스 | 정의안됨 {
-    반환 이것.인스턴스 ?? 정의안됨;
-  }
-
-  정적 설정 기본(값: 서비스 | 정의안됨) {
-    이것.인스턴스 = 값;
-  }
-}
-
-상수 구성 = { 모드: "개발" } 만족 { 모드: 문자열 };
-타입 구성키 = 키오브 타입오브 구성;
-타입 대기값<입력> = 입력 확장 프로미스<인퍼 결과> ? 결과 : 입력;
-
-상수 길이 = "3" 처럼 숫자;
-상수 폭 = 4 애즈 숫자;
-
-함수 문자열인지(값: 아무거나): 값 이다 문자열 {
-  반환 타입오브 값 === "string";
-}
-
-함수 숫자인지(값: 아무거나): 값 이즈 숫자 {
-  반환 참;
-}
-
-상수 인스턴스 = 새로운 서비스("테스트");
-`;
-  const output = compileString(source);
-  assert.match(output, /import 기본모듈 from "\.\/module";/);
-  assert.match(output, /import \{ 읽기파일 \} from "fs";/);
-  assert.match(output, /switch \(상태\)/);
-  assert.match(output, /case "start":/);
-  assert.match(output, /default:/);
-  assert.match(output, /break;/);
-  assert.match(output, /continue;/);
-  assert.match(output, /do {/);
-  assert.match(output, /for \(const 항목 of 목록\)/);
-  assert.match(output, /for \(const 키 in Object\)/);
-  assert.match(output, /delete Object\[키\];/);
-  assert.match(output, /function\* 생성기\(\)/);
-  assert.match(output, /yield 1;/);
-  assert.match(output, /enum 상태 {/);
-  assert.match(output, /declare abstract class 기초서비스 {/);
-  assert.match(output, /public readonly 이름: string;/);
-  assert.match(output, /private static 인스턴스: 서비스 \| undefined;/);
-  assert.match(output, /constructor\(이름: string\)/);
-  assert.match(output, /super\(\);/);
-  assert.match(output, /static get default\(\): 서비스 \| undefined {/);
-  assert.match(output, /static set default\(값: 서비스 \| undefined\)/);
-  assert.match(output, /const 구성 = \{ 모드: "개발" \} satisfies \{ 모드: string \};/);
-  assert.match(output, /type 구성키 = keyof typeof 구성;/);
-  assert.match(output, /type 대기값<입력> = 입력 extends Promise<infer 결과> \? 결과 : 입력;/);
-  assert.match(output, /const 길이 = "3" as number;/);
-  assert.match(output, /const 폭 = 4 as number;/);
-  assert.match(output, /function 문자열인지\(값: any\): 값 is string {/);
-  assert.match(output, /return typeof 값 === "string";/);
-  assert.match(output, /function 숫자인지\(값: any\): 값 is number {/);
-  assert.match(output, /const 인스턴스 = new 서비스\("테스트"\);/);
+test('all 15 standard helpers work, including invalid and bounded input cases', () => {
+  const result = run('목록은 [3, 1, 2]이다\n추가(목록, 4)\n출력(길이(목록), 포함(목록, 4), 합계(목록), 정렬(목록))\n출력(나누기("가,나", ","), 잇기(["가", "나"], "-"), 숫자로("2"), 다듬기(" 가 "))\n출력(반올림(1.234, 2), 평균(목록), 최솟값(목록), 최댓값(목록), 범위(3, 0, -1))');
+  assert.deepEqual(result, ['[4,true,10,[1,2,3,4]]','[["가","나"],"가-나",2,"가"]','[1.23,2.5,1,4,[3,2,1]]']);
+  for (const value of ['숫자로("")', '숫자로("NaN")', '평균([])', '최솟값([])', '최댓값([])', '범위(0, 100001)', '반올림(1, 11)']) assert.throws(() => run(`출력(${value})`));
 });
 
 
-test('class normalization preserves strings, comments and nested functions', () => {
-  const source = '클래스 예제 { 함수 메서드() { 함수 내부() { 반환 1; } 반환 내부(); } }\n상수 문장 = "class { function 인사() }";\n// class { function 주석() }';
-  const output = compileString(source);
-  assert.ok(output.includes('메서드() { function 내부()'));
-  assert.ok(output.includes('"class { function 인사() }"'));
-  assert.ok(output.includes('// class { function 주석() }'));
-});
-
-test('console alias respects identifier boundaries', () => {
-  assert.equal(compileString('내콘솔.출력(1); 콘솔.출력값; 콘솔.출력(2);'),
-    '내콘솔.출력(1); 콘솔.출력값; console.log(2);');
+test('parameter defaults and names matching type aliases remain correct', async () => {
+  const module = await load('확인(숫자: 숫자, 사용 = 참)를 정의한다:\n    돌려주기 사용 ? 숫자 : 0\n확인을 공개한다');
+  assert.equal(module.확인(7), 7);
+  assert.equal(module.확인(7, false), 0);
 });

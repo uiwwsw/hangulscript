@@ -44,7 +44,7 @@ test('UI protocol bounds descriptors and rejects invalid input without interpret
 test('Vite plugin emits importable JS for shared React and Vue business logic', async () => {
   const plugin = hangulscript();
   assert.equal(plugin.transform('', '/app.tsx'), null);
-  const result = plugin.transform('문장으로 시작\nexport function 할인(가격: number, 비율: number) { return 가격 * (1 - 비율 / 100); }', '/discount.hgs');
+  const result = plugin.transform('할인(가격: 숫자, 비율: 숫자)를 정의한다:\n    돌려주기 가격 * (1 - 비율 / 100)\n할인을 공개한다', '/discount.hgs');
   assert.doesNotMatch(result.code, /가격: number/);
   const module = await import('data:text/javascript;base64,' + Buffer.from(result.code).toString('base64'));
   assert.equal(module.할인(10000, 20), 8000);

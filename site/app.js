@@ -1,8 +1,7 @@
-import { tools, defaults, uiExample } from './examples.js';
+import { tools, uiExample } from './examples.js';
 const $ = id => document.getElementById(id);
 const examples = {
-  scores: `문장으로 시작
-# 우리 반 점수를 분석해 봅시다
+  scores: `# 우리 반 점수를 분석해 봅시다
 점수들은 [75, 92, 88, 64, 97]이다
 합격자들은 []이다
 
@@ -13,37 +12,31 @@ const examples = {
 출력("합격 점수:", 정렬(합격자들))
 출력("평균 점수:", 합계(점수들) / 길이(점수들))
 출력("합격 인원:", 길이(합격자들))`,
-  hello: `문장으로 시작
-이름은 "세상"이다
+  hello: `이름은 "세상"이다
 
 인사(누구)를 정의한다:
     돌려주기 "안녕, " + 누구 + "!"
 
 출력(인사(이름))`,
-  loop: `문장으로 시작
-단은 7이다
+  loop: `단은 7이다
 각 수를 범위(1, 10)에서:
-    출력(단 + " × " + 수 + " = " + 단 * 수)`,
-  legacy: `상수 이름 = "철수";
-함수 인사(사람: 문자열): 문자열 {
-  반환 "안녕, " + 사람;
-}
-콘솔.출력(인사(이름));`
+    출력(단 + " × " + 수 + " = " + 단 * 수)`
 };
 function selectExample() {
   const key = $('example').value;
-  $('tool-inputs').hidden = true;
   $('source').value = tools[key] ? uiExample(key) : examples[key];
   uiValues = {}; uiAction = ''; $('preview-content').replaceChildren();
   schedule();
-  // Only bundled, trusted examples are opened automatically. Shared code needs Run.
-  if (tools[key]) run();
+  // Built-in controls share the example schema; execute code only on a user's action.
+  if (tools[key]) renderUI([
+    ...tools[key].fields.map(field => ({ type: field.options ? 'select' : field.type, label: field.label, value: field.value, ...(field.options ? { options: field.options } : {}) })),
+    { type: 'button', label: key === 'text' ? '정리하기' : '계산하기' }
+  ]);
 }
 let uiValues = {};
 let uiAction = '';
 let pendingUI;
 let runVersion = 0;
-$('tool-inputs').addEventListener('submit', e => e.preventDefault());
 let javascript = '';
 let frame;
 let timer;
@@ -113,7 +106,6 @@ async function run(action = '') {
   const execution = ++runVersion;
   uiAction = typeof action === 'string' ? action : '';
   pendingUI = null;
-  if (!$('tool-inputs').hidden && !$('tool-inputs').reportValidity()) return;
   stop(); clearTimeout(debounce);
   const version = editVersion;
   $('run').disabled = true;
@@ -160,7 +152,7 @@ try {
   }
 } catch { $('output').textContent = '공유 링크를 읽을 수 없어 기본 예제를 열었습니다.'; }
 $('example').addEventListener('change', selectExample);
-$('source').addEventListener('input', () => { $('tool-inputs').hidden = true; uiValues = {}; $('preview-content').replaceChildren(); schedule(); });
+$('source').addEventListener('input', () => { uiValues = {}; $('preview-content').replaceChildren(); schedule(); });
 $('source').addEventListener('keydown', event => {
   if (event.key === 'Tab') { event.preventDefault(); $('source').setRangeText('    ', $('source').selectionStart, $('source').selectionEnd, 'end'); schedule(); }
   if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') run();

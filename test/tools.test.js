@@ -19,11 +19,11 @@ test('practical tools produce useful default results', () => {
 test('invalid inputs and calculator division by zero give explicit outcomes', () => {
   assert.deepEqual(execute(tools.calculator.source({left:1,right:0,operation:'나누기'})), ['계산 결과: 0으로 나눌 수 없습니다']);
   assert.throws(() => execute(tools.statistics.source({numbers:'10, , 30'})), /빈 문자열/);
-  assert.throws(() => execute('문장으로 시작\n출력(평균([]))'), /빈 목록/);
+  assert.throws(() => execute('출력(평균([]))'), /빈 목록/);
   assert.deepEqual(execute(tools.discount.source({price:100,rate:200})), ['가격은 0 이상, 할인율은 0~100 사이로 입력하세요']);
 });
 test('build emits JS and declarations with exported function types', () => {
-  const built = buildSource('문장으로 시작\n더함(가: 숫자, 나: 숫자)를 정의한다:\n    돌려주기 가 + 나\n내보내기 { 더함 }');
+  const built = buildSource('더함(가: 숫자, 나: 숫자)를 정의한다:\n    돌려주기 가 + 나\n더함을 공개한다');
   assert.match(built.javascript,/function 더함\(가, 나\)/);
   assert.match(built.declaration,/declare function 더함\(가: number, 나: number\): number/);
   assert.match(built.declaration,/export \{ 더함 \}/);

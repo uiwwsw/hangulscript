@@ -2,8 +2,7 @@ export const tools = {
   calculator: {
     title: '사칙연산 계산기',
     fields: [{key:'left',label:'첫 번째 수',value:'24',type:'number'},{key:'right',label:'두 번째 수',value:'6',type:'number'},{key:'operation',label:'연산',value:'나누기',options:['더하기','빼기','곱하기','나누기']}],
-    source: v => `문장으로 시작
-첫째는 ${v.left}이다
+    source: v => `첫째는 ${v.left}이다
 둘째는 ${v.right}이다
 연산은 ${JSON.stringify(v.operation)}이다
 
@@ -24,8 +23,7 @@ export const tools = {
   discount: {
     title:'할인 계산기',
     fields:[{key:'price',label:'가격 (원)',value:'32000',type:'number'},{key:'rate',label:'할인율 (%)',value:'15',type:'number'}],
-    source:v=>`문장으로 시작
-가격은 ${v.price}이다
+    source:v=>`가격은 ${v.price}이다
 할인율은 ${v.rate}이다
 만약 가격 < 0 || 할인율 < 0 || 할인율 > 100 이라면:
     출력("가격은 0 이상, 할인율은 0~100 사이로 입력하세요")
@@ -37,8 +35,7 @@ export const tools = {
   statistics: {
     title:'숫자 통계',
     fields:[{key:'numbers',label:'쉼표로 구분한 숫자',value:'10, 20, 30, 40',type:'text'}],
-    source:v=>`문장으로 시작
-입력값은 ${JSON.stringify(v.numbers)}이다
+    source:v=>`입력값은 ${JSON.stringify(v.numbers)}이다
 목록은 []이다
 각 항목을 나누기(입력값, ",")에서:
     추가(목록, 숫자로(항목))
@@ -51,8 +48,7 @@ export const tools = {
   text: {
     title:'문자열 정리기',
     fields:[{key:'text',label:'정리할 문장',value:'  사과, 바나나, 사과, 포도  ',type:'text'}],
-    source:v=>`문장으로 시작
-원문은 ${JSON.stringify(v.text)}이다
+    source:v=>`원문은 ${JSON.stringify(v.text)}이다
 단어들은 []이다
 각 조각을 나누기(다듬기(원문), ",")에서:
     단어는 다듬기(조각)이다
@@ -75,9 +71,9 @@ export function uiExample(key) {
     const call = f.options ? `선택입력(${JSON.stringify(f.label)}, ${JSON.stringify(f.options)}, ${JSON.stringify(f.value)})` : f.type === 'number' ? `숫자입력(${JSON.stringify(f.label)}, ${Number(f.value)})` : `글자입력(${JSON.stringify(f.label)}, ${JSON.stringify(f.value)})`;
     const name = variables[i];
     const particle = (name.charCodeAt(name.length - 1) - 0xAC00) % 28 ? '은' : '는';
-    lines[i + 1] = `${name}${particle} ${call}이다`;
+    lines[i] = `${name}${particle} ${call}이다`;
   }
-  const controls = lines.splice(0, tool.fields.length + 1);
+  const controls = lines.splice(0, tool.fields.length);
   const body = lines.join('\n').trim().replaceAll('출력(', '보여주기(');
   // Each result has one value; multi-part console expressions become readable text.
   const resultBody = body.replace(/보여주기\(("[^"]*")\)/g, '보여주기("안내", $1)').replace(/보여주기\("(할인액:|결제 금액:)", (.+), "원"\)/g, '보여주기("$1", $2 + " 원")');

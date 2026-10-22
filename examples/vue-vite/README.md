@@ -1,6 +1,6 @@
 # 한글스크립트 + Vue 할인 계산기
 
-실제 npm 패키지 `@uiwwsw/hangulscript@0.5.0`을 사용합니다.
+실제 npm 패키지 `@uiwwsw/hangulscript@0.6.0`을 사용합니다.
 Node.js 20.19 이상(20.x), 또는 22.12 이상이 필요합니다. Node.js 24에서 검증했습니다.
 
 ```bash

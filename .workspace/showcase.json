@@ -7,9 +7,9 @@
   "symbol": "ㅎ",
   "color": "#174d3d",
   "summary": "한글 문장으로 배우고 웹에서 실행하는 실험적 프로그래밍 언어",
-  "description": "한글스크립트(HangulScript)는 한글 문장과 들여쓰기로 도구를 만드는 실험적 언어입니다. 브라우저에서 입력창·버튼·결과 화면이 있는 계산기·할인·통계·문자열 예제를 실행하고 코드를 공유할 수 있습니다. JavaScript와 .d.ts를 생성하며 React·Vue용 공통 Vite 변환 플러그인을 제공합니다.",
+  "description": "한글스크립트(HangulScript)는 첫 줄부터 문장형으로 작성하는 실험적 언어입니다. 함수·반복·모듈·비동기·예외·클래스를 한글 문장으로 표현하고 JavaScript와 .d.ts로 빌드합니다. 브라우저 UI 예제와 React·Vue 공통 Vite 플러그인을 제공합니다.",
   "features": [
-    "한글 문장형 .hgs와 JavaScript·타입 선언 빌드",
+    "시작 표기 없는 문장형 전용 .hgs와 JS·타입 선언 빌드",
     "코드로 만드는 입력창·선택창·버튼·결과 카드",
     "계산기·할인·통계·문자열 UI 예제 4종",
     "React·Vue 공통 Vite 플러그인과 실행 예제·연동 가이드"
@@ -31,7 +31,7 @@
   ],
   "evidence": {
     "verifiedAt": "2026-10-22",
-    "note": "2026-10-22: Production UI examples verified in Chrome: calculator input action returns 6, discount 10000 at 20 percent returns 8000, statistics average 25 and text deduplication 3 words. 20 tests pass. Installed 0.5.0 tarball builds React JSX and Vue SFC projects with Vite 8.3.5 and .hgs imports. npm 0.5.0 lifecycle status is published; public registry installation and Vite export execution verified. React and Vue runnable example projects use public 0.5.0, include lockfiles and pass production builds. README and live framework guide cover installation, components, Node requirements and typed prebuild usage; CI builds both examples."
+    "note": "2026-10-22: 0.6.0 removes keyword source mode, start markers and .ks input. 27 tests pass for core control flow, modules, async/generator, exceptions, classes, generics, standard helpers, UI protocol and CLI JS/declaration execution. All 13 .hgs examples typecheck; React JSX and Vue SFC builds pass with the 0.6.0 tarball. Production Chrome discount UI computes 10000 at 20 percent to 8000 without a start marker. npm 0.6.0 lifecycle status is published. Production statistics UI returns count 4, sum 100, average 25, minimum 10 and maximum 40."
   },
   "en": "HangulScript"
 }

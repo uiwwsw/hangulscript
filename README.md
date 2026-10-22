@@ -8,10 +8,9 @@
 Python의 들여쓰기와 익숙한 기본 함수, JavaScript의 표현식과 웹 생태계,
 TypeScript의 타입 검사를 결합합니다. 소스 확장자는 **`.hgs`**입니다.
 
-[온라인에서 실행하기](https://hangulscript.vercel.app/) · [React·Vue 사용법](docs/frameworks.md) · [문법 명세](LANGUAGE.md) · [릴리스](https://github.com/uiwwsw/hangulscript/releases) · [의견 보내기](https://github.com/uiwwsw/hangulscript/issues)
+[온라인에서 실행하기](https://hangulscript.vercel.app/) · [React·Vue 사용법](docs/frameworks.md) · [문법 명세](LANGUAGE.md) · [변경 내역](CHANGELOG.md) · [릴리스](https://github.com/uiwwsw/hangulscript/releases) · [의견 보내기](https://github.com/uiwwsw/hangulscript/issues)
 
-```ks
-문장으로 시작
+```text
 점수들은 [75, 92, 88]이다
 각 점수를 점수들에서:
     만약 점수 >= 80 이라면:
@@ -79,7 +78,7 @@ npx ksc --typescript examples/math-library.hgs --out-dir output
 ```
 
 **0.2에서 변경:** CLI의 기본 출력이 `.ts`에서 **`.js` + `.d.ts`**로 바뀝니다.
-기존 자동화가 `.ts`를 기대한다면 `--typescript`를 추가하세요.
+중간 TypeScript를 확인하려면 `--typescript`를 추가하세요. 소스는 문장형 하나만 지원합니다.
 `compileSource`·`compileString` API는 기존처럼 TypeScript 문자열을 반환합니다.
 
 `run`은 신뢰하는 코드를 로컬 Node.js에서 실행합니다. 온라인 데모와 달리 격리·2초 제한이 없습니다.
@@ -87,11 +86,10 @@ npx ksc --typescript examples/math-library.hgs --out-dir output
 
 ### 배포 산출물 사용
 
-```ks
-문장으로 시작
+```text
 더함(가: 숫자, 나: 숫자)를 정의한다:
     돌려주기 가 + 나
-내보내기 { 더함 }
+더함을 공개한다
 ```
 
 생성한 `.js`에는 실행 코드가, `.d.ts`에는 다음과 같은 타입 계약이 담깁니다.
@@ -114,8 +112,9 @@ ESM을 지원하는 번들러를 사용하세요. JS와 .d.ts를 함께 배포�
 
 ## 문장형 문법
 
-```ks
-문장으로 시작
+문장형이 유일한 기본 문법입니다. 별도의 시작 문장 없이 첫 줄부터 작성합니다.
+
+```text
 이름은 "하늘"이다
 횟수는 3이다
 
@@ -135,16 +134,6 @@ ESM을 지원하는 번들러를 사용하세요. JS와 .d.ts를 함께 배포�
 - 반복: `각 항목을 목록에서:`와 `동안 식:`. `멈추기`, `계속하기` 지원.
 - 블록은 콜론 뒤에 공백으로 들여씁니다. 탭은 허용하지 않습니다.
 - 행 전체 주석은 `#`입니다. 표현식은 JS의 연산자·배열·객체를 사용합니다.
-
-기존 키워드형도 사용할 수 있습니다.
-
-```ks
-상수 이름 = "철수";
-함수 인사(사람: 문자열): 문자열 {
-  반환 "안녕, " + 사람;
-}
-콘솔.출력(인사(이름));
-```
 
 지원 범위와 제약은 [LANGUAGE.md](LANGUAGE.md)에 정리했습니다.
 
@@ -189,17 +178,11 @@ ESM을 지원하는 번들러를 사용하세요. JS와 .d.ts를 함께 배포�
 
 - **컴파일 전용 Worker:** TypeScript 파싱·변환·출력 정리를 UI 스레드 밖에서 실행.
 - **180ms 입력 지연과 결과 재사용:** 키를 누를 때마다 변환하지 않고, 같은 소스는 다시 컴파일하지 않음.
-- **키워드 첫 글자별 탐색:** 모든 문자에서 전체 키워드 목록을 순회하지 않음.
-- **불필요한 재처리 생략:** 기본 함수 코드를 다시 치환하지 않고, 클래스가 없으면 클래스 보정도 생략.
+- **단일 문장형 파서:** 모드 자동 감지·키워드 치환·클래스 사후 보정을 제거하고 문장 블록을 직접 생성.
 - **실행 출력 제한:** 부모 페이지에서도 최대 100행·행당 1,000자로 제한.
 - **범위 제한:** `범위`는 최대 100,000개 항목. 최솟값·최댓값은 인자 펼치기 없이 순회.
 
-2026-10-22 Node 24.18.0 환경에서 같은 1,000행 선언 코드를 측정했을 때,
-변환 중앙값은 변경 전 약 **4.45ms**, 변경 후 약 **0.65ms**였습니다.
-개선 후 20회 측정 p95는 약 **1.88ms**였고, 작은 코드의 타입 검사·JS/.d.ts 생성은 약 **168ms**였습니다.
-서로 다른 기기·입력·브라우저에서 같은 수치를 보장하는 벤치마크는 아닙니다.
-
-화면 JS는 약 **10.4KB**, 컴파일러 Worker는 약 **3.58MB**입니다(압축 전).
+성능은 `npm run benchmark`로 1,000행 문장형 선언의 변환 시간과 현재 번들 크기를 측정할 수 있습니다.
 Worker 분리는 UI의 파싱·실행 부담을 분리하지만 전체 다운로드를 제거하지 않습니다.
 첫 로딩은 네트워크와 기기에 따라 느릴 수 있습니다.
 
@@ -218,7 +201,7 @@ npm run benchmark
 ```js
 import { buildSource, lintSource } from '@uiwwsw/hangulscript';
 
-const source = '문장으로 시작\n출력(합계([1, 2, 3]))';
+const source = '출력(합계([1, 2, 3]))';
 const { javascript, declaration } = buildSource(source);
 const { hasErrors } = lintSource(source);
 ```
@@ -227,7 +210,7 @@ Node 파일 API 없이 변환만 필요하면:
 
 ```js
 import { compileSource } from '@uiwwsw/hangulscript/browser';
-const typescript = compileSource('문장으로 시작\n출력("안녕")');
+const typescript = compileSource('출력("안녕")');
 ```
 
 이 진입점도 TypeScript 스캐너를 포함합니다. 브라우저에서는 데모처럼 Worker에서 사용하세요.
@@ -246,16 +229,16 @@ npm pack --dry-run
 Vercel은 GitHub main과 연결되어 `site-dist/`를 배포합니다.
 `SITE_URL`에 HTTPS origin을 지정하면 canonical·Open Graph·robots·sitemap 주소를 바꿀 수 있습니다.
 
-Vite 연동은 0.5.0부터 제공합니다. 독립 AST·원본 `.hgs` 소스맵·LSP·모듈 그래프는 향후 과제입니다.
+Vite 연동을 제공합니다. 독립 AST·원본 `.hgs` 소스맵·LSP·모듈 그래프는 향후 과제입니다.
 
 ## 라이선스
 
 [MIT](LICENSE)
 
-## 이름과 확장자 이전 (0.4)
+## 이름과 확장자
 
 제품명은 한글스크립트(HangulScript), 패키지는 `@uiwwsw/hangulscript`입니다.
-기본 소스 확장자는 `.hgs`이며 기존 `.ks` 파일도 CLI에서 계속 지원합니다.
+0.6부터 소스 확장자는 `.hgs`만 지원하며 키워드형과 시작 표기를 제거했습니다. 기존 코드는 [문법 명세](LANGUAGE.md)의 문장형으로 옮겨야 합니다.
 이전 패키지에서 이동하려면 `npm uninstall @uiwwsw/koreanscript` 후 새 패키지를 설치하세요.
 
 
@@ -264,7 +247,6 @@ Vite 연동은 0.5.0부터 제공합니다. 독립 AST·원본 `.hgs` 소스맵�
 온라인 데모의 계산기·할인·통계·문자열 예제는 코드에 선언한 실제 화면을 제공합니다.
 
 ```text
-문장으로 시작
 가격은 숫자입력("상품 가격", 10000)이다
 할인율은 숫자입력("할인율", 20)이다
 
@@ -285,10 +267,10 @@ HTML·이벤트 핸들러 문자열을 삽입하지 않습니다.
 
 ## React·Vue에서 .hgs 가져오기
 
-**0.5.0 이상**의 공통 Vite 플러그인을 사용합니다. React/Vue의 화면과 상태 관리에 한글스크립트 계산·검증 함수를 연결할 수 있습니다.
+**0.6.0 이상**의 공통 Vite 플러그인을 사용합니다. React/Vue의 화면과 상태 관리에 한글스크립트 계산·검증 함수를 연결할 수 있습니다.
 
 ```bash
-npm install --save-dev @uiwwsw/hangulscript@^0.5.0
+npm install --save-dev @uiwwsw/hangulscript@^0.6.0
 ```
 
 ```js
@@ -303,10 +285,9 @@ export default defineConfig({ plugins: [hangulscript(), react()] });
 Vue에서는 `@vitejs/plugin-vue`에서 `vue`를 가져와 `[hangulscript(), vue()]`로 설정합니다.
 
 ```text
-문장으로 시작
 결제금액(가격: number, 할인율: number)를 정의한다:
     돌려주기 가격 - 반올림(가격 * 할인율 / 100)
-export { 결제금액 }
+결제금액을 공개한다
 ```
 
 ```js

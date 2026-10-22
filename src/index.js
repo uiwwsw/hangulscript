@@ -141,7 +141,7 @@ export { compileSource };
 /** Compile through TypeScript once, emitting executable JS and declarations in memory. */
 export function buildSource(source, filePath = 'input.hgs') {
   const ts = loadTypeScriptModule();
-  const virtualPath = path.resolve(filePath).replace(/\.(?:hgs|ks)$/i, '') + '.ts';
+  const virtualPath = path.resolve(filePath).replace(/\.hgs$/i, '') + '.ts';
   const compiled = compileSource(source);
   const options = {
     target: ts.ScriptTarget.ES2022,
