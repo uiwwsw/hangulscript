@@ -1,0 +1,8 @@
+@font-face{font-family:SUITE;src:url('/fonts/SUITE-Variable.woff2') format('woff2');font-weight:100 900;font-style:normal;font-display:swap}
+:root{--font-ui:SUITE,-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;--font-code:ui-monospace,SFMono-Regular,Consolas,SUITE,monospace}
+body{font-family:var(--font-ui);-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font-family:inherit}
+h1,h2,h3,p,li{word-break:keep-all;overflow-wrap:anywhere}
+pre,code,textarea,#output{font-family:var(--font-code)}
+pre{word-break:normal;overflow-wrap:normal}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
