@@ -27,7 +27,7 @@
   ],
   "evidence": {
     "verifiedAt": "2026-10-22",
-    "note": "0.3 development: local CLI and 17 tests verified; public demo release verification pending. Public npm 0.2.0 verified."
+    "note": "2026-10-22: Vercel 0.3 demo live; Chrome calculator, discount, statistics and text tools verified, including division by zero. 17 tests and JS/declaration CLI checks passed. npm 0.2.0 publicly verified; 0.3.0 publication awaiting registry confirmation."
   },
   "en": "KoreanScript"
 }
