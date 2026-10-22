@@ -102,7 +102,7 @@ async function transform() {
     const result = await compile(source);
     if (version !== editVersion) return false;
     lastSource = source; lastResult = result;
-    $('compiled').value = result.display;
+    $('compiled').value = $('output-format').value === 'javascript' ? result.displayJavascript : result.display;
     javascript = result.javascript;
     $('status').textContent = `변환 완료 · ${result.duration.toFixed(1)}ms`;
     return true;
@@ -168,6 +168,9 @@ $('source').addEventListener('keydown', event => {
   if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') run();
 });
 $('run').addEventListener('click', run);
+$('output-format').addEventListener('change', () => {
+  if (lastResult) $('compiled').value = $('output-format').value === 'javascript' ? lastResult.displayJavascript : lastResult.display;
+});
 $('share').addEventListener('click', async () => {
   try {
     const bytes = new TextEncoder().encode($('source').value);
