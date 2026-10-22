@@ -257,3 +257,60 @@ Vercel은 GitHub main과 연결되어 `site-dist/`를 배포합니다.
 제품명은 한글스크립트(HangulScript), 패키지는 `@uiwwsw/hangulscript`입니다.
 기본 소스 확장자는 `.hgs`이며 기존 `.ks` 파일도 CLI에서 계속 지원합니다.
 이전 패키지에서 이동하려면 `npm uninstall @uiwwsw/koreanscript` 후 새 패키지를 설치하세요.
+
+
+## 입력창과 버튼으로 도구 만들기
+
+온라인 데모의 계산기·할인·통계·문자열 예제는 코드에 선언한 실제 화면을 제공합니다.
+
+```text
+문장으로 시작
+가격은 숫자입력("상품 가격", 10000)이다
+할인율은 숫자입력("할인율", 20)이다
+
+"계산하기" 버튼을 누르면:
+    결과는 가격 * (1 - 할인율 / 100)이다
+    보여주기("결제 금액", 결과)
+```
+
+`숫자입력`, `글자입력`, `선택입력`, `버튼`, `보여주기`를 지원합니다.
+버튼을 누르면 현재 입력값과 누른 버튼 이름을 전달하여 프로그램을 처음부터 다시 실행합니다.
+일반 변수는 실행 사이에 유지되지 않으며 입력값은 같은 화면을 사용하는 동안 유지됩니다.
+화면 요소 이름은 중복할 수 없고, 한 실행당 최대 40개입니다.
+공유받은 코드는 실행 버튼을 눌러야 시작합니다. 공유 링크에는 코드와 코드의 기본값이 담기며, 미리보기에서 바꾼 입력값은 포함하지 않습니다.
+
+이 화면 함수는 데모의 UI 실행 환경이 필요합니다. Node CLI에서 직접 실행하거나 React/Vue 컴포넌트 안에 넣는 것으로 화면이 생성되지는 않습니다.
+사용자 코드는 격리된 Worker에서 실행하고, 호스트는 제한된 데이터만 받아 입력창과 결과 카드를 만듭니다.
+HTML·이벤트 핸들러 문자열을 삽입하지 않습니다.
+
+## React·Vue에서 .hgs 가져오기
+
+Vite를 사용하는 React와 Vue는 별도 프레임워크 패키지 없이 같은 플러그인을 사용할 수 있습니다.
+
+```js
+// vite.config.js — React
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import hangulscript from '@uiwwsw/hangulscript/vite';
+
+export default defineConfig({ plugins: [hangulscript(), react()] });
+```
+
+Vue에서는 React 플러그인 대신 `@vitejs/plugin-vue`의 `vue()`를 넣습니다.
+
+```text
+// src/discount.hgs
+export function 할인(가격: number, 비율: number) {
+    return 가격 * (1 - 비율 / 100);
+}
+```
+
+```js
+// React 이벤트 핸들러와 Vue setup 등에서 동일하게 사용
+import { 할인 } from './discount.hgs';
+console.log(할인(10000, 20)); // 8000
+```
+
+이 플러그인은 빌드 시 `.hgs`를 JavaScript 모듈로 변환합니다. React/Vue 컴포넌트는 각 프레임워크로 작성하고 한글스크립트 함수로 계산·검증 로직을 공유합니다.
+현재 플러그인은 타입 검사·선언 생성·소스맵을 제공하지 않습니다. 엄격한 타입 연동이 필요하면 `ksc build`로 만든 `.js`와 `.d.ts`를 가져오세요.
+데모의 UI 문장을 React/Vue 컴포넌트로 변환하는 기능은 포함하지 않습니다.

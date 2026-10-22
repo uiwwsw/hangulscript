@@ -7,12 +7,12 @@
   "symbol": "ㅎ",
   "color": "#174d3d",
   "summary": "한글 문장으로 배우고 웹에서 실행하는 실험적 프로그래밍 언어",
-  "description": "한글스크립트(HangulScript)는 한글 문장과 Python식 들여쓰기로 계산기·할인 계산·숫자 통계·문자열 정리 도구를 만들 수 있습니다. JavaScript와 .d.ts를 생성하고, 브라우저 데모에서 코드를 실행·공유할 수 있습니다. 문장형은 실험 단계입니다.",
+  "description": "한글스크립트(HangulScript)는 한글 문장과 들여쓰기로 도구를 만드는 실험적 언어입니다. 브라우저에서 입력창·버튼·결과 화면이 있는 계산기·할인·통계·문자열 예제를 실행하고 코드를 공유할 수 있습니다. JavaScript와 .d.ts를 생성하며 React·Vue용 공통 Vite 변환 플러그인을 제공합니다.",
   "features": [
-    "한글 문장형 .hgs와 15개 기본 함수",
-    "JavaScript + 타입 선언 빌드와 직접 실행",
-    "계산기·통계·문자열 도구 예제",
-    "JavaScript·TypeScript 출력 비교와 하단 고정 실행 결과"
+    "한글 문장형 .hgs와 JavaScript·타입 선언 빌드",
+    "코드로 만드는 입력창·선택창·버튼·결과 카드",
+    "계산기·할인·통계·문자열 UI 예제 4종",
+    "React·Vue 공통 Vite 플러그인"
   ],
   "status": "live",
   "links": [
@@ -31,7 +31,7 @@
   ],
   "evidence": {
     "verifiedAt": "2026-10-22",
-    "note": "2026-10-22: @uiwwsw/hangulscript 0.4.0 registry status published; clean registry installation and CLI calculator output verified. Production demo defaults to JavaScript, supports TypeScript comparison, and keeps results sticky at the viewport bottom. Browser calculator outputs 4. Runner initialization is separate from the 2-second execution budget. 17 tests pass."
+    "note": "2026-10-22: Production UI examples verified in Chrome: calculator input action returns 6, discount 10000 at 20 percent returns 8000, statistics average 25 and text deduplication 3 words. 20 tests pass. Installed 0.5.0 tarball builds React JSX and Vue SFC projects with Vite 8.3.5 and .hgs imports. npm 0.5.0 accepted and validating; 0.4.0 remains previously verified public."
   },
   "en": "HangulScript"
 }

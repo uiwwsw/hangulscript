@@ -1,9 +1,11 @@
+import { uiRuntime } from './ui.js';
 // 문장형 v0.1: deterministic indentation grammar, not natural-language inference.
 export function isSentenceSource(source) {
   return source.split(/\r?\n/).some(line => /^\s*(?:문장으로 시작\s*$|[\p{L}_$][\p{L}\p{N}_$]*(?:은|는)\s+.+이다\s*$|각 .+에서:\s*$|[\p{L}_$][\p{L}\p{N}_$]*\(.*\)를 정의한다:\s*$)/u.test(line));
 }
 
-export const sentenceRuntime = `
+export const sentenceRuntime = `${uiRuntime}
+
 function 출력(...값: unknown[]): void { console.log(...값); }
 function 길이(값: string | readonly unknown[]): number { return 값.length; }
 function 추가<T>(목록: T[], 값: T): void { 목록.push(값); }
@@ -70,6 +72,8 @@ export function compileSentences(source, { includeRuntime = true } = {}) {
       // Unannotated parameters are intentionally dynamic, like Python.
       const signature = match[1].replace(/\((.*)\)$/, (_, params) => '(' + params.split(',').filter(x => x.trim()).map(x => x.includes(':') ? x.trim() : `${x.trim()}: any`).join(', ') + ')');
       output.push(`function ${signature} {`); needsIndent = true;
+    } else if ((match = text.match(/^("(?:[^"\\]|\\.)*") 버튼을 누르면:$/u))) {
+      output.push(`if (버튼(${match[1]})) {`); needsIndent = true;
     } else if ((match = text.match(/^각 (.+?)(?:을|를) (.+)에서:$/u))) {
       if (!/^[\p{L}_$][\p{L}\p{N}_$]*$/u.test(match[1])) fail('반복 변수 이름을 확인하세요.');
       output.push(`for (const ${match[1]} of ${match[2]}) {`); needsIndent = true;

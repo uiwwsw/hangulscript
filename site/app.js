@@ -1,4 +1,4 @@
-import { tools, defaults } from './examples.js';
+import { tools, defaults, uiExample } from './examples.js';
 const $ = id => document.getElementById(id);
 const examples = {
   scores: `문장으로 시작
@@ -32,37 +32,22 @@ const examples = {
 };
 function selectExample() {
   const key = $('example').value;
-  const tool = tools[key];
-  $('tool-inputs').replaceChildren();
-  if (!tool) { $('source').value = examples[key]; schedule(); return; }
-  for (const field of tool.fields) {
-    const label = document.createElement('label'); label.textContent = field.label;
-    const input = document.createElement(field.options ? 'select' : 'input');
-    if (field.options) for (const text of field.options) { const option = document.createElement('option'); option.textContent = option.value = text; input.append(option); }
-    else { input.type = field.type; if (field.type === 'number') input.step = 'any'; }
-    input.name = field.key; input.value = field.value; input.required = true;
-    if (!field.options && field.type === 'text') input.maxLength = 2000;
-    label.append(input); $('tool-inputs').append(label);
-  }
-  $('tool-inputs').hidden = false;
-  const render = () => {
-    const values = {};
-    for (const field of tool.fields) {
-      const input = $('tool-inputs').elements.namedItem(field.key);
-      if (field.type === 'number') {
-        if (input.value.trim() === '' || !Number.isFinite(Number(input.value))) { $('status').textContent = '올바른 숫자를 입력하세요'; $('run').disabled = true; return; }
-        values[field.key] = Number(input.value);
-      } else values[field.key] = input.value;
-    }
-    $('source').value = tool.source(values); schedule();
-  };
-  $('tool-inputs').oninput = render;
-  render();
+  $('tool-inputs').hidden = true;
+  $('source').value = tools[key] ? uiExample(key) : examples[key];
+  uiValues = {}; uiAction = ''; $('preview-content').replaceChildren();
+  schedule();
+  // Only bundled, trusted examples are opened automatically. Shared code needs Run.
+  if (tools[key]) run();
 }
+let uiValues = {};
+let uiAction = '';
+let pendingUI;
+let runVersion = 0;
 $('tool-inputs').addEventListener('submit', e => e.preventDefault());
 let javascript = '';
 let frame;
 let timer;
+let handshake;
 let token;
 let ready = false;
 let compiler;
@@ -114,47 +99,56 @@ async function transform() {
   }
 }
 function schedule() {
-  editVersion++;
+  editVersion++; runVersion++;
   stop(); clearTimeout(debounce);
   $('status').textContent = '입력 중…';
   debounce = setTimeout(transform, 180);
 }
 function stop() {
-  clearTimeout(timer);
+  clearTimeout(timer); clearInterval(handshake);
   frame?.remove(); frame = null; ready = false;
   $('run').disabled = false;
 }
-async function run() {
+async function run(action = '') {
+  const execution = ++runVersion;
+  uiAction = typeof action === 'string' ? action : '';
+  pendingUI = null;
   if (!$('tool-inputs').hidden && !$('tool-inputs').reportValidity()) return;
   stop(); clearTimeout(debounce);
   const version = editVersion;
   $('run').disabled = true;
-  if (!await transform() || version !== editVersion) { $('run').disabled = false; return; }
+  if (!await transform() || version !== editVersion || execution !== runVersion) { $('run').disabled = false; return; }
   outputLines = 0;
   $('output').textContent = ''; $('status').textContent = '실행 중…'; $('run').disabled = true;
   token = crypto.randomUUID();
   frame = document.createElement('iframe');
   frame.hidden = true; frame.sandbox = 'allow-scripts'; frame.src = '/runner.html';
   document.body.append(frame);
+  handshake = setInterval(() => frame?.contentWindow.postMessage({ type: 'hello' }, '*'), 250);
   timer = setTimeout(() => { stop(); $('status').textContent = '실행 환경 로딩 실패'; $('output').textContent = '실행 환경을 불러오지 못했습니다. 다시 실행해 주세요.'; }, 10000);
 }
 window.addEventListener('message', event => {
   if (!frame || event.source !== frame.contentWindow) return;
   if (event.data?.type === 'ready' && !ready) {
-    ready = true; clearTimeout(timer);
+    ready = true; clearTimeout(timer); clearInterval(handshake);
     timer = setTimeout(() => { stop(); $('status').textContent = '실행 시간 초과'; $('output').textContent += '\n2초 제한으로 실행을 종료했습니다.'; }, 2500);
-    frame.contentWindow.postMessage({ type: 'run', code: javascript, token }, '*'); return;
+    frame.contentWindow.postMessage({ type: 'run', code: javascript, token, values: uiValues, action: uiAction }, '*'); return;
   }
   if (event.data?.token !== token) return;
+  if (event.data.type === 'ui') {
+    try { pendingUI = JSON.parse(event.data.text); } catch { pendingUI = null; }
+  }
   if (event.data.type === 'log' && outputLines++ < 100) $('output').textContent += String(event.data.text).slice(0, 1000) + '\n';
   if (event.data.type === 'done' || event.data.type === 'error') {
     const failure = event.data.type === 'error';
+    if (!failure && pendingUI) renderUI(pendingUI);
     if (failure) $('output').textContent += String(event.data.text);
-    if (!$('output').textContent) $('output').textContent = '실행을 마쳤습니다. 출력할 값이 없습니다.';
+    if (!$('output').textContent) $('output').textContent = pendingUI?.length ? '화면을 업데이트했습니다. 도구의 입력값을 바꾸고 버튼을 눌러 보세요.' : '실행을 마쳤습니다. 출력할 값이 없습니다.';
+    document.querySelector('.console').classList.toggle('ui-mode', !failure && !!pendingUI?.length);
     $('status').textContent = failure ? '실행 오류' : '실행 완료'; stop();
   }
 });
-$('source').value = tools.calculator.source(defaults(tools.calculator));
+$('source').value = uiExample('calculator');
 try {
   if (location.hash.startsWith('#code=')) {
     const encoded = location.hash.slice(6);
@@ -166,7 +160,7 @@ try {
   }
 } catch { $('output').textContent = '공유 링크를 읽을 수 없어 기본 예제를 열었습니다.'; }
 $('example').addEventListener('change', selectExample);
-$('source').addEventListener('input', () => { $('tool-inputs').hidden = true; schedule(); });
+$('source').addEventListener('input', () => { $('tool-inputs').hidden = true; uiValues = {}; $('preview-content').replaceChildren(); schedule(); });
 $('source').addEventListener('keydown', event => {
   if (event.key === 'Tab') { event.preventDefault(); $('source').setRangeText('    ', $('source').selectionStart, $('source').selectionEnd, 'end'); schedule(); }
   if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') run();
@@ -189,3 +183,34 @@ $('download').addEventListener('click', () => {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 });
 if (!location.hash.startsWith('#code=')) selectExample(); else transform();
+
+function renderUI(elements) {
+  if (!Array.isArray(elements) || elements.length > 40) return;
+  const content = document.createDocumentFragment();
+  for (const item of elements) {
+    if (!item || typeof item.label !== 'string' || item.label.length > 2000) continue;
+    const label = document.createElement('label');
+    label.textContent = item.label;
+    if (['number', 'text', 'select'].includes(item.type)) {
+      const input = document.createElement(item.type === 'select' ? 'select' : 'input');
+      if (item.type === 'select') {
+        if (!Array.isArray(item.options) || item.options.length > 30) continue;
+        for (const value of item.options) { const option = document.createElement('option'); option.textContent = option.value = String(value).slice(0, 2000); input.append(option); }
+      } else { input.type = item.type; if (item.type === 'number') input.step = 'any'; else input.maxLength = 2000; }
+      input.value = String(item.value ?? '').slice(0, 2000); input.required = true;
+      input.addEventListener('input', () => { uiValues[item.label] = input.value; });
+      label.append(input); content.append(label);
+    } else if (item.type === 'button') {
+      const button = document.createElement('button'); button.type = 'button'; button.className = 'primary'; button.textContent = item.label;
+      button.addEventListener('click', () => { if ($('preview-content').reportValidity()) run(item.label); }); content.append(button);
+    } else if (item.type === 'result') {
+      const card = document.createElement('div'); card.className = 'preview-result';
+      const title = document.createElement('span'); title.textContent = item.label;
+      const value = document.createElement('strong'); value.textContent = String(item.value ?? '').slice(0, 2000);
+      card.append(title, value); content.append(card);
+    }
+  }
+  $('preview-content').replaceChildren(content);
+  if (!elements.length) $('preview-content').textContent = '이 예제는 아래 실행 결과에 출력합니다. 화면 예제를 선택하면 입력창과 버튼을 볼 수 있습니다.';
+}
+$('preview-content').addEventListener('submit', event => event.preventDefault());

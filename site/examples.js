@@ -63,3 +63,23 @@ export const tools = {
   }
 };
 export function defaults(tool) { return Object.fromEntries(tool.fields.map(f => [f.key,f.value])); }
+
+// The same programs with interactive controls declared in HangulScript.
+export function uiExample(key) {
+  const tool = tools[key];
+  let source = tool.source(defaults(tool));
+  const variables = { calculator: ['첫째', '둘째', '연산'], discount: ['가격', '할인율'], statistics: ['입력값'], text: ['원문'] }[key];
+  const lines = source.split('\n');
+  for (let i = 0; i < tool.fields.length; i++) {
+    const f = tool.fields[i];
+    const call = f.options ? `선택입력(${JSON.stringify(f.label)}, ${JSON.stringify(f.options)}, ${JSON.stringify(f.value)})` : f.type === 'number' ? `숫자입력(${JSON.stringify(f.label)}, ${Number(f.value)})` : `글자입력(${JSON.stringify(f.label)}, ${JSON.stringify(f.value)})`;
+    const name = variables[i];
+    const particle = (name.charCodeAt(name.length - 1) - 0xAC00) % 28 ? '은' : '는';
+    lines[i + 1] = `${name}${particle} ${call}이다`;
+  }
+  const controls = lines.splice(0, tool.fields.length + 1);
+  const body = lines.join('\n').trim().replaceAll('출력(', '보여주기(');
+  // Each result has one value; multi-part console expressions become readable text.
+  const resultBody = body.replace(/보여주기\(("[^"]*")\)/g, '보여주기("안내", $1)').replace(/보여주기\("(할인액:|결제 금액:)", (.+), "원"\)/g, '보여주기("$1", $2 + " 원")');
+  return controls.join('\n') + '\n\n"' + (key === 'text' ? '정리하기' : '계산하기') + '" 버튼을 누르면:\n' + resultBody.split('\n').map(line => line ? '    ' + line : '').join('\n');
+}
