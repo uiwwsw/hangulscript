@@ -7,9 +7,9 @@
   "symbol": "ㅎ",
   "color": "#174d3d",
   "summary": "한글 문장으로 배우고 웹에서 실행하는 실험적 프로그래밍 언어",
-  "description": "한글 문장과 Python식 들여쓰기로 계산기·할인 계산·숫자 통계·문자열 정리 도구를 만들 수 있습니다. JavaScript와 .d.ts를 생성하고, 브라우저 데모에서 코드를 실행·공유할 수 있습니다. 문장형은 실험 단계입니다.",
+  "description": "한글스크립트(HangulScript)는 한글 문장과 Python식 들여쓰기로 계산기·할인 계산·숫자 통계·문자열 정리 도구를 만들 수 있습니다. JavaScript와 .d.ts를 생성하고, 브라우저 데모에서 코드를 실행·공유할 수 있습니다. 문장형은 실험 단계입니다.",
   "features": [
-    "한글 문장형 .ks와 15개 기본 함수",
+    "한글 문장형 .hgs와 15개 기본 함수",
     "JavaScript + 타입 선언 빌드와 직접 실행",
     "계산기·통계·문자열 도구 예제",
     "Worker 변환과 격리 실행·공유"
@@ -18,16 +18,16 @@
   "links": [
     {
       "platform": "web",
-      "url": "https://koreanscript.vercel.app/"
+      "url": "https://hangulscript.vercel.app/"
     },
     {
       "platform": "source",
-      "url": "https://github.com/uiwwsw/koreanscript"
+      "url": "https://github.com/uiwwsw/hangulscript"
     }
   ],
   "evidence": {
     "verifiedAt": "2026-10-22",
-    "note": "2026-10-22: Vercel 0.3 demo live, four tools and division-by-zero handling verified in Chrome. 17 tests and JS/declaration CLI checks passed. GitHub v0.3.0 package uploaded. Public npm 0.2.0 verified; 0.3.0 upload failed with HTTP 503 after registry retries despite successful MFA."
+    "note": "Repository renamed to uiwwsw/hangulscript. Preparing @uiwwsw/hangulscript 0.4.0 with .hgs default and legacy .ks compatibility; registry publication not yet verified."
   },
-  "en": "KoreanScript"
+  "en": "HangulScript"
 }

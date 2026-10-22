@@ -1,4 +1,4 @@
-name: Verify KoreanScript
+name: Verify HangulScript
 on: [push, pull_request]
 permissions:
   contents: read

@@ -178,7 +178,7 @@ $('share').addEventListener('click', async () => {
 });
 $('download').addEventListener('click', () => {
   const url = URL.createObjectURL(new Blob([$('source').value], { type: 'text/plain;charset=utf-8' }));
-  const link = document.createElement('a'); link.href = url; link.download = 'main.ks'; link.click();
+  const link = document.createElement('a'); link.href = url; link.download = 'main.hgs'; link.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 });
 if (!location.hash.startsWith('#code=')) selectExample(); else transform();

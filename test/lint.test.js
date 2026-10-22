@@ -8,7 +8,7 @@ const validSample = `상수 값: 숫자 = 1;
 }`;
 
 test('lintSource reports no diagnostics for valid code', () => {
-  const result = lintSource(validSample, '예시.ks');
+  const result = lintSource(validSample, '예시.hgs');
   assert.equal(result.hasErrors, false);
   assert.equal(result.diagnostics.length, 0);
 });

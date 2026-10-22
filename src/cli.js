@@ -6,8 +6,8 @@ import path from 'node:path';
 
 function usage() {
   console.log(`사용법:
-  ksc [build] [옵션] <파일.ks ...>  JavaScript와 .d.ts 생성
-  ksc run <파일.ks> [-- 인자 ...]   파일 없이 Node.js로 직접 실행
+  ksc [build] [옵션] <파일.hgs ...>  JavaScript와 .d.ts 생성
+  ksc run <파일.hgs> [-- 인자 ...]   파일 없이 Node.js로 직접 실행
 
 옵션:
   -o, --out-dir <경로>   출력 디렉터리 (기본: 입력 파일 옆)
@@ -34,13 +34,13 @@ async function main() {
     } else if (arg === '--check') check = true;
     else if (arg === '--typescript') typescript = true;
     else if (arg.startsWith('-')) throw new Error(`알 수 없는 옵션: ${arg}`);
-    else if (!arg.endsWith('.ks')) throw new Error('입력 파일은 .ks 확장자여야 합니다.');
+    else if (!(/\.(?:hgs|ks)$/.test(arg))) throw new Error('입력 파일은 .hgs 확장자여야 합니다.');
     else inputs.push(arg);
   }
-  if (!inputs.length) throw new Error('입력 .ks 파일을 지정하세요.');
+  if (!inputs.length) throw new Error('입력 .hgs 파일을 지정하세요.');
   if (check && (outDir || typescript)) throw new Error('--check는 출력 옵션과 함께 사용할 수 없습니다.');
   if (mode === 'run') {
-    if (inputs.length !== 1 || outDir || typescript || check) throw new Error('run에는 .ks 파일 하나와 -- 뒤의 실행 인자만 지정하세요.');
+    if (inputs.length !== 1 || outDir || typescript || check) throw new Error('run에는 .hgs 파일 하나와 -- 뒤의 실행 인자만 지정하세요.');
     const input = path.resolve(inputs[0]);
     const { javascript } = buildSource(await readFile(input, 'utf8'), input);
     const child = spawn(process.execPath, ['--input-type=module', '-', ...programArgs], {
@@ -58,7 +58,7 @@ async function main() {
   }
   const destinations = new Set();
   for (const input of inputs) {
-    const destination = path.resolve(outDir ?? path.dirname(input), path.basename(input, '.ks'));
+    const destination = path.resolve(outDir ?? path.dirname(input), path.parse(input).name);
     if (destinations.has(destination)) throw new Error('출력 파일 이름이 겹칩니다. 파일별로 다른 출력 디렉터리를 사용하세요.');
     destinations.add(destination);
   }
@@ -68,7 +68,7 @@ async function main() {
       if (result.hasErrors) throw new Error(result.formattedDiagnostics);
       console.log(`✅ ${input} 문제 없음`);
     } else if (typescript) {
-      const output = outDir ? path.join(outDir, path.basename(input, '.ks') + '.ts') : null;
+      const output = outDir ? path.join(outDir, path.parse(input).name + '.ts') : null;
       const written = output ? (await compileFile(input, output), output) : await compileFileToDefaultDestination(input);
       console.log(`✅ ${written} 생성됨`);
     } else {

@@ -117,7 +117,7 @@ export async function compileFileToDefaultDestination(inputPath) {
   return outputPath;
 }
 
-export function lintSource(source, filePath = 'input.ks', compilerOptions) {
+export function lintSource(source, filePath = 'input.hgs', compilerOptions) {
   const ts = loadTypeScriptModule();
   const options = compilerOptions ?? getDefaultCompilerOptions(ts);
   const compiled = compileSource(source);
@@ -139,9 +139,9 @@ export async function lintFile(inputPath, compilerOptions) {
 export { compileSource };
 
 /** Compile through TypeScript once, emitting executable JS and declarations in memory. */
-export function buildSource(source, filePath = 'input.ks') {
+export function buildSource(source, filePath = 'input.hgs') {
   const ts = loadTypeScriptModule();
-  const virtualPath = path.resolve(filePath).replace(/\.ks$/i, '') + '.ts';
+  const virtualPath = path.resolve(filePath).replace(/\.(?:hgs|ks)$/i, '') + '.ts';
   const compiled = compileSource(source);
   const options = {
     target: ts.ScriptTarget.ES2022,
@@ -171,7 +171,7 @@ export function buildSource(source, filePath = 'input.ks') {
 export async function buildFile(inputPath, outputDirectory = path.dirname(inputPath)) {
   const source = await readFile(inputPath, 'utf8');
   const result = buildSource(source, inputPath);
-  const base = path.basename(inputPath, '.ks');
+  const base = path.parse(inputPath).name;
   await mkdir(outputDirectory, { recursive: true });
   const javascriptPath = path.join(outputDirectory, base + '.js');
   const declarationPath = path.join(outputDirectory, base + '.d.ts');

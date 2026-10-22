@@ -12,8 +12,8 @@
     "./dev vercel deploy --prod --yes"
   ],
   "healthchecks": [
-    "https://koreanscript.vercel.app/",
-    "https://koreanscript.vercel.app/robots.txt",
-    "https://koreanscript.vercel.app/sitemap.xml"
+    "https://hangulscript.vercel.app/",
+    "https://hangulscript.vercel.app/robots.txt",
+    "https://hangulscript.vercel.app/sitemap.xml"
   ]
 }

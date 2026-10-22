@@ -2,6 +2,7 @@ node_modules/
 dist/
 *.tsbuildinfo
 examples/*.ts
+examples/*.hgs.ts
 site-dist/
 .vercel/
 .env*

@@ -1,6 +1,6 @@
 {
-  "name": "@uiwwsw/koreanscript",
-  "version": "0.3.0",
+  "name": "@uiwwsw/hangulscript",
+  "version": "0.4.0",
   "description": "한글 문장으로 작성하고 JavaScript와 타입 선언으로 배포하는 실험적 프로그래밍 언어",
   "license": "MIT",
   "type": "module",
@@ -23,7 +23,7 @@
     "README.md",
     "LANGUAGE.md",
     "LICENSE",
-    "examples/*.ks"
+    "examples/*.hgs"
   ],
   "scripts": {
     "build": "node ./scripts/build.js",
@@ -36,18 +36,20 @@
     "typescript": "^5.4.0"
   },
   "keywords": [
+    "hangul",
     "korean",
+    "hgs",
     "typescript",
     "transpiler"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/uiwwsw/koreanscript.git"
+    "url": "git+https://github.com/uiwwsw/hangulscript.git"
   },
   "bugs": {
-    "url": "https://github.com/uiwwsw/koreanscript/issues"
+    "url": "https://github.com/uiwwsw/hangulscript/issues"
   },
-  "homepage": "https://github.com/uiwwsw/koreanscript#readme",
+  "homepage": "https://github.com/uiwwsw/hangulscript#readme",
   "engines": {
     "node": ">=20"
   },

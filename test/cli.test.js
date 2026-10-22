@@ -8,11 +8,16 @@ const cli=path.resolve('src/cli.js');
 test('CLI builds executable ESM and declarations, runs without files, keeps TS option', async()=>{
   const dir=await mkdtemp(path.join(tmpdir(),'ks-cli-'));
   try {
-    const input=path.join(dir,'math.ks');
+    const input=path.join(dir,'math.hgs');
     await writeFile(input,'문장으로 시작\n더함(가: 숫자, 나: 숫자)를 정의한다:\n    돌려주기 가 + 나\n내보내기 { 더함 }\n출력(더함(2, 3))');
     let result=spawnSync(process.execPath,[cli,'run',input],{encoding:'utf8'});
     assert.equal(result.status,0,result.stderr); assert.equal(result.stdout.trim(),'5');
     await assert.rejects(readFile(path.join(dir,'math.js')),{code:'ENOENT'});
+    const legacy=path.join(dir,'legacy.ks');
+    await writeFile(legacy,await readFile(input,'utf8'));
+    const old=spawnSync(process.execPath,[cli,'build',legacy],{encoding:'utf8'});
+    assert.equal(old.status,0,old.stderr);
+    assert.match(await readFile(path.join(dir,'legacy.d.ts'),'utf8'),/더함/);
     result=spawnSync(process.execPath,[cli,'build',input],{encoding:'utf8'});
     assert.equal(result.status,0,result.stderr);
     assert.match(await readFile(path.join(dir,'math.d.ts'),'utf8'),/더함\(가: number, 나: number\): number/);

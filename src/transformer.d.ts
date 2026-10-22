@@ -1,2 +1,2 @@
-/** Convert keyword-style or sentence-style .ks source into TypeScript. */
+/** Convert keyword-style or sentence-style .hgs source into TypeScript. */
 export function compileSource(source: string): string;

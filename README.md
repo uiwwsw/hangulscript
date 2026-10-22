@@ -1,11 +1,11 @@
-# 한글스크립트 · KoreanScript
+# 한글스크립트 · HangulScript
 
 **한글 문장으로 작성하고, JavaScript와 타입 선언으로 배포하는 실험적 프로그래밍 언어.**
 
 Python의 들여쓰기와 익숙한 기본 함수, JavaScript의 표현식과 웹 생태계,
-TypeScript의 타입 검사를 결합합니다. 소스 확장자는 **`.ks`**입니다.
+TypeScript의 타입 검사를 결합합니다. 소스 확장자는 **`.hgs`**입니다.
 
-[온라인에서 실행하기](https://koreanscript.vercel.app/) · [문법 명세](LANGUAGE.md) · [릴리스](https://github.com/uiwwsw/koreanscript/releases) · [의견 보내기](https://github.com/uiwwsw/koreanscript/issues)
+[온라인에서 실행하기](https://hangulscript.vercel.app/) · [문법 명세](LANGUAGE.md) · [릴리스](https://github.com/uiwwsw/hangulscript/releases) · [의견 보내기](https://github.com/uiwwsw/hangulscript/issues)
 
 ```ks
 문장으로 시작
@@ -23,12 +23,12 @@ Python 소스 호환이나 전체 TypeScript 문법 지원을 뜻하지 않습�
 
 | 예제 | 바꿀 수 있는 값 | 사용하는 기능 |
 | --- | --- | --- |
-| [사칙연산 계산기](examples/calculator.ks) | 두 숫자·연산 | 함수·조건·0 나눗셈 처리 |
-| [할인 계산기](examples/discount.ks) | 가격·할인율 | 범위 검사·반올림 |
-| [숫자 통계](examples/statistics.ks) | 쉼표로 구분한 숫자 | 합계·평균·최솟값·최댓값 |
-| [문자열 정리기](examples/text.ks) | 단어 목록 | 공백 정리·중복 제거·연결 |
-| [성적 분석기](examples/scores.ks) | 점수 목록 | 반복·필터링·정렬 |
-| [타입 있는 함수 모듈](examples/math-library.ks) | 함수·타입 | JS + .d.ts 라이브러리 빌드 |
+| [사칙연산 계산기](examples/calculator.hgs) | 두 숫자·연산 | 함수·조건·0 나눗셈 처리 |
+| [할인 계산기](examples/discount.hgs) | 가격·할인율 | 범위 검사·반올림 |
+| [숫자 통계](examples/statistics.hgs) | 쉼표로 구분한 숫자 | 합계·평균·최솟값·최댓값 |
+| [문자열 정리기](examples/text.hgs) | 단어 목록 | 공백 정리·중복 제거·연결 |
+| [성적 분석기](examples/scores.hgs) | 점수 목록 | 반복·필터링·정렬 |
+| [타입 있는 함수 모듈](examples/math-library.hgs) | 함수·타입 | JS + .d.ts 라이브러리 빌드 |
 
 데모에서 예제를 선택하고 입력값을 바꾼 다음 **실행하기**를 누르세요.
 입력값 변경은 예제 코드를 다시 생성하며, 코드를 직접 편집하면 입력란은 숨겨집니다.
@@ -38,41 +38,41 @@ Python 소스 호환이나 전체 TypeScript 문법 지원을 뜻하지 않습�
 ## 설치
 
 Node.js **20 이상**이 필요합니다. 아래의 JS + .d.ts 빌드와 `run` 명령은 **0.3.0부터** 제공합니다.
-공개된 버전은 [npm](https://www.npmjs.com/package/@uiwwsw/koreanscript) 또는 `npm view @uiwwsw/koreanscript version`으로 확인하세요.
+공개된 버전은 [npm](https://www.npmjs.com/package/@uiwwsw/hangulscript) 또는 `npm view @uiwwsw/hangulscript version`으로 확인하세요.
 
 ```bash
-npm install --save-dev @uiwwsw/koreanscript
+npm install --save-dev @uiwwsw/hangulscript
 ```
 
 소스에서 최신 버전을 사용하려면:
 
 ```bash
-git clone https://github.com/uiwwsw/koreanscript.git
-cd koreanscript
+git clone https://github.com/uiwwsw/hangulscript.git
+cd hangulscript
 npm ci
 npm run build
-node dist/cli.js run examples/calculator.ks
+node dist/cli.js run examples/calculator.hgs
 ```
 
 ## 직접 실행과 빌드
 
 ```bash
-# .ks를 바로 실행: 중간 파일을 만들지 않음
-npx ksc run examples/calculator.ks
+# .hgs를 바로 실행: 중간 파일을 만들지 않음
+npx ksc run examples/calculator.hgs
 
 # 기본 출력은 .js + .d.ts
-npx ksc build examples/math-library.ks --out-dir output
+npx ksc build examples/math-library.hgs --out-dir output
 # output/math-library.js
 # output/math-library.d.ts
 
 # build 생략 가능
-npx ksc examples/math-library.ks --out-dir output
+npx ksc examples/math-library.hgs --out-dir output
 
 # 타입 검사만 수행
-npx ksc --check examples/math-library.ks
+npx ksc --check examples/math-library.hgs
 
 # 기존 .ts 출력이 필요할 때
-npx ksc --typescript examples/math-library.ks --out-dir output
+npx ksc --typescript examples/math-library.hgs --out-dir output
 ```
 
 **0.2에서 변경:** CLI의 기본 출력이 `.ts`에서 **`.js` + `.d.ts`**로 바뀝니다.
@@ -80,7 +80,7 @@ npx ksc --typescript examples/math-library.ks --out-dir output
 `compileSource`·`compileString` API는 기존처럼 TypeScript 문자열을 반환합니다.
 
 `run`은 신뢰하는 코드를 로컬 Node.js에서 실행합니다. 온라인 데모와 달리 격리·2초 제한이 없습니다.
-프로그램 인자는 `ksc run 파일.ks -- 인자1 인자2`처럼 전달합니다.
+프로그램 인자는 `ksc run 파일.hgs -- 인자1 인자2`처럼 전달합니다.
 
 ### 배포 산출물 사용
 
@@ -107,7 +107,7 @@ console.log(더함(2, 3)); // 5
 ESM을 지원하는 번들러를 사용하세요. JS와 .d.ts를 함께 배포하면 TypeScript 사용자가 타입을 읽을 수 있습니다.
 `.d.ts`는 실행 파일이 아닙니다. 함수 인자 타입을 생략하면 `any`가 되므로
 공개 라이브러리 함수에는 타입을 명시하는 편이 좋습니다.
-여러 `.ks` 파일의 import 경로를 자동으로 묶거나 재작성하지는 않습니다.
+여러 `.hgs` 파일의 import 경로를 자동으로 묶거나 재작성하지는 않습니다.
 
 ## 문장형 문법
 
@@ -175,7 +175,7 @@ ESM을 지원하는 번들러를 사용하세요. JS와 .d.ts를 함께 배포�
 1. 데모에서 예제를 수정하고 실행 결과를 확인합니다.
 2. **공유 링크 복사**로 코드를 담은 URL을 전달합니다.
 3. 받는 사람은 코드를 읽고 직접 실행합니다. 링크를 열기만 해서는 실행되지 않습니다.
-4. **.ks 저장**으로 소스를 내려받아 CLI에서 실행하거나 JS + .d.ts로 배포합니다.
+4. **.hgs 저장**으로 소스를 내려받아 CLI에서 실행하거나 JS + .d.ts로 배포합니다.
 
 코드는 URL의 `#code=` 조각에 담깁니다. 서버 저장소·공개 코드 목록 기능은 없습니다.
 링크를 가진 사람이 코드를 읽을 수 있으므로 비밀번호·토큰·개인정보는 넣지 마세요.
@@ -213,7 +213,7 @@ npm run benchmark
 ## 프로그래밍 API
 
 ```js
-import { buildSource, lintSource } from '@uiwwsw/koreanscript';
+import { buildSource, lintSource } from '@uiwwsw/hangulscript';
 
 const source = '문장으로 시작\n출력(합계([1, 2, 3]))';
 const { javascript, declaration } = buildSource(source);
@@ -223,7 +223,7 @@ const { hasErrors } = lintSource(source);
 Node 파일 API 없이 변환만 필요하면:
 
 ```js
-import { compileSource } from '@uiwwsw/koreanscript/browser';
+import { compileSource } from '@uiwwsw/hangulscript/browser';
 const typescript = compileSource('문장으로 시작\n출력("안녕")');
 ```
 
@@ -243,8 +243,14 @@ npm pack --dry-run
 Vercel은 GitHub main과 연결되어 `site-dist/`를 배포합니다.
 `SITE_URL`에 HTTPS origin을 지정하면 canonical·Open Graph·robots·sitemap 주소를 바꿀 수 있습니다.
 
-향후에는 독립 AST·원본 `.ks` 소스맵·LSP·모듈 그래프·Vite 연동 순으로 확장할 계획입니다.
+향후에는 독립 AST·원본 `.hgs` 소스맵·LSP·모듈 그래프·Vite 연동 순으로 확장할 계획입니다.
 
 ## 라이선스
 
 [MIT](LICENSE)
+
+## 이름과 확장자 이전 (0.4)
+
+제품명은 한글스크립트(HangulScript), 패키지는 `@uiwwsw/hangulscript`입니다.
+기본 소스 확장자는 `.hgs`이며 기존 `.ks` 파일도 CLI에서 계속 지원합니다.
+이전 패키지에서 이동하려면 `npm uninstall @uiwwsw/koreanscript` 후 새 패키지를 설치하세요.
