@@ -1,6 +1,18 @@
-# 한글스크립트 for VS Code
+# 한글스크립트 · HangulScript for VS Code
 
 `.hgs` 파일의 문법 강조, 자동 들여쓰기, 문서 포맷과 문법·타입 오류 표시를 제공합니다. 컴파일러와 같은 검사기를 사용하며 코드를 실행하지 않습니다. 별도 npm 설치 없이 동작합니다. 타입 정보 표시, 정의로 이동, 스코프 이름 자동 완성과 문장형 스니펫도 제공합니다.
+
+
+## English — Korean programming language support
+
+**HangulScript** is a Korean sentence-style programming language using `.hgs` files. This extension provides syntax highlighting, indentation, document formatting, syntax and type diagnostics, scoped completion, hover information and go to definition. It includes the compiler checker and does not execute your code or require a separate npm installation.
+
+- Install: search for **HangulScript**, **Korean**, or `uiwwsw.hangulscript-vscode` in VS Code Extensions.
+- Open a `.hgs` file and run **Format Document**. Diagnostics appear in **Problems** and editor underlines.
+- [English introduction](https://hangulscript.vercel.app/en/) · [Playground](https://hangulscript.vercel.app/#playground) · [Documentation (Korean)](https://hangulscript.vercel.app/docs/)
+- Compile and run projects with `@uiwwsw/hangulscript`. The CLI emits JavaScript and `.d.ts` declarations; the shared Vite plugin supports React and Vue projects.
+
+Full property completion, automatic imports, rename refactoring, debugging and VS Code for the Web are not yet supported. See the [roadmap](https://hangulscript.vercel.app/docs/roadmap/) for the current scope.
 
 ## 설치와 포맷
 
@@ -31,4 +43,4 @@ Marketplace 게시 전 `package.json`의 publisher를 실제 소유한 게시자
 
 밝은·어두운 테마용 `ㅎ` 도형 아이콘을 언어 정의에 등록합니다. 기본 파일 아이콘 테마에서 `.hgs` 파일 옆에 표시됩니다. 사용 중인 아이콘 테마가 해당 언어의 아이콘을 별도로 지정했다면 테마의 설정이 우선합니다. 아이콘이 꺼져 있다면 VS Code의 File Icon Theme에서 기본 Seti 테마를 선택하세요.
 
-0.3.0 확장은 0.8.0의 목록·집합·사전·복사·정렬과 문장형 표현도 검사합니다. [공식 문서](https://hangulscript.vercel.app/docs/)에서 함수별 동작과 예제를 확인하세요.
+0.3.1 확장은 0.8.0의 목록·집합·사전·복사·정렬과 문장형 표현도 검사합니다. [공식 문서](https://hangulscript.vercel.app/docs/)에서 함수별 동작과 예제를 확인하세요.

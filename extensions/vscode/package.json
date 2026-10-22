@@ -1,8 +1,8 @@
 {
   "name": "hangulscript-vscode",
-  "displayName": "한글스크립트",
-  "description": "한글스크립트 .hgs 문법 강조, 포맷, 타입 오류, 자동 완성, 타입 정보와 정의로 이동",
-  "version": "0.3.0",
+  "displayName": "한글스크립트 · HangulScript",
+  "description": "HangulScript Korean programming language (.hgs): syntax highlighting, formatting, type diagnostics, completion, hover and definitions. 한글 문법 강조·포맷·타입 검사",
+  "version": "0.3.1",
   "publisher": "uiwwsw",
   "license": "MIT",
   "engines": {
@@ -63,5 +63,13 @@
       }
     ]
   },
-  "icon": "icons/extension.png"
+  "icon": "icons/extension.png",
+  "keywords": [
+    "HangulScript",
+    "Korean",
+    "Hangul",
+    "hgs",
+    "한글스크립트"
+  ],
+  "homepage": "https://hangulscript.vercel.app/en/"
 }
