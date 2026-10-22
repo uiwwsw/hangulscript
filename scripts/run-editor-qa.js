@@ -10,6 +10,6 @@ try {
     extensionDevelopmentPath: path.resolve('extensions/vscode'),
     extensionTestsPath: path.resolve('extensions/vscode/qa/host.cjs'),
     launchArgs: ['--user-data-dir', path.join(dir, 'profile'), '--extensions-dir', path.join(dir, 'extensions'), '--skip-welcome', '--skip-release-notes', '--disable-updates', '--disable-workspace-trust', '--disable-gpu', '--new-window'],
-    extensionTestsEnv: { HGS_TEST_DIRECTORY: dir }
+    extensionTestsEnv: { HGS_TEST_DIRECTORY: dir, HGS_QA_SCREENSHOT_WAIT_MS: process.env.HGS_QA_SCREENSHOT_WAIT_MS }
   });
 } finally { await rm(dir, { recursive: true, force: true }); }

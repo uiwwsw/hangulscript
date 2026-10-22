@@ -270,7 +270,7 @@ HTML·이벤트 핸들러 문자열을 삽입하지 않습니다.
 **0.6.0 이상**의 공통 Vite 플러그인을 사용합니다. React/Vue의 화면과 상태 관리에 한글스크립트 계산·검증 함수를 연결할 수 있습니다.
 
 ```bash
-npm install --save-dev @uiwwsw/hangulscript@^0.7.0
+npm install --save-dev @uiwwsw/hangulscript@^0.8.0
 ```
 
 ```js
@@ -315,3 +315,19 @@ console.log(결제금액(10000, 20)); // 8000
 Node에서 직접 실행하려면 `node --import @uiwwsw/hangulscript/register src/main.hgs`를 사용합니다. `ksc run`도 같은 로더를 사용하며 상대 경로 `.hgs` import를 처리합니다. `ksc build`는 진입 폴더 아래 HGS 모듈을 함께 빌드하고 import를 `.js`로 연결합니다.
 
 [환경별 지원 계약·타입 설정·호환성 정책](docs/support.md)을 확인하세요. 언어 패키지와 VS Code 확장은 같은 저장소에서 검증하며 별도 버전으로 배포합니다.
+
+## 문서와 자료구조
+
+[공식 문서](https://hangulscript.vercel.app/docs/)는 시작하기·문법·자료구조·모듈·프레임워크·편집기·오류 해결을 페이지별로 제공합니다. [61개 표준 함수](https://hangulscript.vercel.app/docs/standard-library/)에는 타입·실행 예제·원본 변경 여부가 있습니다.
+
+```text
+점수들은 [88, 92, 88]이다
+점수순은 점수들을 내림차순으로 정렬한 값이다
+고유값은 점수들에서 중복을 제거한 값이다
+독립본은 점수들을 깊게 복사한 값이다
+출력(점수순, 고유값, 독립본)
+```
+
+목록의 변환·검색·누적·펼치기, 집합 연산, 사전(Map), 얕은·깊은 복사, 안정적인 기준 정렬을 제공합니다. 전체 JS API를 한글화한 상태는 아니며 [지원 범위](docs/support.md)에 제약을 명시합니다.
+
+[한글스크립트의 큰 그림과 로드맵](https://hangulscript.vercel.app/docs/roadmap/)에서 현재 지원·부분 지원·미구현과 다음 개발 순서를 확인하세요.

@@ -1,0 +1,64 @@
+name: Publish npm package
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag matching package.json (for example v0.8.0)'
+        required: true
+        type: string
+permissions:
+  contents: read
+  id-token: write
+concurrency:
+  group: npm-publish
+  cancel-in-progress: false
+jobs:
+  publish:
+    if: github.repository == 'uiwwsw/hangulscript'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name || inputs.tag }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+          cache: npm
+      - name: Validate release version and publishing secret
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name || inputs.tag }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          node --input-type=module <<'JS'
+          import fs from 'node:fs';
+          const p=JSON.parse(fs.readFileSync('package.json'));
+          if(p.name !== '@uiwwsw/hangulscript' || process.env.RELEASE_TAG !== 'v'+p.version) throw Error('Release tag/package version mismatch');
+          if(!process.env.NPM_TOKEN) throw Error('Register the package-scoped NPM_TOKEN in repository Actions secrets');
+          JS
+      - run: npm ci
+      - run: npm run build:vscode
+      - run: npm test
+      - run: npm run build
+      - run: npm run build:site
+      - name: Package once
+        run: npm pack --json > package-report.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: npm-package
+          path: '*.tgz'
+      - name: Publish verified archive
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          node --input-type=module <<'JS'
+          import fs from 'node:fs';
+          import {spawnSync} from 'node:child_process';
+          const archive=JSON.parse(fs.readFileSync('package-report.json'))[0];
+          const version=JSON.parse(fs.readFileSync('package.json')).version;
+          const tag=version.includes('-')?'next':'latest';
+          const result=spawnSync('npm',['publish',archive.filename,'--access','public','--provenance','--tag',tag],{stdio:'inherit'});
+          process.exit(result.status ?? 1);
+          JS

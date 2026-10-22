@@ -2,7 +2,7 @@
   "name": "hangulscript-vscode",
   "displayName": "한글스크립트",
   "description": "한글스크립트 .hgs 문법 강조, 포맷, 타입 오류, 자동 완성, 타입 정보와 정의로 이동",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "publisher": "uiwwsw",
   "license": "MIT",
   "engines": {
@@ -36,7 +36,11 @@
         "extensions": [
           ".hgs"
         ],
-        "configuration": "./language-configuration.json"
+        "configuration": "./language-configuration.json",
+        "icon": {
+          "light": "./icons/hgs-light.svg",
+          "dark": "./icons/hgs-dark.svg"
+        }
       }
     ],
     "grammars": [
@@ -58,5 +62,6 @@
         "path": "./snippets.json"
       }
     ]
-  }
+  },
+  "icon": "icons/extension.png"
 }

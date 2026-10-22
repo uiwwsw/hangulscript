@@ -1,7 +1,7 @@
 import ts from 'typescript';
 
 const literals = new Map([['참', 'true'], ['거짓', 'false'], ['비어있음', 'null'], ['정의안됨', 'undefined'], ['자신', 'this'], ['부모', 'super']]);
-const types = new Map([['숫자', 'number'], ['문자열', 'string'], ['논리', 'boolean'], ['불리언', 'boolean'], ['아무거나', 'any'], ['모름', 'unknown'], ['무효', 'void']]);
+const types = new Map([['숫자', 'number'], ['문자열', 'string'], ['논리', 'boolean'], ['불리언', 'boolean'], ['아무거나', 'any'], ['모름', 'unknown'], ['무효', 'void'], ['목록', 'Array'], ['집합', 'Set'], ['사전', 'Map']]);
 
 function identifiers(source, replacements) {
   const file = ts.createSourceFile('expression.ts', source, ts.ScriptTarget.Latest, true);
@@ -21,6 +21,10 @@ function identifiers(source, replacements) {
 }
 
 export function expression(source) {
+  let phrase;
+  if ((phrase = source.trim().match(/^(.+?)(?:을|를) (오름차순|내림차순)으로 정렬한 값$/u))) return phrase[2] + '(' + expression(phrase[1]) + ')';
+  if ((phrase = source.trim().match(/^(.+?)(?:을|를) (얕게|깊게) 복사한 값$/u))) return (phrase[2] === '얕게' ? '얕게복사' : '깊게복사') + '(' + expression(phrase[1]) + ')';
+  if ((phrase = source.trim().match(/^(.+?)에서 중복을 제거한 값$/u))) return '중복제거(' + expression(phrase[1]) + ')';
   source = source.replace(/^새\s+/, 'new ').replace(/^기다리기\s+/, 'await ');
   if (/[참거비정자부]/.test(source)) {
     const prefix = 'const __expression = (';

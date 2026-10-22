@@ -1,6 +1,6 @@
 # React·Vue에서 한글스크립트 사용하기
 
-이 가이드는 `@uiwwsw/hangulscript@0.7.0` 문법과 공통 Vite 플러그인을 사용합니다.
+이 가이드는 `@uiwwsw/hangulscript@0.8.0` 문법과 공통 Vite 플러그인을 사용합니다.
 화면과 상태는 React/Vue로 만들고 계산·조건·검증 함수를 `.hgs`에 작성합니다.
 데모의 `숫자입력`·`버튼`·`보여주기`는 데모 UI 실행 환경의 API이며 React/Vue 컴포넌트로 자동 변환되지 않습니다.
 
@@ -26,7 +26,7 @@ Vue는 같은 저장소의 `examples/vue-vite`에서 `npm ci`와 `npm run dev`�
 ## 기존 Vite 프로젝트에 설치하기
 
 ```bash
-npm install --save-dev @uiwwsw/hangulscript@^0.7.0
+npm install --save-dev @uiwwsw/hangulscript@^0.8.0
 ```
 
 React/Vue와 해당 Vite 플러그인은 기존 프로젝트에 설치돼 있다고 가정합니다.

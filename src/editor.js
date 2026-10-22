@@ -30,7 +30,7 @@ export function inspectSource(source, filePath, line, column, settings = {}) {
   const checker = analysis.program.getTypeChecker();
   target = matched ?? target;
   const completions = checker.getSymbolsInScope(target, ts.SymbolFlags.Value | ts.SymbolFlags.Type | ts.SymbolFlags.Alias)
-    .filter(symbol => symbol.declarations?.some(d => analysis.documents.has(d.getSourceFile().fileName) && !['화면연결'].includes(symbol.name)))
+    .filter(symbol => symbol.declarations?.some(d => analysis.documents.has(d.getSourceFile().fileName) && !['화면연결', '정렬비교'].includes(symbol.name)))
     .map(symbol => ({ name: symbol.name, detail: checker.typeToString(checker.getTypeOfSymbolAtLocation(symbol,target)) }));
   if (!matched) return { completions, definitions: [] };
   let symbol = checker.getSymbolAtLocation(matched);

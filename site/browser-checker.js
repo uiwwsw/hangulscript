@@ -5,7 +5,7 @@ import { mapDiagnostic, syntaxDiagnostic } from '../src/diagnostics.js';
 export function createBrowserChecker(libraries) {
   const libCache = new Map();
   const options = { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext, strict: true, skipLibCheck: true, noEmit: true, types: [], lib: ['lib.es2022.d.ts'] };
-  const globals = 'declare const console: { log(...values: unknown[]): void };';
+  const globals = 'declare const console: { log(...values: unknown[]): void }; declare function structuredClone<T>(value: T): T;';
   return source => {
     let mapped;
     try { mapped = compileMappedSource(source); }

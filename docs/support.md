@@ -1,6 +1,6 @@
 # 지원 범위와 호환성
 
-한글스크립트는 명시된 한국어 문법을 JavaScript ES 모듈로 컴파일합니다. 임의의 자연어를 추측하지 않으며 별도 시작 표기는 사용하지 않습니다. 이 문서는 0.7.0 언어 패키지와 0.2.0 VS Code 확장의 지원 계약입니다.
+한글스크립트는 명시된 한국어 문법을 JavaScript ES 모듈로 컴파일합니다. 임의의 자연어를 추측하지 않으며 별도 시작 표기는 사용하지 않습니다. 이 문서는 0.8.0 언어 패키지와 0.3.0 VS Code 확장의 지원 계약입니다.
 
 | 환경 | 지원 내용 | 검증 |
 | --- | --- | --- |
@@ -13,7 +13,7 @@
 ## Node에서 사용하기
 
 ```bash
-npm install @uiwwsw/hangulscript@^0.7.0
+npm install @uiwwsw/hangulscript@^0.8.0
 npx ksc run src/main.hgs
 # 또는 Node의 등록 진입점으로 직접 로드
 node --import @uiwwsw/hangulscript/register src/main.hgs
@@ -40,3 +40,5 @@ Vite가 아닌 환경에서 `.hgs` 파일을 바로 가져오려면 해당 로�
 [VS Code 설치 및 기능 안내](../extensions/vscode/README.md)를 참고하세요. 확장은 컴파일러와 같은 저장소에서 관리하며 독립 버전으로 배포합니다. 편집기 검사는 Worker에서 실행하며 사용자 코드는 실행하지 않습니다. 자동 완성은 스코프의 이름과 스니펫을 제공합니다. 전체 속성 자동 완성, 자동 import, 이름 변경, 디버거, vscode.dev는 아직 지원하지 않습니다.
 
 0.x에서는 문법의 호환성을 깨는 변경을 minor 버전에서만 진행하고 변경 내역·마이그레이션을 안내합니다. patch 버전은 호환되는 수정에 사용합니다. 1.0은 별도의 문법 동결과 호환성 검증을 거쳐 결정합니다. 사용자용 확장을 Marketplace에 게시하는 것과 Microsoft가 기본 내장 언어로 채택하는 것은 별개입니다.
+
+0.8.0은 목록·집합·사전·복사·정렬 등을 포함한 61개 한글 함수를 제공합니다. 전체 JavaScript API의 한글 별칭, 데이터베이스·네트워크·GUI 프레임워크 전체를 제공한다는 뜻은 아닙니다. 지원하지 않는 기능은 기존 JS/TS 생태계와 연결하거나 별도 구현해야 합니다. [표준 기능 참조](https://hangulscript.vercel.app/docs/standard-library/)에서 제공 범위를 확인하세요.

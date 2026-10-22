@@ -36,6 +36,16 @@ exports.run = async () => {
   assert.ok(definitions.some(d=>d.uri.fsPath.endsWith('math.hgs') && d.range.start.line===0));
   const completion=await vscode.commands.executeCommand('vscode.executeCompletionItemProvider',document.uri,new vscode.Position(2,5));
   assert.ok(completion.items.some(item=>item.label==='더함'));
+  const language = extension.packageJSON.contributes.languages.find(item=>item.id==='hangulscript');
+  for(const mode of ['light','dark']) assert.ok((await fs.stat(path.join(extension.extensionPath,language.icon[mode]))).size > 0);
+  await replace('점수들은 [88, 92, 88]이다\n점수순은 점수들을 내림차순으로 정렬한 값이다\n독립본은 점수들을 깊게 복사한 값이다\n출력(점수순, 독립본)\n');
+  await waitFor(()=>vscode.languages.getDiagnostics(document.uri).length===0);
+  const standard=await vscode.commands.executeCommand('vscode.executeCompletionItemProvider',document.uri,new vscode.Position(3,4));
+  assert.ok(standard.items.some(item=>item.label==='깊게복사'));
+  assert.ok(!standard.items.some(item=>item.label==='정렬비교'));
+  await document.save();
+  console.log('PASS: light/dark HGS icons and sentence collection tooling');
   console.log('PASS: hover, cross-file definition and scoped completion');
   console.log('PASS: real VS Code activation, .hgs association, formatting, unsaved type error and correction');
+  if(process.env.HGS_QA_SCREENSHOT_WAIT_MS) await pause(Number(process.env.HGS_QA_SCREENSHOT_WAIT_MS));
 };
