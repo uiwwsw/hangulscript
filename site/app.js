@@ -27,6 +27,7 @@ function selectExample() {
   const key = $('example').value;
   $('source').value = tools[key] ? uiExample(key) : examples[key];
   uiValues = {}; uiAction = ''; $('preview-content').replaceChildren();
+  document.querySelector('.preview').hidden = !tools[key];
   schedule();
   // Built-in controls share the example schema; execute code only on a user's action.
   if (tools[key]) renderUI([
@@ -139,11 +140,11 @@ window.addEventListener('message', event => {
     if (!failure && pendingUI) renderUI(pendingUI);
     if (failure) $('output').textContent += String(event.data.text);
     if (!$('output').textContent) $('output').textContent = pendingUI?.length ? '화면을 업데이트했습니다. 도구의 입력값을 바꾸고 버튼을 눌러 보세요.' : '실행을 마쳤습니다. 출력할 값이 없습니다.';
-    document.querySelector('.console').classList.toggle('ui-mode', !failure && !!pendingUI?.length);
+
     $('status').textContent = failure ? '실행 오류' : '실행 완료'; stop();
   }
 });
-$('source').value = uiExample('calculator');
+$('source').value = examples.hello;
 try {
   if (location.hash.startsWith('#code=')) {
     const encoded = location.hash.slice(6);
@@ -199,12 +200,10 @@ function renderUI(elements) {
       const button = document.createElement('button'); button.type = 'button'; button.className = 'primary'; button.textContent = item.label;
       button.addEventListener('click', () => { if ($('preview-content').reportValidity()) run(item.label); }); content.append(button);
     } else if (item.type === 'result') {
-      const card = document.createElement('div'); card.className = 'preview-result';
-      const title = document.createElement('span'); title.textContent = item.label;
-      const value = document.createElement('strong'); value.textContent = String(item.value ?? '').slice(0, 2000);
-      card.append(title, value); content.append(card);
+      $('output').textContent += item.label + ' ' + String(item.value ?? '').slice(0, 2000) + '\n';
     }
   }
+  document.querySelector('.preview').hidden = !content.childNodes.length;
   $('preview-content').replaceChildren(content);
   if (!elements.length) $('preview-content').textContent = '이 예제는 아래 실행 결과에 출력합니다. 화면 예제를 선택하면 입력창과 버튼을 볼 수 있습니다.';
 }
@@ -225,3 +224,14 @@ function showDiagnostics(diagnostics) {
     $('diagnostics').append(button);
   }
 }
+
+const consolePanel = document.querySelector('.console');
+new IntersectionObserver(([entry]) => {
+  consolePanel.classList.toggle('visible', entry.isIntersecting);
+}, { threshold: 0 }).observe($('playground'));
+$('clear-console').addEventListener('click', () => { $('output').textContent = ''; });
+$('toggle-console').addEventListener('click', () => {
+  const collapsed = consolePanel.classList.toggle('collapsed');
+  $('toggle-console').setAttribute('aria-expanded', String(!collapsed));
+  $('toggle-console').textContent = collapsed ? '펼치기' : '접기';
+});
