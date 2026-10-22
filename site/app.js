@@ -136,11 +136,15 @@ async function run() {
   frame = document.createElement('iframe');
   frame.hidden = true; frame.sandbox = 'allow-scripts'; frame.src = '/runner.html';
   document.body.append(frame);
-  timer = setTimeout(() => { stop(); $('status').textContent = '실행 시간 초과'; $('output').textContent += '\n2초 제한으로 실행을 종료했습니다.'; }, 2500);
+  timer = setTimeout(() => { stop(); $('status').textContent = '실행 환경 로딩 실패'; $('output').textContent = '실행 환경을 불러오지 못했습니다. 다시 실행해 주세요.'; }, 10000);
 }
 window.addEventListener('message', event => {
   if (!frame || event.source !== frame.contentWindow) return;
-  if (event.data?.type === 'ready' && !ready) { ready = true; frame.contentWindow.postMessage({ type: 'run', code: javascript, token }, '*'); return; }
+  if (event.data?.type === 'ready' && !ready) {
+    ready = true; clearTimeout(timer);
+    timer = setTimeout(() => { stop(); $('status').textContent = '실행 시간 초과'; $('output').textContent += '\n2초 제한으로 실행을 종료했습니다.'; }, 2500);
+    frame.contentWindow.postMessage({ type: 'run', code: javascript, token }, '*'); return;
+  }
   if (event.data?.token !== token) return;
   if (event.data.type === 'log' && outputLines++ < 100) $('output').textContent += String(event.data.text).slice(0, 1000) + '\n';
   if (event.data.type === 'done' || event.data.type === 'error') {
