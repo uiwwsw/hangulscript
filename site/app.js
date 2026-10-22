@@ -169,7 +169,7 @@ $('share').addEventListener('click', async () => {
   try {
     const bytes = new TextEncoder().encode($('source').value);
     const encoded = btoa(Array.from(bytes, b => String.fromCharCode(b)).join(''));
-    await navigator.clipboard.writeText(location.origin + '/#code=' + encoded);
+    await navigator.clipboard.writeText(location.origin + '/playground/#code=' + encoded);
     $('status').textContent = '공유 링크를 복사했습니다';
   } catch { $('status').textContent = '클립보드 권한을 확인해 주세요'; }
 });
