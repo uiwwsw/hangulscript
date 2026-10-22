@@ -31,7 +31,7 @@
   ],
   "evidence": {
     "verifiedAt": "2026-10-22",
-    "note": "2026-10-22: Production UI examples verified in Chrome: calculator input action returns 6, discount 10000 at 20 percent returns 8000, statistics average 25 and text deduplication 3 words. 20 tests pass. Installed 0.5.0 tarball builds React JSX and Vue SFC projects with Vite 8.3.5 and .hgs imports. npm 0.5.0 accepted and validating; 0.4.0 remains previously verified public."
+    "note": "2026-10-22: Production UI examples verified in Chrome: calculator input action returns 6, discount 10000 at 20 percent returns 8000, statistics average 25 and text deduplication 3 words. 20 tests pass. Installed 0.5.0 tarball builds React JSX and Vue SFC projects with Vite 8.3.5 and .hgs imports. npm 0.5.0 lifecycle status is published; public registry installation and Vite export execution verified."
   },
   "en": "HangulScript"
 }
