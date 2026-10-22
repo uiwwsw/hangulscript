@@ -27,7 +27,7 @@
   ],
   "evidence": {
     "verifiedAt": "2026-10-22",
-    "note": "2026-10-22: GitHub repository renamed to uiwwsw/hangulscript; Vercel project renamed and https://hangulscript.vercel.app responds publicly. @uiwwsw/hangulscript 0.4.0 uses .hgs, legacy .ks compatibility verified by CLI tests. npm registry upload timed out; package publication is not confirmed."
+    "note": "2026-10-22: uiwwsw/hangulscript and .hgs migration verified by 17 tests, legacy .ks CLI compatibility and installed package run. New Vercel production domain returns HTTP 200; three old koreanscript aliases removed and return 404. MOVV links match new domain. Google new-domain ownership verified and sitemap resubmitted after initial HTTP fetch error. Naver verification tag deployed; human CAPTCHA pending. npm @uiwwsw/hangulscript 0.4.0 upload timed out and publication is not confirmed."
   },
   "en": "HangulScript"
 }
