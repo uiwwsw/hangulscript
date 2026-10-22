@@ -1,0 +1,12 @@
+import { build } from 'esbuild';
+import { cp, mkdir, rm, writeFile } from 'node:fs/promises';
+const origin = process.env.SITE_URL || 'https://koreanscript.vercel.app';
+if (!/^https:\/\/[a-z0-9.-]+$/i.test(origin)) throw new Error('SITE_URL must be an HTTPS origin');
+await rm('site-dist', { recursive: true, force: true });
+await mkdir('site-dist');
+await cp('site', 'site-dist', { recursive: true });
+await build({ entryPoints: ['site/app.js'], bundle: true, minify: true, format: 'esm', platform: 'browser', outfile: 'site-dist/app.js' });
+await writeFile('site-dist/robots.txt', `User-agent: *\nAllow: /\nSitemap: ${origin}/sitemap.xml\n`);
+await writeFile('site-dist/sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>${origin}/</loc></url></urlset>`);
+const { readFile } = await import('node:fs/promises');
+await writeFile('site-dist/index.html', (await readFile('site/index.html', 'utf8')).replaceAll('https://koreanscript.vercel.app', origin));

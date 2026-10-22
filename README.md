@@ -1,22 +1,41 @@
 # 한글스크립트 (koreanscript)
 
-한글 키워드로 TypeScript를 작성할 수 있는 초간단 트랜스파일러입니다. `.ks` 파일을 작성하면 CLI가 동일한 폴더에 `.ts` 파일을 생성해 줍니다.
+한글 문장과 키워드로 프로그램을 작성하는 실험적 언어입니다. Python의 들여쓰기와 기본 함수, JavaScript/TypeScript의 표현식과 웹 생태계를 결합합니다. `.ks` 파일을 작성하면 CLI가 동일한 폴더에 `.ts` 파일을 생성해 줍니다.
+
+## 온라인 데모와 공유
+
+[한글스크립트 실행하기](https://koreanscript.vercel.app/)에서 성적 분석기·구구단·인사 예제를 실행할 수 있습니다.
+코드를 수정하고 **공유 링크 복사**를 누르면 코드가 포함된 링크를 공유합니다.
+수신자는 코드를 읽고 직접 실행합니다. 링크에는 비밀 정보를 넣지 마세요.
+**.ks 저장**으로 파일을 내려받아 프로젝트에 사용할 수 있습니다.
+
+```ks
+문장으로 시작
+점수들은 [75, 92, 88]이다
+각 점수를 점수들에서:
+    만약 점수 >= 80 이라면:
+        출력(점수)
+출력("평균:", 합계(점수들) / 길이(점수들))
+```
+
+[문장형 문법·기본 함수·설계 방향](LANGUAGE.md)을 참고하세요.
+기존 한글 키워드형도 계속 지원합니다. 자유 자연어 해석이나 Python 소스 호환을 제공하지는 않습니다.
 
 ## 설치
 
-이 저장소의 패키지명은 `@uiwwsw/koreanscript`입니다. 로컬 소스에서 사용하려면 Bun과 Node.js를 준비한 뒤 의존성을 설치하고 CLI를 빌드합니다.
+이 저장소의 패키지명은 `@uiwwsw/koreanscript`입니다. 로컬 소스에서 사용하려면 Node.js 20 이상을 준비한 뒤 의존성을 설치하고 CLI를 빌드합니다.
 
 ```bash
 git clone https://github.com/uiwwsw/koreanscript.git
 cd koreanscript
-bun install
-bun run build
-bun link
+npm ci
+npm run build
+npm link
 ```
 
 `ksc` 실행 파일은 빌드 결과인 `dist/cli.js`를 사용하므로 링크 전에 빌드가 필요합니다. 전역 링크 없이 실행하려면 `node dist/cli.js examples/hello.ks`를 사용할 수 있습니다.
 
-테스트는 `bun run test`로 실행합니다.
+테스트는 `npm test`로 실행합니다. 이 Mac의 Developer workspace에서는 모든 명령을 `./dev`로 실행하세요.
 
 ## 사용법
 
@@ -176,3 +195,40 @@ console.log(인사(이름));
 ## 라이선스
 
 MIT
+
+## 브라우저와 프로젝트에서 사용
+
+Node 파일 API가 없는 변환 진입점을 제공합니다.
+
+```js
+import { compileSource } from '@uiwwsw/koreanscript/browser';
+const typescript = compileSource('문장으로 시작\n출력("안녕")');
+```
+
+`.ks` → `ksc` → `.ts` → 기존 TypeScript 빌드 순서로 통합합니다.
+브라우저에서 임의의 사용자 코드를 부모 페이지나 서버에서 실행하면 안 됩니다.
+데모는 별도 origin의 sandbox iframe과 최대 2초 실행 Worker를 사용합니다.
+
+## 웹 데모 개발·Vercel 배포
+
+```bash
+./dev npm ci
+./dev npm test
+./dev npm run build:site
+./dev vercel link --project koreanscript
+./dev vercel deploy --prod
+```
+
+Vercel은 GitHub 저장소에 연결되어 main push로 production을 배포합니다.
+공개 산출물은 `site-dist/`입니다. `SITE_URL`을 HTTPS origin으로 지정하면
+canonical·Open Graph·robots·sitemap을 다른 도메인으로 빌드할 수 있습니다.
+SEO 메타데이터·구조화 데이터·사이트맵을 제공하지만 검색 노출을 보장하지 않습니다.
+Google Search Console / 네이버 서치어드바이저 등록에는 별도 소유권 확인이 필요합니다.
+
+## 패키지 배포
+
+`npm test && npm run build && npm pack --dry-run`으로 검증합니다.
+현재 공개 npm 게시 여부는 npm registry에서 확인해야 하며 GitHub 릴리스와 별개입니다.
+인증된 npm 계정에서 `npm publish --access public`을 실행하거나
+[npm trusted publishing](https://docs.npmjs.com/trusted-publishers/)을 설정합니다.
+GitHub Release의 `.tgz`를 내려받아 `npm install ./uiwwsw-koreanscript-0.2.0.tgz`로 설치할 수도 있습니다.

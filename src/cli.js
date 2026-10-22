@@ -45,6 +45,16 @@ async function main() {
       printUsage();
       return;
     }
+    if (arg.startsWith('-')) {
+      console.error(`오류: 알 수 없는 옵션 ${arg}`);
+      process.exitCode = 1;
+      return;
+    }
+    if (!arg.endsWith('.ks')) {
+      console.error('오류: 입력 파일은 .ks 확장자여야 합니다.');
+      process.exitCode = 1;
+      return;
+    }
     inputFiles.push(arg);
   }
 

@@ -1,3 +1,6 @@
+import ts from 'typescript';
+import { compileSentences, isSentenceSource } from './sentences.js';
+
 const identifierCharRegex = /[\p{L}\p{N}_$]/u;
 
 const KEYWORD_TRANSFORMS = [
@@ -83,7 +86,7 @@ const KEYWORD_TRANSFORMS = [
   { match: "정규식", replacement: "RegExp", requiresBoundary: true },
   { match: "제이슨", replacement: "JSON", requiresBoundary: true },
   { match: "수학", replacement: "Math", requiresBoundary: true },
-  { match: "콘솔.출력", replacement: "console.log", requiresBoundary: false }
+  { match: "콘솔.출력", replacement: "console.log", requiresBoundary: true }
 ];
 
 function isIdentifierBoundary(source, index) {
@@ -279,87 +282,48 @@ function transformKeywords(source) {
   return result;
 }
 
-function getLastNonWhitespaceChar(result) {
-  for (let i = result.length - 1; i >= 0; i -= 1) {
-    const char = result[i];
-    if (char.trim() !== "") {
-      return char;
-    }
-  }
-  return "";
-}
-
+// Scan tokens so literals, comments, and nested function bodies stay untouched.
 function fixClassMethods(source) {
-  let result = "";
-  let index = 0;
+  const scanner = ts.createScanner(ts.ScriptTarget.Latest, false, ts.LanguageVariant.Standard, source);
   const stack = [];
+  const edits = [];
   let pendingClass = false;
-
-  while (index < source.length) {
-    if (source.startsWith("class", index) && isIdentifierBoundary(source, index) && isBoundaryAfter(source, index + 5)) {
-      result += "class";
-      index += 5;
-      pendingClass = true;
+  let previous = ts.SyntaxKind.Unknown;
+  const templateDepths = [];
+  let braces = 0;
+  for (let token = scanner.scan(); token !== ts.SyntaxKind.EndOfFileToken; token = scanner.scan()) {
+    if (token === ts.SyntaxKind.CloseBraceToken && templateDepths.at(-1) === braces) {
+      token = scanner.reScanTemplateToken(false);
+      if (token === ts.SyntaxKind.TemplateTail) templateDepths.pop();
       continue;
     }
-
-    const char = source[index];
-
-    if (char === "{") {
-      result += char;
-      index += 1;
-      if (pendingClass) {
-        stack.push("class");
-        pendingClass = false;
-      } else if (stack.length > 0) {
-        stack.push(stack[stack.length - 1]);
-      } else {
-        stack.push("block");
-      }
-      continue;
+    if (token === ts.SyntaxKind.TemplateHead) { templateDepths.push(braces); continue; }
+    if (token === ts.SyntaxKind.SingleLineCommentTrivia || token === ts.SyntaxKind.MultiLineCommentTrivia ||
+        token === ts.SyntaxKind.WhitespaceTrivia || token === ts.SyntaxKind.NewLineTrivia) continue;
+    if (token === ts.SyntaxKind.ClassKeyword) pendingClass = true;
+    if (token === ts.SyntaxKind.OpenBraceToken) {
+      stack.push(pendingClass ? 'class' : 'block');
+      pendingClass = false;
+      braces++;
+    } else if (token === ts.SyntaxKind.CloseBraceToken) {
+      stack.pop(); braces--;
+    } else if (token === ts.SyntaxKind.FunctionKeyword && stack.at(-1) === 'class' &&
+      [ts.SyntaxKind.OpenBraceToken, ts.SyntaxKind.CloseBraceToken, ts.SyntaxKind.SemicolonToken,
+       ts.SyntaxKind.AsyncKeyword, ts.SyntaxKind.PublicKeyword, ts.SyntaxKind.PrivateKeyword,
+       ts.SyntaxKind.ProtectedKeyword, ts.SyntaxKind.StaticKeyword].includes(previous)) {
+      const start = scanner.getTokenPos();
+      let end = scanner.getTextPos();
+      while (source[end] === ' ' || source[end] === '\t') end++;
+      edits.push([start, end]);
     }
-
-    if (char === "}") {
-      result += char;
-      index += 1;
-      if (stack.length > 0) {
-        stack.pop();
-      }
-      continue;
-    }
-
-    if (stack.includes("class")) {
-      if (source.startsWith("async function", index) && isIdentifierBoundary(source, index) && isBoundaryAfter(source, index + "async function".length)) {
-        const previous = getLastNonWhitespaceChar(result);
-        if (previous === "" || "{;}.".includes(previous) || previous === "\n") {
-          result += "async ";
-          index += "async function".length;
-          if (source[index] === " ") {
-            index += 1;
-          }
-          continue;
-        }
-      }
-      if (source.startsWith("function", index) && isIdentifierBoundary(source, index) && isBoundaryAfter(source, index + "function".length)) {
-        const previous = getLastNonWhitespaceChar(result);
-        if (previous === "" || "{;}.".includes(previous) || previous === "\n") {
-          index += "function".length;
-          if (source[index] === " ") {
-            index += 1;
-          }
-          continue;
-        }
-      }
-    }
-
-    result += char;
-    index += 1;
+    previous = token;
   }
-
-  return result;
+  for (const [start, end] of edits.reverse()) source = source.slice(0, start) + source.slice(end);
+  return source;
 }
 
 export function compileSource(source) {
+  if (isSentenceSource(source)) source = compileSentences(source);
   const keywordTransformed = transformKeywords(source);
   return fixClassMethods(keywordTransformed);
 }

@@ -185,3 +185,17 @@ test('translates extended control flow, module, and type keywords', () => {
   assert.match(output, /function 숫자인지\(값: any\): 값 is number {/);
   assert.match(output, /const 인스턴스 = new 서비스\("테스트"\);/);
 });
+
+
+test('class normalization preserves strings, comments and nested functions', () => {
+  const source = '클래스 예제 { 함수 메서드() { 함수 내부() { 반환 1; } 반환 내부(); } }\n상수 문장 = "class { function 인사() }";\n// class { function 주석() }';
+  const output = compileString(source);
+  assert.ok(output.includes('메서드() { function 내부()'));
+  assert.ok(output.includes('"class { function 인사() }"'));
+  assert.ok(output.includes('// class { function 주석() }'));
+});
+
+test('console alias respects identifier boundaries', () => {
+  assert.equal(compileString('내콘솔.출력(1); 콘솔.출력값; 콘솔.출력(2);'),
+    '내콘솔.출력(1); 콘솔.출력값; console.log(2);');
+});

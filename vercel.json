@@ -1,0 +1,15 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build:site",
+  "outputDirectory": "site-dist",
+  "framework": null,
+  "headers": [
+    {"source": "/(.*)", "headers": [
+      {"key":"X-Content-Type-Options","value":"nosniff"},
+      {"key":"Referrer-Policy","value":"strict-origin-when-cross-origin"},
+      {"key":"Permissions-Policy","value":"camera=(), microphone=(), geolocation=()"},
+      {"key":"Content-Security-Policy","value":"default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; frame-src 'self'; worker-src 'self' blob:; connect-src 'none'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'"}
+    ]},
+    {"source":"/runner.html","headers":[{"key":"Content-Security-Policy","value":"default-src 'none'; script-src 'self' 'unsafe-eval'; worker-src blob:; connect-src 'none'; object-src 'none'; base-uri 'none'; frame-ancestors 'self'"}]}
+  ]
+}
