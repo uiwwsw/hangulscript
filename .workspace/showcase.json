@@ -23,11 +23,15 @@
     {
       "platform": "source",
       "url": "https://github.com/uiwwsw/hangulscript"
+    },
+    {
+      "platform": "package",
+      "url": "https://www.npmjs.com/package/@uiwwsw/hangulscript"
     }
   ],
   "evidence": {
     "verifiedAt": "2026-10-22",
-    "note": "2026-10-22: Production https://hangulscript.vercel.app returns HTTP 200 with JavaScript default output, TypeScript comparison and sticky result panel. 17 tests and worker output check pass; JS removes type annotations while TS preserves them. npm publication requires additional authentication and remains unconfirmed."
+    "note": "2026-10-22: @uiwwsw/hangulscript 0.4.0 registry status published; clean registry installation and CLI calculator output verified. Production demo defaults to JavaScript, supports TypeScript comparison, and keeps results sticky at the viewport bottom. Browser calculator outputs 4. Runner initialization is separate from the 2-second execution budget. 17 tests pass."
   },
   "en": "HangulScript"
 }
