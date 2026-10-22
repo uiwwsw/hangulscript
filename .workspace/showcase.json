@@ -15,7 +15,7 @@
     "입력창·버튼·결과 카드와 계산기·통계 등 UI 예제",
     "Node 직접 실행·다중 모듈 빌드·React/Vue Vite 연동",
     "23개 공식 문서 페이지·검색·실행 예제·큰 그림과 로드맵",
-    "VS Code 포맷·진단·타입 정보·정의 이동과 ㅎ 아이콘 VSIX"
+    "VS Code 정식 확장: 포맷·진단·타입 정보·정의 이동·ㅎ 아이콘"
   ],
   "status": "live",
   "links": [
@@ -34,7 +34,7 @@
   ],
   "evidence": {
     "verifiedAt": "2026-10-22",
-    "note": "2026-10-22: npm 0.8.0 latest public, published by GitHub Actions run 39729721166 using repository secret without interactive OTP. Public archive SHA1 ee08e7cbbdb900d212fd10e62d2a3717a301ed99 matches CI artifact; local archive contents identical. 45 tests and actual macOS/Linux VS Code host checks pass. 61 API examples typecheck; non-UI examples execute. 23 docs routes have unique metadata and internal links. Production healthchecks pass; Chrome search for deep copy opens its reference and shared demo returns 10 after copying nested data. React/Vue builds pass with public 0.8.0. VS Code light/dark HGS icons verified in actual host. GitHub v0.8.0 release includes 0.3.0 VSIX; Marketplace latest public remains 0.2.0 at verification."
+    "note": "2026-10-22: npm 0.8.0 latest public, published by GitHub Actions run 39729721166 using repository secret without interactive OTP. Public archive SHA1 ee08e7cbbdb900d212fd10e62d2a3717a301ed99 matches CI artifact; local archive contents identical. 45 tests and actual macOS/Linux VS Code host checks pass. 61 API examples typecheck; non-UI examples execute. 23 docs routes have unique metadata and internal links. Production healthchecks pass; Chrome search for deep copy opens its reference and shared demo returns 10 after copying nested data. React/Vue builds pass with public 0.8.0. VS Code light/dark HGS icons verified in actual host. GitHub v0.8.0 release includes 0.3.0 VSIX; Marketplace public gallery confirms 0.3.0 as latest."
   },
   "en": "HangulScript"
 }
