@@ -27,7 +27,7 @@
   ],
   "evidence": {
     "verifiedAt": "2026-10-22",
-    "note": "Repository renamed to uiwwsw/hangulscript. Preparing @uiwwsw/hangulscript 0.4.0 with .hgs default and legacy .ks compatibility; registry publication not yet verified."
+    "note": "2026-10-22: GitHub repository renamed to uiwwsw/hangulscript; Vercel project renamed and https://hangulscript.vercel.app responds publicly. @uiwwsw/hangulscript 0.4.0 uses .hgs, legacy .ks compatibility verified by CLI tests. npm registry upload timed out; package publication is not confirmed."
   },
   "en": "HangulScript"
 }
