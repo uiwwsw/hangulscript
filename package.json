@@ -1,6 +1,6 @@
 {
   "name": "@uiwwsw/hangulscript",
-  "version": "0.6.0",
+  "version": "0.7.0-dev.0",
   "description": "한글 문장으로 작성하고 JavaScript와 타입 선언으로 배포하는 실험적 프로그래밍 언어",
   "license": "MIT",
   "type": "module",
@@ -17,6 +17,10 @@
     "./vite": {
       "types": "./dist/vite.d.ts",
       "import": "./dist/vite.js"
+    },
+    "./formatter": {
+      "types": "./dist/formatter.d.ts",
+      "import": "./dist/formatter.js"
     }
   },
   "bin": {
@@ -34,7 +38,9 @@
     "prepublishOnly": "npm test && npm run build",
     "test": "node --test",
     "build:site": "node scripts/build-site.js",
-    "benchmark": "node scripts/benchmark.js"
+    "benchmark": "node scripts/benchmark.js",
+    "build:vscode": "node scripts/build-vscode.js",
+    "package:vscode": "npm run build:vscode && cd extensions/vscode && vsce package --no-dependencies"
   },
   "dependencies": {
     "typescript": "^5.4.0"
@@ -61,6 +67,7 @@
     "access": "public"
   },
   "devDependencies": {
+    "@vscode/vsce": "^4.0.0",
     "esbuild": "^0.25.0"
   },
   "types": "dist/index.d.ts"

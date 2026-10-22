@@ -10,3 +10,5 @@ site-dist/
 .vercel
 examples/*.js
 examples/*.d.ts
+extensions/vscode/out/
+extensions/vscode/*.vsix

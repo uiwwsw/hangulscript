@@ -1,0 +1,54 @@
+{
+  "scopeName": "source.hangulscript",
+  "patterns": [
+    {
+      "name": "comment.line.number-sign.hangulscript",
+      "match": "#.*$"
+    },
+    {
+      "name": "string.quoted.double.hangulscript",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        {
+          "name": "constant.character.escape.hangulscript",
+          "match": "\\\\."
+        }
+      ]
+    },
+    {
+      "name": "string.quoted.single.hangulscript",
+      "begin": "'",
+      "end": "'",
+      "patterns": [
+        {
+          "name": "constant.character.escape.hangulscript",
+          "match": "\\\\."
+        }
+      ]
+    },
+    {
+      "name": "string.quoted.template.hangulscript",
+      "begin": "`",
+      "end": "`",
+      "patterns": [
+        {
+          "match": "\\\\.",
+          "name": "constant.character.escape.hangulscript"
+        }
+      ]
+    },
+    {
+      "name": "constant.numeric.hangulscript",
+      "match": "\\b[0-9]+(?:\\.[0-9]+)?\\b"
+    },
+    {
+      "name": "storage.type.hangulscript",
+      "match": "(?<![가-힣\\w])(?:숫자|문자|문자열|논리|참거짓|아무것|없음)(?![가-힣\\w])"
+    },
+    {
+      "name": "keyword.control.hangulscript",
+      "match": "(?:정의한다|공개한다|가져온다|돌려주기|반복한다|아니면|만약|동안|출력한다|기다린다|던진다|시도한다|잡는다|마지막으로|누르면)(?![가-힣\\w])"
+    }
+  ]
+}

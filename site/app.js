@@ -59,7 +59,7 @@ function compile(source) {
       const request = requests.get(data.id);
       if (!request) return;
       requests.delete(data.id);
-      data.error ? request.reject(new Error(data.error)) : request.resolve(data);
+      data.error ? request.reject(Object.assign(new Error(data.error), { diagnostics: data.diagnostics ?? [] })) : request.resolve(data);
     };
     compiler.onerror = () => {
       for (const request of requests.values()) request.reject(new Error('변환기를 불러오지 못했습니다. 페이지를 새로고침해 주세요.'));
@@ -80,6 +80,7 @@ async function transform() {
     const result = await compile(source);
     if (version !== editVersion) return false;
     lastSource = source; lastResult = result;
+    showDiagnostics([]);
     $('compiled').value = $('output-format').value === 'javascript' ? result.displayJavascript : result.display;
     javascript = result.javascript;
     $('status').textContent = `변환 완료 · ${result.duration.toFixed(1)}ms`;
@@ -87,7 +88,8 @@ async function transform() {
   } catch (error) {
     if (version !== editVersion) return false;
     javascript = ''; $('compiled').value = '';
-    $('status').textContent = '문법을 확인해 주세요'; $('output').textContent = error.message;
+    showDiagnostics(error.diagnostics ?? []);
+    $('status').textContent = '코드의 오류를 확인해 주세요'; $('output').textContent = error.message;
     return false;
   }
 }
@@ -206,3 +208,19 @@ function renderUI(elements) {
   if (!elements.length) $('preview-content').textContent = '이 예제는 아래 실행 결과에 출력합니다. 화면 예제를 선택하면 입력창과 버튼을 볼 수 있습니다.';
 }
 $('preview-content').addEventListener('submit', event => event.preventDefault());
+
+function showDiagnostics(diagnostics) {
+  $('diagnostics').replaceChildren();
+  $('source').setAttribute('aria-invalid', diagnostics.length ? 'true' : 'false');
+  for (const diagnostic of diagnostics.slice(0, 20)) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.textContent = `${diagnostic.line}행 ${diagnostic.column}열 · ${typeof diagnostic.code === 'number' ? 'TS' : ''}${diagnostic.code} · ${diagnostic.message}`;
+    button.addEventListener('click', () => {
+      const lines = $('source').value.split('\n');
+      const offset = lines.slice(0, diagnostic.line - 1).reduce((sum, line) => sum + line.length + 1, 0) + diagnostic.column - 1;
+      $('source').focus(); $('source').setSelectionRange(offset, offset + diagnostic.length);
+    });
+    $('diagnostics').append(button);
+  }
+}

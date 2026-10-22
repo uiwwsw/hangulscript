@@ -5,3 +5,9 @@ export function compileSource(source) {
   if (typeof source !== 'string') throw new TypeError('한글스크립트 소스는 문자열이어야 합니다.');
   return compileSentences(source);
 }
+
+/** Generated TypeScript lines map to 1-based HGS lines; runtime lines map to zero. */
+export function compileMappedSource(source) {
+  if (typeof source !== 'string') throw new TypeError('한글스크립트 소스는 문자열이어야 합니다.');
+  return compileSentences(source, { withMapping: true });
+}

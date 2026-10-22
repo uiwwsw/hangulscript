@@ -1,102 +1,10 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
-import { createRequire } from 'node:module';
 import { compileSource } from './transformer.js';
-
-const require = createRequire(import.meta.url);
-let tsModuleCache;
-let defaultCompilerOptions;
-
-function loadTypeScriptModule() {
-  if (tsModuleCache) {
-    return tsModuleCache;
-  }
-  let typescript;
-  try {
-    typescript = require('typescript');
-  } catch (initialError) {
-    const globalCandidate = path.join(process.execPath, '..', '..', 'lib', 'node_modules', 'typescript');
-    try {
-      typescript = require(globalCandidate);
-    } catch (fallbackError) {
-      throw new Error('TypeScript 모듈을 불러올 수 없습니다. Bun 또는 Node 환경에서 TypeScript를 설치해주세요.');
-    }
-  }
-  tsModuleCache = typescript.default ?? typescript;
-  return tsModuleCache;
-}
-
-function getDefaultCompilerOptions(ts) {
-  if (!defaultCompilerOptions) {
-    defaultCompilerOptions = {
-      allowNonTsExtensions: true,
-      noEmit: true,
-      module: ts.ModuleKind.NodeNext,
-      moduleResolution: ts.ModuleResolutionKind.NodeNext,
-      target: ts.ScriptTarget.ES2020,
-      strict: true,
-      esModuleInterop: true
-    };
-  }
-  return defaultCompilerOptions;
-}
-
-function createLintHost(ts, compilerOptions, filePath, sourceText) {
-  const resolvedFilePath = path.resolve(filePath);
-  const baseHost = ts.createCompilerHost(compilerOptions, true);
-  const sourceFile = ts.createSourceFile(
-    resolvedFilePath,
-    sourceText,
-    compilerOptions.target ?? ts.ScriptTarget.ES2020,
-    true,
-    ts.ScriptKind.TS
-  );
-
-  const getSourceFile = baseHost.getSourceFile.bind(baseHost);
-  const fileExists = baseHost.fileExists.bind(baseHost);
-  const readFile = baseHost.readFile.bind(baseHost);
-
-  baseHost.getSourceFile = (fileName, languageVersion, onError, shouldCreateNewSourceFile) => {
-    if (path.resolve(fileName) === resolvedFilePath) {
-      return shouldCreateNewSourceFile ? ts.createSourceFile(
-        resolvedFilePath,
-        sourceText,
-        languageVersion,
-        true,
-        ts.ScriptKind.TS
-      ) : sourceFile;
-    }
-    return getSourceFile(fileName, languageVersion, onError, shouldCreateNewSourceFile);
-  };
-
-  baseHost.fileExists = (fileName) => {
-    if (path.resolve(fileName) === resolvedFilePath) {
-      return true;
-    }
-    return fileExists(fileName);
-  };
-
-  baseHost.readFile = (fileName) => {
-    if (path.resolve(fileName) === resolvedFilePath) {
-      return sourceText;
-    }
-    return readFile(fileName);
-  };
-
-  return baseHost;
-}
-
-function formatDiagnostics(ts, diagnostics) {
-  if (diagnostics.length === 0) {
-    return '';
-  }
-  const formatHost = {
-    getCanonicalFileName: (fileName) => fileName,
-    getCurrentDirectory: () => process.cwd(),
-    getNewLine: () => '\n'
-  };
-  return ts.formatDiagnosticsWithColorAndContext(diagnostics, formatHost);
-}
+import { analyzeSource } from './checker.js';
+import { HangulScriptError, formatSourceDiagnostics, mapDiagnostic } from './diagnostics.js';
+export { checkSource } from './checker.js';
+export { HangulScriptError, formatSourceDiagnostics } from './diagnostics.js';
 
 export function compileString(source) {
   return compileSource(source);
@@ -118,16 +26,13 @@ export async function compileFileToDefaultDestination(inputPath) {
 }
 
 export function lintSource(source, filePath = 'input.hgs', compilerOptions) {
-  const ts = loadTypeScriptModule();
-  const options = compilerOptions ?? getDefaultCompilerOptions(ts);
-  const compiled = compileSource(source);
-  const host = createLintHost(ts, options, filePath, compiled);
-  const program = ts.createProgram([path.resolve(filePath)], options, host);
-  const diagnostics = ts.getPreEmitDiagnostics(program);
+  compileSource(source); // Keep syntax errors explicit for callers of the legacy lint API.
+  const result = analyzeSource(source, filePath, { compilerOptions });
   return {
-    diagnostics,
-    formattedDiagnostics: formatDiagnostics(ts, diagnostics),
-    hasErrors: diagnostics.some((diagnostic) => diagnostic.category === ts.DiagnosticCategory.Error)
+    diagnostics: result.nativeDiagnostics,
+    sourceDiagnostics: result.diagnostics,
+    formattedDiagnostics: formatSourceDiagnostics(result.diagnostics),
+    hasErrors: result.hasErrors
   };
 }
 
@@ -140,31 +45,14 @@ export { compileSource };
 
 /** Compile through TypeScript once, emitting executable JS and declarations in memory. */
 export function buildSource(source, filePath = 'input.hgs') {
-  const ts = loadTypeScriptModule();
-  const virtualPath = path.resolve(filePath).replace(/\.hgs$/i, '') + '.ts';
-  const compiled = compileSource(source);
-  const options = {
-    target: ts.ScriptTarget.ES2022,
-    module: ts.ModuleKind.ESNext,
-    moduleResolution: ts.ModuleResolutionKind.Bundler,
-    strict: true,
-    declaration: true,
-    noEmitOnError: true,
-    skipLibCheck: true
-  };
-  const host = createLintHost(ts, options, virtualPath, compiled);
+  const result = analyzeSource(source, filePath);
+  if (result.hasErrors) throw new HangulScriptError(result.diagnostics);
   const files = new Map();
-  host.writeFile = (name, content) => files.set(name, content);
-  const program = ts.createProgram([virtualPath], options, host);
-  const diagnostics = ts.getPreEmitDiagnostics(program);
-  if (diagnostics.some(d => d.category === ts.DiagnosticCategory.Error)) {
-    throw new Error(formatDiagnostics(ts, diagnostics));
-  }
-  const emitted = program.emit();
-  if (emitted.emitSkipped) throw new Error(formatDiagnostics(ts, emitted.diagnostics) || '빌드에 실패했습니다.');
+  const emitted = result.program.emit(undefined, (name, content) => files.set(name, content));
+  if (emitted.emitSkipped) throw new HangulScriptError(emitted.diagnostics.map(d => mapDiagnostic(d, result.documents)));
   return {
-    javascript: files.get(virtualPath.replace(/\.ts$/, '.js')) ?? '',
-    declaration: files.get(virtualPath.replace(/\.ts$/, '.d.ts')) ?? ''
+    javascript: files.get(result.virtualRoot.replace(/\.ts$/, '.js')) ?? '',
+    declaration: files.get(result.virtualRoot.replace(/\.ts$/, '.d.ts')) ?? ''
   };
 }
 
@@ -179,3 +67,5 @@ export async function buildFile(inputPath, outputDirectory = path.dirname(inputP
   await writeFile(declarationPath, result.declaration, 'utf8');
   return { ...result, javascriptPath, declarationPath };
 }
+
+export { formatSource } from './formatter.js';

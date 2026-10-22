@@ -303,5 +303,9 @@ console.log(결제금액(10000, 20)); // 8000
 - [온라인 연동 안내](https://hangulscript.vercel.app/#frameworks)
 
 예제는 Node.js `^20.19.0 || >=22.12.0`이 필요하며 Node.js 24에서 검증했습니다.
-Vite 플러그인은 타입 검사·선언 생성·소스맵을 제공하지 않습니다. TypeScript 프로젝트는 `ksc build`로 생성한 `.js`와 `.d.ts`를 가져오는 방식이 적합합니다.
+개발 중인 다음 버전의 Vite 플러그인은 구문·타입 오류가 있으면 개발 서버와 빌드를 실패시키고 원본 `.hgs` 위치를 표시합니다. 선언 생성·디버깅 소스맵은 제공하지 않습니다. TypeScript 프로젝트는 `ksc build`로 생성한 `.js`와 `.d.ts`를 가져오는 방식이 적합합니다.
 데모의 UI 문장을 React/Vue 컴포넌트로 자동 변환하는 기능은 포함하지 않습니다.
+
+## VS Code 확장
+
+문법 강조·자동 들여쓰기·문서 포맷·Problems 오류 표시를 제공하는 확장을 같은 저장소의 [`extensions/vscode`](extensions/vscode)에서 개발합니다. [설치·저장 시 포맷·Marketplace 게시 안내](extensions/vscode/README.md)를 참고하세요. VSIX 패키지와 Marketplace 공개는 별도 단계입니다.

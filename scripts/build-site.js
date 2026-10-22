@@ -1,12 +1,15 @@
 import { build } from 'esbuild';
+import { typeLibraries } from './type-libraries.js';
 import { cp, mkdir, rm, writeFile } from 'node:fs/promises';
 const origin = process.env.SITE_URL || 'https://hangulscript.vercel.app';
 if (!/^https:\/\/[a-z0-9.-]+$/i.test(origin)) throw new Error('SITE_URL must be an HTTPS origin');
 await rm('site-dist', { recursive: true, force: true });
 await mkdir('site-dist');
 await cp('site', 'site-dist', { recursive: true });
-await build({ entryPoints: ['site/app.js', 'site/compiler-worker.js', 'site/runner.js'], bundle: true, minify: true, format: 'esm', platform: 'browser', outdir: 'site-dist' });
+await build({ entryPoints: ['site/app.js', 'site/compiler-worker.js', 'site/runner.js'], bundle: true, minify: true, format: 'esm', platform: 'browser', outdir: 'site-dist', external: ['/type-libs.js'] });
 await writeFile('site-dist/robots.txt', `User-agent: *\nAllow: /\nSitemap: ${origin}/sitemap.xml\n`);
 await writeFile('site-dist/sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>${origin}/</loc></url></urlset>`);
 const { readFile } = await import('node:fs/promises');
 await writeFile('site-dist/index.html', (await readFile('site/index.html', 'utf8')).replaceAll('https://hangulscript.vercel.app', origin));
+
+await writeFile('site-dist/type-libs.js', 'export default ' + JSON.stringify(await typeLibraries()) + ';\n');

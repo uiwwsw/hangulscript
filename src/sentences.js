@@ -6,8 +6,12 @@ const identifier = /^[\p{L}_$][\p{L}\p{N}_$]*$/u;
 const functionName = /^[\p{L}_$][\p{L}\p{N}_$]*(?:<.+>)?$/u;
 const obsolete = /^(?:상수|변수|함수|반환|클래스|가져오기|내보내기|반복|비동기함수|스위치|선택|케이스|경우|인터페이스|열거형|시도|잡기|마침내|던지기|선언|추상)(?:\s|[({*])|^콘솔\.출력/u;
 
-export function compileSentences(source, { includeRuntime = true } = {}) {
-  const output = includeRuntime ? [sentenceRuntime] : [];
+export function compileSentences(source, { includeRuntime = true, withMapping = false } = {}) {
+  const output = [];
+  const lineMap = [];
+  let currentLine = 0;
+  const push = code => { output.push(code); lineMap.push(...code.split('\n').map(() => currentLine)); };
+  if (includeRuntime) push(sentenceRuntime);
   const frames = [{ indent: 0, kind: 'root' }];
   let pending = null;
   const lines = source.split(/\r?\n/);
@@ -19,6 +23,7 @@ export function compileSentences(source, { includeRuntime = true } = {}) {
     return false;
   };
   for (let index = 0; index < lines.length; index++) {
+    currentLine = index + 1;
     const raw = lines[index];
     const text = raw.trim();
     if (!text || text.startsWith('#')) continue;
@@ -33,12 +38,12 @@ export function compileSentences(source, { includeRuntime = true } = {}) {
     let closed;
     while (indent < frames.at(-1).indent) {
       closed = frames.pop();
-      output.push(closed.kind === 'case' ? 'break; }' : '}');
+      push(closed.kind === 'case' ? 'break; }' : '}');
     }
     if (indent !== frames.at(-1).indent) fail('이전 블록과 들여쓰기를 맞춰 주세요.');
     const parent = frames.at(-1).kind;
-    const open = (code, kind) => { output.push(code + ' {'); pending = { kind }; };
-    const emit = code => output.push(code);
+    const open = (code, kind) => { push(code + ' {'); pending = { kind }; };
+    const emit = code => push(code);
     const exp = value => expression(value);
     const top = () => { if (parent !== 'root') fail('가져오기·공개·타입 선언은 파일의 최상위에 작성하세요.'); };
     let m;
@@ -132,7 +137,8 @@ export function compileSentences(source, { includeRuntime = true } = {}) {
   while (frames.length > 1) {
     const frame = frames.pop();
     if (frame.kind === 'do') throw new SyntaxError('먼저 실행한다 블록 뒤에 반복 조건이 필요합니다.');
-    output.push(frame.kind === 'case' ? 'break; }' : '}');
+    push(frame.kind === 'case' ? 'break; }' : '}');
   }
-  return output.join('\n');
+  const code = output.join('\n');
+  return withMapping ? { code, lineMap } : code;
 }

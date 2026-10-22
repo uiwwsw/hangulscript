@@ -8,7 +8,7 @@ import hangulscript from '../src/vite.js';
 
 function execute(source, values = {}, action = '') {
   const bridge = createUIBridge(values, action);
-  vm.runInNewContext(buildSource(source).javascript, { __hangulUI: bridge, console }, { timeout: 1000 });
+  vm.runInNewContext(buildSource(source).javascript.replace(/export \{\};\s*$/, ''), { __hangulUI: bridge, console }, { timeout: 1000 });
   return bridge.snapshot();
 }
 
