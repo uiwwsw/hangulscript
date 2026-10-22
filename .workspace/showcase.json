@@ -5,14 +5,14 @@
   "name": "한글스크립트",
   "category": "개발 도구",
   "symbol": "ㅎ",
-  "color": "#174d3d",
+  "color": "#2563eb",
   "summary": "한글 문장으로 개발하고 JavaScript·Node·VS Code로 연결하는 프로그래밍 언어",
   "description": "한글스크립트(HangulScript)는 문장형 코드를 JavaScript와 .d.ts로 빌드하는 언어입니다. npm 0.8.0에서 목록·집합·사전·복사·정렬 등 61개 한글 함수를 제공하며, 23개 페이지의 공식 문서와 개발 로드맵을 공개했습니다. Node 직접 실행, React·Vue Vite 연동, 타입 검사와 VS Code 편집 기능을 지원합니다.",
   "features": [
     "시작 표기 없는 문장형 .hgs와 JavaScript·타입 선언 빌드",
     "목록·집합·사전·정렬·복사·검증 등 61개 한글 함수",
     "얕은·깊은 복사와 원본을 유지하는 안정적인 기준 정렬",
-    "입력창·버튼·결과 카드와 계산기·통계 등 UI 예제",
+    "한글 코드·JavaScript 비교와 하단 고정 콘솔·선택형 UI 예제",
     "Node 직접 실행·다중 모듈 빌드·React/Vue Vite 연동",
     "23개 공식 문서 페이지·검색·실행 예제·큰 그림과 로드맵",
     "VS Code 정식 확장: 포맷·진단·타입 정보·정의 이동·ㅎ 아이콘"
@@ -34,7 +34,7 @@
   ],
   "evidence": {
     "verifiedAt": "2026-10-22",
-    "note": "2026-10-22: npm 0.8.0 latest public, published by GitHub Actions run 39729721166 using repository secret without interactive OTP. Public archive SHA1 ee08e7cbbdb900d212fd10e62d2a3717a301ed99 matches CI artifact; local archive contents identical. 45 tests and actual macOS/Linux VS Code host checks pass. 61 API examples typecheck; non-UI examples execute. 23 docs routes have unique metadata and internal links. Production healthchecks pass; Chrome search for deep copy opens its reference and shared demo returns 10 after copying nested data. React/Vue builds pass with public 0.8.0. VS Code light/dark HGS icons verified in actual host. GitHub v0.8.0 release includes 0.3.0 VSIX; Marketplace public gallery confirms 0.3.0 as latest."
+    "note": "2026-10-22: npm 0.8.0 latest public, published by GitHub Actions run 39729721166 using repository secret without interactive OTP. Public archive SHA1 ee08e7cbbdb900d212fd10e62d2a3717a301ed99 matches CI artifact; local archive contents identical. 45 tests and actual macOS/Linux VS Code host checks pass. 61 API examples typecheck; non-UI examples execute. 23 docs routes have unique metadata and internal links. Production healthchecks pass; Chrome search for deep copy opens its reference and shared demo returns 10 after copying nested data. React/Vue builds pass with public 0.8.0. VS Code light/dark HGS icons verified in actual host. GitHub v0.8.0 release includes 0.3.0 VSIX; Marketplace public gallery confirms 0.3.0 as latest. Playground redesigned with white/blue documentation theme, default language example and fixed console for logs/errors; calculator result cards removed. Production deployment verified."
   },
   "en": "HangulScript"
 }

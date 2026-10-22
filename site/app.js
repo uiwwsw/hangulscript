@@ -156,7 +156,7 @@ try {
   }
 } catch { $('output').textContent = '공유 링크를 읽을 수 없어 기본 예제를 열었습니다.'; }
 $('example').addEventListener('change', selectExample);
-$('source').addEventListener('input', () => { uiValues = {}; $('preview-content').replaceChildren(); schedule(); });
+$('source').addEventListener('input', () => { uiValues = {}; $('preview-content').replaceChildren(); document.querySelector('.preview').hidden = true; schedule(); });
 $('source').addEventListener('keydown', event => {
   if (event.key === 'Tab') { event.preventDefault(); $('source').setRangeText('    ', $('source').selectionStart, $('source').selectionEnd, 'end'); schedule(); }
   if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') run();
