@@ -16,3 +16,19 @@ jobs:
       - run: npm run build
       - run: npm run build:site
       - run: npm pack --dry-run
+  framework-examples:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        framework: [react, vue]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: examples/${{ matrix.framework }}-vite/package-lock.json
+      - run: npm ci
+        working-directory: examples/${{ matrix.framework }}-vite
+      - run: npm run build
+        working-directory: examples/${{ matrix.framework }}-vite

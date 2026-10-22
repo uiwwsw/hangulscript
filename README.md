@@ -8,7 +8,7 @@
 Python의 들여쓰기와 익숙한 기본 함수, JavaScript의 표현식과 웹 생태계,
 TypeScript의 타입 검사를 결합합니다. 소스 확장자는 **`.hgs`**입니다.
 
-[온라인에서 실행하기](https://hangulscript.vercel.app/) · [문법 명세](LANGUAGE.md) · [릴리스](https://github.com/uiwwsw/hangulscript/releases) · [의견 보내기](https://github.com/uiwwsw/hangulscript/issues)
+[온라인에서 실행하기](https://hangulscript.vercel.app/) · [React·Vue 사용법](docs/frameworks.md) · [문법 명세](LANGUAGE.md) · [릴리스](https://github.com/uiwwsw/hangulscript/releases) · [의견 보내기](https://github.com/uiwwsw/hangulscript/issues)
 
 ```ks
 문장으로 시작
@@ -34,8 +34,8 @@ Python 소스 호환이나 전체 TypeScript 문법 지원을 뜻하지 않습�
 | [타입 있는 함수 모듈](examples/math-library.hgs) | 함수·타입 | JS + .d.ts 라이브러리 빌드 |
 
 데모에서 예제를 선택하고 입력값을 바꾼 다음 **실행하기**를 누르세요. 변환 결과는 기본적으로 JavaScript로 표시하며, 선택 메뉴에서 TypeScript와 비교할 수 있습니다. 실행 결과 패널은 데모를 스크롤하는 동안 화면 하단에 붙어 있습니다. CLI 빌드는 JavaScript와 `.d.ts`를 함께 생성합니다.
-입력값 변경은 예제 코드를 다시 생성하며, 코드를 직접 편집하면 입력란은 숨겨집니다.
-독립적인 웹 UI·데이터베이스·외부 API를 언어 자체에서 제공하는 단계는 아닙니다.
+화면 예제에서는 입력값을 바꾸고 도구 안의 버튼을 누르면 현재 값으로 프로그램을 다시 실행합니다.
+데모는 입력창·선택창·버튼·결과 카드를 제공합니다. 데이터베이스·외부 API는 제공하지 않습니다.
 생성한 JS를 기존 웹/Node 프로젝트에 연결해 화면과 서비스를 확장할 수 있습니다.
 
 ## 설치
@@ -246,7 +246,7 @@ npm pack --dry-run
 Vercel은 GitHub main과 연결되어 `site-dist/`를 배포합니다.
 `SITE_URL`에 HTTPS origin을 지정하면 canonical·Open Graph·robots·sitemap 주소를 바꿀 수 있습니다.
 
-향후에는 독립 AST·원본 `.hgs` 소스맵·LSP·모듈 그래프·Vite 연동 순으로 확장할 계획입니다.
+Vite 연동은 0.5.0부터 제공합니다. 독립 AST·원본 `.hgs` 소스맵·LSP·모듈 그래프는 향후 과제입니다.
 
 ## 라이선스
 
@@ -285,7 +285,11 @@ HTML·이벤트 핸들러 문자열을 삽입하지 않습니다.
 
 ## React·Vue에서 .hgs 가져오기
 
-Vite를 사용하는 React와 Vue는 별도 프레임워크 패키지 없이 같은 플러그인을 사용할 수 있습니다.
+**0.5.0 이상**의 공통 Vite 플러그인을 사용합니다. React/Vue의 화면과 상태 관리에 한글스크립트 계산·검증 함수를 연결할 수 있습니다.
+
+```bash
+npm install --save-dev @uiwwsw/hangulscript@^0.5.0
+```
 
 ```js
 // vite.config.js — React
@@ -296,21 +300,27 @@ import hangulscript from '@uiwwsw/hangulscript/vite';
 export default defineConfig({ plugins: [hangulscript(), react()] });
 ```
 
-Vue에서는 React 플러그인 대신 `@vitejs/plugin-vue`의 `vue()`를 넣습니다.
+Vue에서는 `@vitejs/plugin-vue`에서 `vue`를 가져와 `[hangulscript(), vue()]`로 설정합니다.
 
 ```text
-// src/discount.hgs
-export function 할인(가격: number, 비율: number) {
-    return 가격 * (1 - 비율 / 100);
-}
+문장으로 시작
+결제금액(가격: number, 할인율: number)를 정의한다:
+    돌려주기 가격 - 반올림(가격 * 할인율 / 100)
+export { 결제금액 }
 ```
 
 ```js
-// React 이벤트 핸들러와 Vue setup 등에서 동일하게 사용
-import { 할인 } from './discount.hgs';
-console.log(할인(10000, 20)); // 8000
+import { 결제금액 } from './discount.hgs';
+console.log(결제금액(10000, 20)); // 8000
 ```
 
-이 플러그인은 빌드 시 `.hgs`를 JavaScript 모듈로 변환합니다. React/Vue 컴포넌트는 각 프레임워크로 작성하고 한글스크립트 함수로 계산·검증 로직을 공유합니다.
-현재 플러그인은 타입 검사·선언 생성·소스맵을 제공하지 않습니다. 엄격한 타입 연동이 필요하면 `ksc build`로 만든 `.js`와 `.d.ts`를 가져오세요.
-데모의 UI 문장을 React/Vue 컴포넌트로 변환하는 기능은 포함하지 않습니다.
+완성된 **입력창 → 버튼 → 계산 결과** 예제와 React JSX·Vue SFC 전체 코드를 제공합니다.
+
+- [React·Vue 단계별 사용 안내](docs/frameworks.md): 설치·설정·한글 함수·컴포넌트 연결·TypeScript 사용법
+- [실행 가능한 React 예제](examples/react-vite): 해당 폴더에서 `npm ci` → `npm run dev`
+- [실행 가능한 Vue 예제](examples/vue-vite): 해당 폴더에서 `npm ci` → `npm run dev`
+- [온라인 연동 안내](https://hangulscript.vercel.app/#frameworks)
+
+예제는 Node.js `^20.19.0 || >=22.12.0`이 필요하며 Node.js 24에서 검증했습니다.
+Vite 플러그인은 타입 검사·선언 생성·소스맵을 제공하지 않습니다. TypeScript 프로젝트는 `ksc build`로 생성한 `.js`와 `.d.ts`를 가져오는 방식이 적합합니다.
+데모의 UI 문장을 React/Vue 컴포넌트로 자동 변환하는 기능은 포함하지 않습니다.

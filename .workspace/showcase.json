@@ -12,7 +12,7 @@
     "한글 문장형 .hgs와 JavaScript·타입 선언 빌드",
     "코드로 만드는 입력창·선택창·버튼·결과 카드",
     "계산기·할인·통계·문자열 UI 예제 4종",
-    "React·Vue 공통 Vite 플러그인"
+    "React·Vue 공통 Vite 플러그인과 실행 예제·연동 가이드"
   ],
   "status": "live",
   "links": [
@@ -31,7 +31,7 @@
   ],
   "evidence": {
     "verifiedAt": "2026-10-22",
-    "note": "2026-10-22: Production UI examples verified in Chrome: calculator input action returns 6, discount 10000 at 20 percent returns 8000, statistics average 25 and text deduplication 3 words. 20 tests pass. Installed 0.5.0 tarball builds React JSX and Vue SFC projects with Vite 8.3.5 and .hgs imports. npm 0.5.0 lifecycle status is published; public registry installation and Vite export execution verified."
+    "note": "2026-10-22: Production UI examples verified in Chrome: calculator input action returns 6, discount 10000 at 20 percent returns 8000, statistics average 25 and text deduplication 3 words. 20 tests pass. Installed 0.5.0 tarball builds React JSX and Vue SFC projects with Vite 8.3.5 and .hgs imports. npm 0.5.0 lifecycle status is published; public registry installation and Vite export execution verified. React and Vue runnable example projects use public 0.5.0, include lockfiles and pass production builds. README and live framework guide cover installation, components, Node requirements and typed prebuild usage; CI builds both examples."
   },
   "en": "HangulScript"
 }
