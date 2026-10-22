@@ -1,5 +1,8 @@
 # 한글스크립트 · HangulScript
 
+[![CI on main](https://github.com/uiwwsw/hangulscript/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/uiwwsw/hangulscript/actions/workflows/ci.yml)
+[![MIT license](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](https://github.com/uiwwsw/hangulscript/blob/main/LICENSE)
+
 **한글 문장으로 작성하고, JavaScript와 타입 선언으로 배포하는 실험적 프로그래밍 언어.**
 
 Python의 들여쓰기와 익숙한 기본 함수, JavaScript의 표현식과 웹 생태계,
