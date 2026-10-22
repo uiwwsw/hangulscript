@@ -12,7 +12,7 @@
     "시작 표기 없는 문장형 .hgs와 JavaScript·타입 선언 빌드",
     "목록·집합·사전·정렬·복사·검증 등 61개 한글 함수",
     "얕은·깊은 복사와 원본을 유지하는 안정적인 기준 정렬",
-    "한글 코드·JavaScript 비교와 하단 고정 콘솔·선택형 UI 예제",
+    "실행 코드와 일치하는 JavaScript 변환·하단 콘솔·선택형 UI 예제",
     "Node 직접 실행·다중 모듈 빌드·React/Vue Vite 연동",
     "공식 문서·영문 소개·검색·실행 예제·큰 그림과 로드맵",
     "VS Code 정식 확장: 포맷·진단·타입 정보·정의 이동·ㅎ 아이콘"
@@ -34,7 +34,7 @@
   ],
   "evidence": {
     "verifiedAt": "2026-10-22",
-    "note": "2026-10-22: npm 0.8.0 latest public, published by GitHub Actions run 39729721166 using repository secret without interactive OTP. Public archive SHA1 ee08e7cbbdb900d212fd10e62d2a3717a301ed99 matches CI artifact; local archive contents identical. 45 tests and actual macOS/Linux VS Code host checks pass. 61 API examples typecheck; non-UI examples execute. 23 docs routes have unique metadata and internal links. Production healthchecks pass; Chrome search for deep copy opens its reference and shared demo returns 10 after copying nested data. React/Vue builds pass with public 0.8.0. VS Code light/dark HGS icons verified in actual host. GitHub v0.8.0 release includes 0.3.0 VSIX; Marketplace public gallery confirms 0.3.0 as latest. Playground redesigned with white/blue documentation theme, default language example and fixed console for logs/errors; calculator result cards removed. Production deployment verified. English introduction at /en/ is public; reciprocal ko/en/x-default language alternates, self canonicals, JSON-LD, sitemap entry and bilingual title verified."
+    "note": "2026-10-22: npm 0.8.0 latest public, published by GitHub Actions run 39729721166 using repository secret without interactive OTP. Public archive SHA1 ee08e7cbbdb900d212fd10e62d2a3717a301ed99 matches CI artifact; local archive contents identical. 45 tests and actual macOS/Linux VS Code host checks pass. 61 API examples typecheck; non-UI examples execute. 23 docs routes have unique metadata and internal links. Production healthchecks pass; Chrome search for deep copy opens its reference and shared demo returns 10 after copying nested data. React/Vue builds pass with public 0.8.0. VS Code light/dark HGS icons verified in actual host. GitHub v0.8.0 release includes 0.3.0 VSIX; Marketplace public gallery confirms 0.3.0 as latest. Playground redesigned with white/blue documentation theme, default language example and fixed console for logs/errors; calculator result cards removed. Production deployment verified. English introduction at /en/ is public; reciprocal ko/en/x-default language alternates, self canonicals, JSON-LD, sitemap entry and bilingual title verified. Displayed and executed playground JavaScript now match: direct output becomes console.log and referenced helpers include transitive definitions; 48 tests pass, including standalone execution, aliases, local console shadowing and UI dependencies. Production healthchecks pass."
   },
   "en": "HangulScript"
 }
