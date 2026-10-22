@@ -7,14 +7,17 @@
   "symbol": "ㅎ",
   "color": "#174d3d",
   "summary": "한글 문장으로 개발하고 JavaScript·Node·VS Code로 연결하는 프로그래밍 언어",
-  "description": "한글스크립트(HangulScript)는 첫 줄부터 문장형으로 작성하는 언어입니다. 함수·반복·모듈·비동기·예외·클래스를 한글 문장으로 표현하고 JavaScript와 .d.ts로 빌드합니다. npm 0.7.0과 VS Code Marketplace 확장 0.2.0을 공개했으며 Node 직접 실행, React·Vue Vite 연동, 타입 오류 검사와 편집기 기능을 제공합니다.",
+  "description": "한글스크립트(HangulScript)는 문장형 코드를 JavaScript와 .d.ts로 빌드하는 언어입니다. npm 0.8.0에서 목록·집합·사전·복사·정렬 등 61개 한글 함수를 제공하며, 23개 페이지의 공식 문서와 개발 로드맵을 공개했습니다. Node 직접 실행, React·Vue Vite 연동, 타입 검사와 VS Code 편집 기능을 지원합니다.",
   "features": [
     "시작 표기 없는 문장형 전용 .hgs와 JS·타입 선언 빌드",
     "코드로 만드는 입력창·선택창·버튼·결과 카드",
     "계산기·할인·통계·문자열 UI 예제 4종",
     "React·Vue 공통 Vite 플러그인과 실행 예제·연동 가이드",
     "VS Code 공식 확장: 문법 강조·포맷·오류 진단·타입 정보·정의 이동·스코프 자동 완성",
-    "Node .hgs 직접 실행·다중 모듈 빌드·tsconfig 연동"
+    "Node .hgs 직접 실행·다중 모듈 빌드·tsconfig 연동",
+    "23개 페이지의 공식 문서·검색·함수별 실행 예제·개발 로드맵",
+    "61개 한글 함수와 목록·집합·사전·얕은·깊은 복사·기준 정렬",
+    "ㅎ 파일 아이콘을 제공하는 VS Code 0.3.0 VSIX 릴리스"
   ],
   "status": "live",
   "links": [
@@ -33,7 +36,7 @@
   ],
   "evidence": {
     "verifiedAt": "2026-10-22",
-    "note": "2026-10-22: npm @uiwwsw/hangulscript 0.7.0 lifecycle published, latest 0.7.0, SHA1 997f2d5a701b2406cfa65fdfa60d7f88a4870463. Fresh npm consumer passes Node HGS imports and strict TypeScript API consumption. React/Vue builds pass with public 0.7.0 locks. Marketplace uiwwsw.hangulscript-vscode 0.2.0 reports validated/public; official VS Code CLI installs it in an isolated test profile. 39 tests, Node 20.19 CLI/module tests, Node 22/24 CI and real macOS/Linux Extension Host tests pass. Vercel health checks pass; production Chrome maps TS2322 to main.hgs:1:1 and discount UI computes 10000 at 20 percent to 8000."
+    "note": "2026-10-22: npm 0.8.0 latest public, published by GitHub Actions run 39729721166 using repository secret without interactive OTP. Public archive SHA1 ee08e7cbbdb900d212fd10e62d2a3717a301ed99 matches CI artifact; local archive contents identical. 45 tests and actual macOS/Linux VS Code host checks pass. 61 API examples typecheck; non-UI examples execute. 23 docs routes have unique metadata and internal links. Production healthchecks pass; Chrome search for deep copy opens its reference and shared demo returns 10 after copying nested data. React/Vue builds pass with public 0.8.0. VS Code light/dark HGS icons verified in actual host. GitHub v0.8.0 release includes 0.3.0 VSIX; Marketplace latest public remains 0.2.0 at verification."
   },
   "en": "HangulScript"
 }
