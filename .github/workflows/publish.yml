@@ -16,12 +16,14 @@ concurrency:
   cancel-in-progress: false
 jobs:
   publish:
-    if: github.repository == 'uiwwsw/hangulscript'
+    if: github.repository == 'uiwwsw/hangulscript' && (github.event_name == 'workflow_dispatch' || startsWith(github.event.release.tag_name, 'v') && !startsWith(github.event.release.tag_name, 'vscode-v'))
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.release.tag_name || inputs.tag }}
+          ref: refs/tags/${{ github.event.release.tag_name || inputs.tag }}
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: 24

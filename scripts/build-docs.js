@@ -16,7 +16,7 @@ export const docPages = [
  ['writing','문장과 설계','이름·타입·조건·결과가 분명한 문장으로 개발합니다.','docs/guides/writing.md'],
  ['roadmap','큰 그림과 로드맵','현재 지원·부분 지원·미구현과 앞으로의 개발 순서.','docs/ROADMAP.md'],
  ['support','지원 범위','지원 환경·제약·호환성 정책을 확인합니다.','docs/support.md'],
- ['publishing','npm 게시','Actions Secret으로 검증한 릴리스를 게시합니다.','docs/publishing.md'],
+ ['publishing','릴리스와 자동 배포','npm과 VS Code 확장의 검증·패키징·자동 게시를 설정합니다.','docs/publishing.md'],
  ['standard-library','표준 기능 전체',`${standardCatalog.length}개 한글 기본 함수의 타입·동작·실행 예제.`,null]
 ];
 export const categories = [['기본','basics'],['목록','lists'],['집합','sets'],['사전','maps'],['복사','copy'],['정렬','sorting'],['숫자','numbers'],['문자열','strings'],['검증','checks'],['화면','ui']];

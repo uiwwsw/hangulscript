@@ -1,0 +1,100 @@
+name: Publish VS Code extension
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Extension tag matching its manifest (for example vscode-v0.3.2)'
+        required: true
+        type: string
+      dry_run:
+        description: 'Build and verify the VSIX without publishing'
+        type: boolean
+        default: true
+permissions:
+  contents: read
+concurrency:
+  group: vscode-publish
+  cancel-in-progress: false
+jobs:
+  publish:
+    if: github.repository == 'uiwwsw/hangulscript' && (github.event_name == 'workflow_dispatch' || startsWith(github.event.release.tag_name, 'vscode-v'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      RELEASE_TAG: ${{ github.event.release.tag_name || inputs.tag }}
+    steps:
+      - name: Validate tag format before checkout
+        run: |
+          node --input-type=module <<'JS'
+          if (!/^vscode-v\d+\.\d+\.\d+$/.test(process.env.RELEASE_TAG)) throw Error('Expected a stable vscode-vX.Y.Z tag');
+          JS
+      - uses: actions/checkout@v4
+        with:
+          ref: refs/tags/${{ github.event.release.tag_name || inputs.tag }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - name: Validate extension identity and version
+        id: metadata
+        run: node scripts/release-metadata.js vscode "$RELEASE_TAG"
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+      - run: npm run build:site
+      - run: npm pack --dry-run
+      - run: xvfb-run -a npm run test:vscode
+      - name: Package verified extension once
+        run: npm run package:vscode
+      - name: Record archive checksum
+        run: sha256sum "${{ steps.metadata.outputs.archive }}" > vscode-checksums.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vscode-${{ steps.metadata.outputs.version }}
+          path: |
+            ${{ steps.metadata.outputs.archive }}
+            vscode-checksums.txt
+          if-no-files-found: error
+      - name: Verify publishing configuration
+        if: github.event_name == 'release' || !inputs.dry_run
+        env:
+          AUTH_MODE: ${{ vars.VSCE_AUTH_MODE || 'oidc' }}
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+        run: |
+          node --input-type=module <<'JS'
+          const mode = process.env.AUTH_MODE;
+          if (!['oidc', 'pat'].includes(mode)) throw Error('VSCE_AUTH_MODE must be oidc or pat');
+          if (mode === 'pat' && !process.env.VSCE_PAT) throw Error('Register VSCE_PAT or configure Marketplace trusted publishing');
+          JS
+      - name: Publish using Marketplace trusted publishing
+        if: (github.event_name == 'release' || !inputs.dry_run) && vars.VSCE_AUTH_MODE != 'pat'
+        working-directory: extensions/vscode
+        run: npx --no-install vsce publish --oidc --packagePath "hangulscript-vscode-${{ steps.metadata.outputs.version }}.vsix" --skip-duplicate
+      - name: Publish using explicitly configured PAT
+        if: (github.event_name == 'release' || !inputs.dry_run) && vars.VSCE_AUTH_MODE == 'pat'
+        working-directory: extensions/vscode
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+        run: npx --no-install vsce publish --packagePath "hangulscript-vscode-${{ steps.metadata.outputs.version }}.vsix" --skip-duplicate
+      - name: Confirm public Marketplace version
+        if: github.event_name == 'release' || !inputs.dry_run
+        run: node scripts/verify-marketplace.js "${{ steps.metadata.outputs.version }}"
+      - name: Write run summary
+        if: success()
+        env:
+          VERSION: ${{ steps.metadata.outputs.version }}
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
+        run: |
+          echo "### HangulScript VS Code $VERSION" >> "$GITHUB_STEP_SUMMARY"
+          if [ "$DRY_RUN" = true ]; then
+            echo 'Build, tests and VSIX packaging passed. No publication was attempted.' >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo 'Public Marketplace version verified.' >> "$GITHUB_STEP_SUMMARY"
+          fi
+          cat vscode-checksums.txt >> "$GITHUB_STEP_SUMMARY"

@@ -44,3 +44,7 @@ Marketplace 게시 전 `package.json`의 publisher를 실제 소유한 게시자
 밝은·어두운 테마용 `ㅎ` 도형 아이콘을 언어 정의에 등록합니다. 기본 파일 아이콘 테마에서 `.hgs` 파일 옆에 표시됩니다. 사용 중인 아이콘 테마가 해당 언어의 아이콘을 별도로 지정했다면 테마의 설정이 우선합니다. 아이콘이 꺼져 있다면 VS Code의 File Icon Theme에서 기본 Seti 테마를 선택하세요.
 
 0.3.1 확장은 0.8.0의 목록·집합·사전·복사·정렬과 문장형 표현도 검사합니다. [공식 문서](https://hangulscript.vercel.app/docs/)에서 함수별 동작과 예제를 확인하세요.
+
+## CI/CD 릴리스
+
+`vscode-vX.Y.Z` GitHub Release는 테스트와 VSIX 생성을 거쳐 Marketplace 게시 워크플로를 실행합니다. 기본 인증은 OIDC이며 Marketplace 신뢰 설정이 먼저 필요합니다. 게시 없이 확인하는 `dry_run`도 제공합니다. [인증 설정과 릴리스 절차](https://hangulscript.vercel.app/docs/publishing/)를 참고하세요.

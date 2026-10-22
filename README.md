@@ -337,3 +337,7 @@ Node에서 직접 실행하려면 `node --import @uiwwsw/hangulscript/register s
 목록의 변환·검색·누적·펼치기, 집합 연산, 사전(Map), 얕은·깊은 복사, 안정적인 기준 정렬을 제공합니다. 전체 JS API를 한글화한 상태는 아니며 [지원 범위](docs/support.md)에 제약을 명시합니다.
 
 [한글스크립트의 큰 그림과 로드맵](https://hangulscript.vercel.app/docs/roadmap/)에서 현재 지원·부분 지원·미구현과 다음 개발 순서를 확인하세요.
+
+## 릴리스 자동화
+
+언어 패키지는 `vX.Y.Z`, VS Code 확장은 `vscode-vX.Y.Z` GitHub Release로 각각 게시합니다. 테스트·빌드 후 검증한 아카이브를 사용하며, 확장은 게시 없는 시험 실행도 지원합니다. [CI/CD와 인증 설정](docs/publishing.md)을 확인하세요.
