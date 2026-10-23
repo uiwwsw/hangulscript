@@ -1,2 +1,4 @@
-#!/bin/sh
-exec /Users/uiwwsw/Developer/workspace/bin/devctl exec -- "$@"
+#!/bin/bash
+set -euo pipefail
+project_dir="$(cd "$(dirname "$0")" && pwd)"
+exec "$project_dir/../../workspace/bin/devctl" exec -- "$@"
