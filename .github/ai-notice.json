@@ -17,5 +17,6 @@
   "outputs": [
     "site-dist",
     "dist"
-  ]
+  ],
+  "uiPolicy": "source-only"
 }
