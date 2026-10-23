@@ -342,4 +342,4 @@ Node에서 직접 실행하려면 `node --import @uiwwsw/hangulscript/register s
 
 ## 릴리스 자동화
 
-언어 패키지는 `vX.Y.Z`, VS Code 확장은 `vscode-vX.Y.Z` GitHub Release로 각각 게시합니다. 테스트·빌드 후 검증한 아카이브를 사용하며, 확장은 게시 없는 시험 실행도 지원합니다. [CI/CD와 인증 설정](docs/publishing.md)을 확인하세요.
+언어 패키지는 `vX.Y.Z`, VS Code 확장은 `vscode-vX.Y.Z` GitHub Release로 각각 게시합니다. 테스트·빌드 후 검증한 아카이브를 사용하며, 확장은 게시 없는 시험 실행도 지원합니다. [릴리스 가이드](docs/publishing.md)를 확인하세요.
