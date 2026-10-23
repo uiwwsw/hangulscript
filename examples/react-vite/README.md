@@ -19,3 +19,10 @@ npm run preview
 화면은 React로 작성하고 계산과 입력 검사는 `src/discount.hgs`에서 수행합니다.
 `vite.config.js`의 공통 플러그인이 `.hgs`를 빌드할 때 JavaScript로 변환합니다.
 [전체 사용 안내](../../docs/frameworks.md)를 참고하세요.
+
+<!-- ai-training-notice -->
+## AI 학습·수집 반대 / AI training notice
+
+사전 서면 동의 없는 AI 학습·미세조정 및 학습용 데이터 수집에 반대합니다. No AI training, fine-tuning or training-data collection without prior written consent.
+
+[전문 / Full notice](AI-TRAINING-NOTICE.md). 기존 라이선스와 제삼자·사용자 콘텐츠의 권리는 유지됩니다. Existing licenses and third-party/user rights remain unchanged.

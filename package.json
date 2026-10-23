@@ -38,13 +38,14 @@
     "LICENSE",
     "examples/*.hgs",
     "docs",
-    "CHANGELOG.md"
+    "CHANGELOG.md",
+    "AI-TRAINING-NOTICE.md"
   ],
   "scripts": {
-    "build": "node ./scripts/build.js",
+    "build": "node ./scripts/build.js && node .github/scripts/apply-ai-notice.mjs",
     "prepublishOnly": "npm test && npm run build",
     "test": "node --test",
-    "build:site": "node scripts/build-site.js",
+    "build:site": "node scripts/build-site.js && node .github/scripts/apply-ai-notice.mjs",
     "benchmark": "node scripts/benchmark.js",
     "build:vscode": "node scripts/build-vscode.js",
     "package:vscode": "npm run build:vscode && cd extensions/vscode && vsce package --no-dependencies",

@@ -343,3 +343,10 @@ Node에서 직접 실행하려면 `node --import @uiwwsw/hangulscript/register s
 ## 릴리스 자동화
 
 언어 패키지는 `vX.Y.Z`, VS Code 확장은 `vscode-vX.Y.Z` GitHub Release로 각각 게시합니다. 테스트·빌드 후 검증한 아카이브를 사용하며, 확장은 게시 없는 시험 실행도 지원합니다. [릴리스 가이드](docs/publishing.md)를 확인하세요.
+
+<!-- ai-training-notice -->
+## AI 학습·수집 반대 / AI training notice
+
+사전 서면 동의 없는 AI 학습·미세조정 및 학습용 데이터 수집에 반대합니다. No AI training, fine-tuning or training-data collection without prior written consent.
+
+[전문 / Full notice](AI-TRAINING-NOTICE.md). 기존 라이선스와 제삼자·사용자 콘텐츠의 권리는 유지됩니다. Existing licenses and third-party/user rights remain unchanged.

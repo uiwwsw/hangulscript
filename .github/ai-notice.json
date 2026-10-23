@@ -1,0 +1,21 @@
+{
+  "assets": [
+    "extensions/vscode/AI-TRAINING-NOTICE.md",
+    "AI-TRAINING-NOTICE.md",
+    "examples/react-vite/AI-TRAINING-NOTICE.md",
+    "examples/vue-vite/AI-TRAINING-NOTICE.md"
+  ],
+  "surfaces": [
+    "site/index.html",
+    "site/en/index.html",
+    "site/playground/index.html"
+  ],
+  "robots": [],
+  "packages": [
+    "package.json"
+  ],
+  "outputs": [
+    "site-dist",
+    "dist"
+  ]
+}

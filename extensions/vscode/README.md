@@ -48,3 +48,10 @@ Marketplace 게시 전 `package.json`의 publisher를 실제 소유한 게시자
 ## CI/CD 릴리스
 
 `vscode-vX.Y.Z` GitHub Release는 테스트와 VSIX 생성을 거쳐 Marketplace 게시 워크플로를 실행합니다. 기본 인증은 OIDC이며 Marketplace 신뢰 설정이 먼저 필요합니다. 게시 없이 확인하는 `dry_run`도 제공합니다. [인증 설정과 릴리스 절차](https://hangulscript.vercel.app/docs/publishing/)를 참고하세요.
+
+<!-- ai-training-notice -->
+## AI 학습·수집 반대 / AI training notice
+
+사전 서면 동의 없는 AI 학습·미세조정 및 학습용 데이터 수집에 반대합니다. No AI training, fine-tuning or training-data collection without prior written consent.
+
+[전문 / Full notice](AI-TRAINING-NOTICE.md). 기존 라이선스와 제삼자·사용자 콘텐츠의 권리는 유지됩니다. Existing licenses and third-party/user rights remain unchanged.
