@@ -19,4 +19,9 @@ npx ksc run main.hgs
 
 배포에는 `npx ksc build main.hgs --out-dir dist`를 사용합니다. JavaScript와 타입 선언 `.d.ts`가 함께 생성됩니다. 생성된 `.js`를 Node에서 실행할 프로젝트에는 package.json의 `"type": "module"`을 설정하세요.
 
-설치 없이 확인하려면 [실행 화면](/#playground)을 사용하세요. 공유한 코드는 자동 실행하지 않습니다. 브라우저는 격리된 실행 환경에서 최대 2초 동안 동작합니다.
+설치 없이 확인하려면 [실행 화면](/playground/)을 사용하세요. 공유한 코드는 자동 실행하지 않습니다. 브라우저는 격리된 실행 환경에서 최대 2초 동안 동작합니다.
+
+
+## 한글 코딩 기초
+
+[온라인 입문](online.md) · [변수](variables.md) · [조건문](conditions.md) · [반복문](loops.md) · [함수](functions.md)

@@ -5,7 +5,9 @@ import path from 'node:path';
 import os from 'node:os';
 import {buildDocs,docPages} from '../scripts/build-docs.js';
 import {standardCatalog} from '../scripts/standard-catalog.js';
-import {checkSource} from '../src/index.js';
+import ts from 'typescript';
+import vm from 'node:vm';
+import {compileSource,checkSource} from '../src/index.js';
 test('documentation has real routes, distinct SEO, complete API signatures and valid internal links',async()=>{
  const dir=await mkdtemp(path.join(os.tmpdir(),'hgs-docs-'));
  try {
@@ -22,14 +24,26 @@ test('documentation has real routes, distinct SEO, complete API signatures and v
   }
   const full=await readFile(path.join(dir,'docs/standard-library/index.html'),'utf8');
   for(const item of standardCatalog)assert.ok(full.includes(`id="${item.name}"`),item.name);
-  assert.equal(routes.length,24);assert.equal(docPages.length,24);
+  assert.equal(routes.length,29);assert.equal(docPages.length,29);
  }finally{await rm(dir,{recursive:true,force:true});}
 });
 test('tutorial HGS examples compile with the same checker used by CLI and editor',async()=>{
- for(const name of ['start','collections','writing']){
+ for(const name of ['start','collections','writing','online','variables','conditions','loops','functions']){
   const text=await readFile(`docs/guides/${name}.md`,'utf8');
   for(const [,source] of text.matchAll(/```hgs\n([\s\S]*?)```/g)){
    const result=checkSource(source);assert.equal(result.hasErrors,false,name+': '+JSON.stringify(result.diagnostics));
   }
+ }
+});
+
+test('introductory tutorials produce their documented output',async()=>{
+ for(const name of ['variables','conditions','loops','functions']){
+  const text=await readFile(`docs/guides/${name}.md`,'utf8');
+  const source=text.match(/```hgs\n([\s\S]*?)```/)[1];
+  const expected=text.match(/```text\n([\s\S]*?)```/)[1].trim();
+  const logs=[];
+  const code=ts.transpileModule(compileSource(source),{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
+  vm.runInNewContext(code,{console:{log:(...args)=>logs.push(args.join(' '))}},{timeout:1000});
+  assert.equal(logs.join('\n'),expected,name);
  }
 });
