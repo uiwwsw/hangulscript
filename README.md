@@ -344,4 +344,6 @@ Node에서 직접 실행하려면 `node --import @uiwwsw/hangulscript/register s
 
 언어 패키지는 `vX.Y.Z`, VS Code 확장은 `vscode-vX.Y.Z` GitHub Release로 각각 게시합니다. 테스트·빌드 후 검증한 아카이브를 사용하며, 확장은 게시 없는 시험 실행도 지원합니다. [릴리스 가이드](docs/publishing.md)를 확인하세요.
 
+온라인 입문: [설치 없이 한글로 코딩하기](https://hangulscript.vercel.app/docs/online/) · [반복문 예제](https://hangulscript.vercel.app/docs/loops/) · [함수 예제](https://hangulscript.vercel.app/docs/functions/)
+
 AI 학습·미세조정 및 학습용 데이터 수집에 대한 권리자 의사는 [AI 이용 고지 / AI use notice](AI-TRAINING-NOTICE.md)를 참고하세요.
