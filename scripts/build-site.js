@@ -20,3 +20,13 @@ await writeFile('site-dist/type-libs.js', 'export default ' + JSON.stringify(awa
 await writeFile('site-dist/en/index.html', (await readFile('site/en/index.html', 'utf8')).replaceAll('https://hangulscript.vercel.app', origin));
 
 await writeFile('site-dist/playground/index.html', (await readFile('site/playground/index.html', 'utf8')).replaceAll('https://hangulscript.vercel.app', origin));
+
+const escapeUsagePath=path=>Array.from(path,char=>'.?+*^$[]\\(){}|'.includes(char)?'\\'+char:char).join('');
+const usageConfig={service:'koreanscript',origin,hosts:[new URL(origin).hostname],routes:['/',...docRoutes].map(path=>({match:path==='/'?'^/$':`^${escapeUsagePath(path.slice(0,-1))}/?$`,path,name:path.split('/').filter(Boolean).join('_').replaceAll('-','_')||'home'})),sections:{features:'features',start:'start'},outbound:[{url:'https://github.com/uiwwsw/hangulscript',name:'github'},{url:'https://www.npmjs.com/package/@uiwwsw/hangulscript',name:'npm'}]};
+const usageAttr=JSON.stringify(usageConfig).replaceAll('&','&amp;').replaceAll('"','&quot;').replaceAll('<','&lt;');
+const usageTag=`<script type="module" src="/usage-analytics.js" data-usage-config="${usageAttr}"></script>`;
+// Only authored page routes receive analytics; the execution frame stays isolated.
+for(const path of ['/',...docRoutes]) {
+ const file=`site-dist${path}index.html`;
+ await writeFile(file,(await readFile(file,'utf8')).replace('</head>',()=>usageTag+'</head>'));
+}
