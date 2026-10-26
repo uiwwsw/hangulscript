@@ -28,5 +28,5 @@ const usageTag=`<script type="module" src="/usage-analytics.js" data-usage-confi
 // Only authored page routes receive analytics; the execution frame stays isolated.
 for(const path of ['/',...docRoutes]) {
  const file=`site-dist${path}index.html`;
- await writeFile(file,(await readFile(file,'utf8')).replace('</head>',usageTag+'</head>'));
+ await writeFile(file,(await readFile(file,'utf8')).replace('</head>',()=>usageTag+'</head>'));
 }
