@@ -1,0 +1,10 @@
+name: koreanscript
+services:
+  web:
+    build: .
+    image: koreanscript-web
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8442:80"
+    logging:
+      options: { max-size: 10m, max-file: "3" }
