@@ -1,13 +1,94 @@
-# 한글스크립트 · HangulScript
+<div align="center">
 
-[![CI on main](https://github.com/uiwwsw/hangulscript/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/uiwwsw/hangulscript/actions/workflows/ci.yml)
-[![MIT license](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](https://github.com/uiwwsw/hangulscript/blob/main/LICENSE)
+<img src="https://raw.githubusercontent.com/uiwwsw/hangulscript/main/site/icon.svg" alt="한글스크립트 로고" width="80" height="80">
 
-**한글 문장으로 쓴 `.hgs` 소스를 TypeScript로 변환하고, TypeScript 컴파일러로 타입을 검사해 JavaScript와 `.d.ts`를 만드는 실험적 변환기입니다.**
+<h1>한글스크립트 · HangulScript</h1>
+
+<p>한글 문장으로 쓴 <code>.hgs</code> 소스를 TypeScript로 변환하고, TypeScript 컴파일러로 타입을 검사해 JavaScript와 <code>.d.ts</code>를 만드는 실험적 변환기입니다.</p>
+
+[![npm](https://img.shields.io/npm/v/@uiwwsw/hangulscript?style=flat-square)](https://www.npmjs.com/package/@uiwwsw/hangulscript)
+[![license](https://img.shields.io/github/license/uiwwsw/hangulscript?style=flat-square)](https://github.com/uiwwsw/hangulscript/blob/main/LICENSE)
+[![CI](https://img.shields.io/github/actions/workflow/status/uiwwsw/hangulscript/ci.yml?branch=main&style=flat-square&label=CI)](https://github.com/uiwwsw/hangulscript/actions/workflows/ci.yml)
+[![node](https://img.shields.io/node/v/@uiwwsw/hangulscript?style=flat-square)](https://nodejs.org/)
+[![built on TypeScript](https://img.shields.io/badge/built%20on-TypeScript-3178c6?style=flat-square&logo=typescript&logoColor=white)](https://github.com/microsoft/TypeScript)
+
+[플레이그라운드](https://hangulscript.vercel.app/) · [문서](https://hangulscript.vercel.app/docs/) · [문법 명세](LANGUAGE.md) · [VS Code 확장](extensions/vscode/README.md) · [npm](https://www.npmjs.com/package/@uiwwsw/hangulscript) · [변경 내역](CHANGELOG.md)
+
+</div>
+
+## 제공하는 것
+
+- `ksc run 파일.hgs`: `.hgs` 파일을 중간 파일 없이 Node.js에서 실행
+- `ksc build`: `.hgs`를 ES 모듈 `.js`와 `.d.ts`로 변환 (`--typescript`로 TypeScript 출력)
+- `ksc --check`: 타입 검사만 수행
+- Node 로더 `@uiwwsw/hangulscript/register`: `node --import`로 `.hgs`를 바로 로드
+- Vite 플러그인 `@uiwwsw/hangulscript/vite`: React·Vue 프로젝트에서 `.hgs` import, 구문·타입 오류 시 빌드 실패
+- 프로그래밍 API: `buildSource`, `lintSource`, 브라우저용 `compileSource`
+- 한글 기본 함수 61개: 목록·집합·사전·복사·정렬·숫자·문자열·검증·화면
+- VS Code 확장: 문법 강조, 들여쓰기, 문서 포맷, 오류 표시, 타입 정보, 정의 이동, 스코프 자동 완성, 스니펫
+- 온라인 플레이그라운드: 격리된 iframe과 Worker에서 최대 2초 실행, 공유 링크
+
+## 설치
+
+Node.js **20.19 이상**이 필요합니다. 아래의 JS + .d.ts 빌드와 `run` 명령은 **0.3.0부터** 제공합니다.
+공개된 버전은 [npm](https://www.npmjs.com/package/@uiwwsw/hangulscript) 또는 `npm view @uiwwsw/hangulscript version`으로 확인하세요.
+
+```bash
+npm install --save-dev @uiwwsw/hangulscript
+```
+
+소스에서 최신 버전을 사용하려면:
+
+```bash
+git clone https://github.com/uiwwsw/hangulscript.git
+cd hangulscript
+npm ci
+npm run build
+node dist/cli.js run examples/calculator.hgs
+```
+
+## 예제
+
+`examples/hello.hgs`:
+
+```text
+이름은 "세상"이다
+
+인사(누구: 문자열)를 정의한다:
+    돌려주기 "안녕, " + 누구 + "!"
+
+출력(인사(이름))
+```
+
+```bash
+npx ksc run examples/hello.hgs
+```
+
+## 제공하지 않는 것 / 한계
+
+- 독립 파서·타입 검사기·실행 엔진이 없습니다. 문장 변환은 줄 단위 규칙이고 검사와 코드 생성은 TypeScript가 합니다.
+- 원본 `.hgs` 기준 소스맵이 없습니다.
+- LSP(언어 서버)가 없습니다. 전체 속성 자동 완성, 자동 import, 이름 변경, 디버거, 브라우저용 VS Code도 지원하지 않습니다.
+- 임의의 자연어를 해석하지 않습니다. 정해진 문장 규칙만 변환합니다.
+- Python 소스 호환이나 전체 TypeScript 문법 지원이 아닙니다.
+- 표현식은 JavaScript 문법 그대로입니다. 탭 들여쓰기와 여러 줄 표현식은 지원하지 않습니다.
+- 모든 JavaScript API의 한글 별칭이 아닙니다. 데이터베이스·외부 API 연동은 제공하지 않습니다.
+- `ksc run`에는 격리와 시간 제한이 없습니다. 신뢰하는 코드에만 사용하세요.
+- 현재 버전은 0.x라 문법과 API가 바뀔 수 있습니다.
+
+## 기반
+
+- [TypeScript](https://github.com/microsoft/TypeScript): 표현식 처리, 타입 검사, `.js`·`.d.ts` 생성
+- [Vite](https://vite.dev/): `.hgs` import 플러그인의 연동 대상
+- [VS Code Extension API](https://code.visualstudio.com/api): 편집기 확장
+- [Node.js](https://nodejs.org/): CLI와 로더의 실행 환경
+- 구성 상세: [구성과 의존 프로젝트](https://github.com/uiwwsw/hangulscript/blob/main/docs/architecture.md)
+
+## 소개
 
 문장 구조는 줄 단위 규칙으로 직접 변환하고, 표현식·타입 검사·코드 생성은 [TypeScript](https://github.com/microsoft/TypeScript)를 그대로 사용합니다. 들여쓰기로 블록을 나누는 모양은 Python을 참고했고, 표현식과 실행 환경은 JavaScript입니다. 소스 확장자는 **`.hgs`**이며, 현재 버전은 0.x라 문법과 API가 바뀔 수 있습니다. 내부 구성과 의존 프로젝트는 [구성과 의존 프로젝트](https://github.com/uiwwsw/hangulscript/blob/main/docs/architecture.md)에 정리했습니다.
 
-[온라인에서 실행하기](https://hangulscript.vercel.app/) · [구성](https://github.com/uiwwsw/hangulscript/blob/main/docs/architecture.md) · [React·Vue 사용법](docs/frameworks.md) · [문법 명세](LANGUAGE.md) · [변경 내역](CHANGELOG.md) · [릴리스](https://github.com/uiwwsw/hangulscript/releases) · [의견 보내기](https://github.com/uiwwsw/hangulscript/issues)
+[구성](https://github.com/uiwwsw/hangulscript/blob/main/docs/architecture.md) · [React·Vue 사용법](docs/frameworks.md) · [릴리스](https://github.com/uiwwsw/hangulscript/releases) · [의견 보내기](https://github.com/uiwwsw/hangulscript/issues)
 
 ```text
 점수들은 [75, 92, 88]이다
@@ -43,25 +124,6 @@ Python 소스 호환이나 전체 TypeScript 문법 지원을 뜻하지 않습�
 화면 예제에서는 입력값을 바꾸고 도구 안의 버튼을 누르면 현재 값으로 프로그램을 다시 실행합니다.
 데모의 선택형 UI 예제는 입력창·선택창·버튼을 제공하며 결과는 콘솔에 표시합니다. 데이터베이스·외부 API는 제공하지 않습니다.
 생성한 JS를 기존 웹/Node 프로젝트에 연결해 화면과 서비스를 확장할 수 있습니다.
-
-## 설치
-
-Node.js **20.19 이상**이 필요합니다. 아래의 JS + .d.ts 빌드와 `run` 명령은 **0.3.0부터** 제공합니다.
-공개된 버전은 [npm](https://www.npmjs.com/package/@uiwwsw/hangulscript) 또는 `npm view @uiwwsw/hangulscript version`으로 확인하세요.
-
-```bash
-npm install --save-dev @uiwwsw/hangulscript
-```
-
-소스에서 최신 버전을 사용하려면:
-
-```bash
-git clone https://github.com/uiwwsw/hangulscript.git
-cd hangulscript
-npm ci
-npm run build
-node dist/cli.js run examples/calculator.hgs
-```
 
 ## 직접 실행과 빌드
 
@@ -238,10 +300,6 @@ Vercel은 GitHub main과 연결되어 `site-dist/`를 배포합니다.
 
 Vite 연동을 제공합니다. 독립 AST·원본 `.hgs` 소스맵·LSP·모듈 그래프는 향후 과제입니다.
 
-## 라이선스
-
-[MIT](LICENSE)
-
 ## 이름과 확장자
 
 제품명은 한글스크립트(HangulScript), 패키지는 `@uiwwsw/hangulscript`입니다.
@@ -344,3 +402,7 @@ Node에서 직접 실행하려면 `node --import @uiwwsw/hangulscript/register s
 언어 패키지는 `vX.Y.Z`, VS Code 확장은 `vscode-vX.Y.Z` GitHub Release로 각각 게시합니다. 테스트·빌드 후 검증한 아카이브를 사용하며, 확장은 게시 없는 시험 실행도 지원합니다. [릴리스 가이드](docs/publishing.md)를 확인하세요.
 
 온라인 입문: [설치 없이 한글로 코딩하기](https://hangulscript.vercel.app/docs/online/) · [반복문 예제](https://hangulscript.vercel.app/docs/loops/) · [함수 예제](https://hangulscript.vercel.app/docs/functions/)
+
+## 라이선스
+
+[MIT](LICENSE)
