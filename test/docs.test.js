@@ -24,7 +24,7 @@ test('documentation has real routes, distinct SEO, complete API signatures and v
   }
   const full=await readFile(path.join(dir,'docs/standard-library/index.html'),'utf8');
   for(const item of standardCatalog)assert.ok(full.includes(`id="${item.name}"`),item.name);
-  assert.equal(routes.length,29);assert.equal(docPages.length,29);
+  assert.equal(routes.length,30);assert.equal(docPages.length,30);
  }finally{await rm(dir,{recursive:true,force:true});}
 });
 test('tutorial HGS examples compile with the same checker used by CLI and editor',async()=>{

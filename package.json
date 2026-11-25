@@ -1,7 +1,7 @@
 {
   "name": "@uiwwsw/hangulscript",
   "version": "0.8.0",
-  "description": "한글 문장으로 작성하고 JavaScript와 타입 선언으로 배포하는 프로그래밍 언어",
+  "description": "한글 문장으로 쓴 .hgs 소스를 TypeScript로 변환하고 TypeScript 컴파일러로 검사해 JavaScript와 .d.ts를 만드는 실험적 변환기와 CLI",
   "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
@@ -57,8 +57,13 @@
     "hangul",
     "korean",
     "hgs",
+    "korean-programming-language",
+    "transpiler",
     "typescript",
-    "transpiler"
+    "compiler",
+    "cli",
+    "vite-plugin",
+    "dts"
   ],
   "repository": {
     "type": "git",

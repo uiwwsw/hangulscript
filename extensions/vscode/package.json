@@ -1,7 +1,7 @@
 {
   "name": "hangulscript-vscode",
   "displayName": "한글스크립트 · HangulScript",
-  "description": "HangulScript Korean programming language (.hgs): syntax highlighting, formatting, type diagnostics, completion, hover and definitions. 한글 문법 강조·포맷·타입 검사",
+  "description": "VS Code support for HangulScript (.hgs), a Korean sentence-style language that compiles to TypeScript: syntax highlighting, formatting, diagnostics from the TypeScript checker, completion, hover and go to definition. 한글스크립트 .hgs 문법 강조·포맷·TypeScript 기반 타입 검사",
   "version": "0.3.1",
   "publisher": "uiwwsw",
   "license": "MIT",
@@ -69,7 +69,10 @@
     "Korean",
     "Hangul",
     "hgs",
-    "한글스크립트"
+    "한글스크립트",
+    "TypeScript",
+    "diagnostics",
+    "formatter"
   ],
   "homepage": "https://hangulscript.vercel.app/en/"
 }
