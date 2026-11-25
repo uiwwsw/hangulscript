@@ -3,12 +3,11 @@
 [![CI on main](https://github.com/uiwwsw/hangulscript/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/uiwwsw/hangulscript/actions/workflows/ci.yml)
 [![MIT license](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](https://github.com/uiwwsw/hangulscript/blob/main/LICENSE)
 
-**한글 문장으로 작성하고, JavaScript와 타입 선언으로 배포하는 프로그래밍 언어.**
+**한글 문장으로 쓴 `.hgs` 소스를 TypeScript로 변환하고, TypeScript 컴파일러로 타입을 검사해 JavaScript와 `.d.ts`를 만드는 실험적 변환기입니다.**
 
-Python의 들여쓰기와 익숙한 기본 함수, JavaScript의 표현식과 웹 생태계,
-TypeScript의 타입 검사를 결합합니다. 소스 확장자는 **`.hgs`**입니다.
+문장 구조는 줄 단위 규칙으로 직접 변환하고, 표현식·타입 검사·코드 생성은 [TypeScript](https://github.com/microsoft/TypeScript)를 그대로 사용합니다. 들여쓰기로 블록을 나누는 모양은 Python을 참고했고, 표현식과 실행 환경은 JavaScript입니다. 소스 확장자는 **`.hgs`**이며, 현재 버전은 0.x라 문법과 API가 바뀔 수 있습니다. 내부 구성과 의존 프로젝트는 [구성과 의존 프로젝트](https://github.com/uiwwsw/hangulscript/blob/main/docs/architecture.md)에 정리했습니다.
 
-[온라인에서 실행하기](https://hangulscript.vercel.app/) · [React·Vue 사용법](docs/frameworks.md) · [문법 명세](LANGUAGE.md) · [변경 내역](CHANGELOG.md) · [릴리스](https://github.com/uiwwsw/hangulscript/releases) · [의견 보내기](https://github.com/uiwwsw/hangulscript/issues)
+[온라인에서 실행하기](https://hangulscript.vercel.app/) · [구성](https://github.com/uiwwsw/hangulscript/blob/main/docs/architecture.md) · [React·Vue 사용법](docs/frameworks.md) · [문법 명세](LANGUAGE.md) · [변경 내역](CHANGELOG.md) · [릴리스](https://github.com/uiwwsw/hangulscript/releases) · [의견 보내기](https://github.com/uiwwsw/hangulscript/issues)
 
 ```text
 점수들은 [75, 92, 88]이다
@@ -18,8 +17,8 @@ TypeScript의 타입 검사를 결합합니다. 소스 확장자는 **`.hgs`**�
 출력("평균:", 평균(점수들))
 ```
 
-정해진 한국어 문법을 파싱하며, 임의의 자연어를 추측해 실행하지 않습니다.
-Python 소스 호환이나 전체 TypeScript 문법 지원을 뜻하지 않습니다.
+정해진 문장 규칙만 해석하며, 임의의 자연어를 추측해 실행하지 않습니다.
+Python 소스 호환이나 전체 TypeScript 문법 지원을 뜻하지 않습니다. 독립 파서·타입 검사기·실행 엔진은 없습니다.
 
 ## 우리가 꿈꾸는 언어
 

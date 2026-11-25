@@ -1,11 +1,11 @@
 # 한글스크립트 · HangulScript for VS Code
 
-`.hgs` 파일의 문법 강조, 자동 들여쓰기, 문서 포맷과 문법·타입 오류 표시를 제공합니다. 컴파일러와 같은 검사기를 사용하며 코드를 실행하지 않습니다. 별도 npm 설치 없이 동작합니다. 타입 정보 표시, 정의로 이동, 스코프 이름 자동 완성과 문장형 스니펫도 제공합니다.
+`.hgs` 파일의 문법 강조, 자동 들여쓰기, 문서 포맷과 문법·타입 오류 표시를 제공합니다. 검사는 `@uiwwsw/hangulscript`와 같은 코드(TypeScript 컴파일러 기반)로 수행하며 코드를 실행하지 않습니다. 별도 npm 설치 없이 동작합니다. 타입 정보 표시, 정의로 이동, 스코프 이름 자동 완성과 문장형 스니펫도 제공합니다.
 
 
 ## English — Korean programming language support
 
-**HangulScript** is a Korean sentence-style programming language using `.hgs` files. This extension provides syntax highlighting, indentation, document formatting, syntax and type diagnostics, scoped completion, hover information and go to definition. It includes the compiler checker and does not execute your code or require a separate npm installation.
+**HangulScript** is a Korean sentence-style programming language using `.hgs` files. This extension provides syntax highlighting, indentation, document formatting, syntax and type diagnostics, scoped completion, hover information and go to definition. Diagnostics come from the TypeScript compiler through the same code as `@uiwwsw/hangulscript`, bundled into the extension. It does not execute your code or require a separate npm installation.
 
 - Install: search for **HangulScript**, **Korean**, or `uiwwsw.hangulscript-vscode` in VS Code Extensions.
 - Open a `.hgs` file and run **Format Document**. Diagnostics appear in **Problems** and editor underlines.
