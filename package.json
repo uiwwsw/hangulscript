@@ -1,6 +1,6 @@
 {
   "name": "@uiwwsw/hangulscript",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "description": "한글 문장으로 쓴 .hgs 소스를 TypeScript로 변환하고 TypeScript 컴파일러로 검사해 JavaScript와 .d.ts를 만드는 실험적 변환기와 CLI",
   "license": "MIT",
   "type": "module",
